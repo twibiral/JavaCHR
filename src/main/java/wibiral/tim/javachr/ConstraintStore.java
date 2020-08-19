@@ -1,0 +1,125 @@
+package wibiral.tim.javachr;
+
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+
+/**
+ * Holds a set of constraints.
+ * Constraints can be added with the add(Constrain<T> constraint) method and as constructor parameter.
+ */
+public class ConstraintStore {
+    private final List<Constraint<?>> store = new LinkedList<>();
+
+    public ConstraintStore(){   }
+
+    public ConstraintStore(List<Constraint<?>> constraints){
+        if(constraints != null)
+            store.addAll(constraints);
+    }
+
+    public ConstraintStore(Constraint<?>[] constraints){
+        if(constraints.length > 0)
+            store.addAll(Arrays.asList(constraints));
+    }
+
+    @SafeVarargs
+    public<T> ConstraintStore(T... values){
+        for(T value : values)
+            store.add(new Constraint<>(value));
+    }
+
+    /**
+     * @return true if no constraints are in the store, otherwise false.
+     */
+    public boolean isEmpty(){
+        return store.isEmpty();
+    }
+
+    /**
+     * Delete all elements in the constraint store.
+     */
+    public void clear(){
+        store.clear();
+    }
+
+    public Constraint<?> get(int index){
+        return store.get(index);
+    }
+
+    /**
+     * Returns the list that stores all the {@link Constraint}s.
+     * Attention: It's the same list as used for storage. Manipulation of the list leads to manipulation
+     * of the ConstraintStore.
+     * @return A list with all {@link Constraint}s the ConstraintStore holds.
+     */
+    public List<Constraint<?>> getAll(){
+        return store;
+    }
+
+    /**
+     * Removes and returns the {@link Constraint} at the given index. Shifts any subsequent elements to the left.
+     * @param index The index of the Constraint to remove.
+     * @return The constraint at the given index.
+     */
+    public Constraint<?> remove(int index){
+        return store.remove(index);
+    }
+
+    /**
+     * Removes all {@link Constraint}s with the given indexes from the store.
+     * @param allIndexes An int array that contains the indexes that should be removed.
+     * @return true if removing successful.
+     */
+    public boolean removeAll(int[] allIndexes){
+        if(allIndexes.length > store.size())
+            return false;
+
+        Arrays.sort(allIndexes);
+
+        // Start from behind to avoid problems caused by already removed constraints.
+        int old = -1;
+        for (int i = allIndexes.length - 1; i >= 0; i--) {
+            if(allIndexes[i] >= 0 && allIndexes[i] != old){
+                store.remove(allIndexes[i]);
+                old = allIndexes[i];
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Adds the constraint to the end of the constraint store.
+     * @param constraint The constraint to add.
+     * @return true if added successful, otherwise false.
+     */
+    public boolean add(Constraint<?> constraint){
+        return store.add(constraint);
+    }
+
+    public boolean addAll(List<Constraint<?>> constraints){
+        return store.addAll(constraints);
+    }
+
+    public boolean addAll(ConstraintStore constraintStore){
+        return store.addAll(constraintStore.getAll());
+    }
+
+    /**
+     * @return The number of {@link Constraint}s that are stored.
+     */
+    public int size(){
+        return store.size();
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder str = new StringBuilder("Constraint store:");
+        for (Constraint<?> c : store){
+            str.append("\n\t").append(c.toString());
+        }
+
+        return str.toString();
+    }
+}
