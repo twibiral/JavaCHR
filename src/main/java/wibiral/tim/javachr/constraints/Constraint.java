@@ -1,4 +1,4 @@
-package wibiral.tim.javachr;
+package wibiral.tim.javachr.constraints;
 
 import wibiral.tim.javachr.exceptions.AlreadyBoundException;
 

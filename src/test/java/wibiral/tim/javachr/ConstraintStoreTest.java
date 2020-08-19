@@ -1,6 +1,8 @@
 package wibiral.tim.javachr;
 
 import org.junit.Test;
+import wibiral.tim.javachr.constraints.Constraint;
+import wibiral.tim.javachr.constraints.ConstraintStore;
 
 import java.util.List;
 

@@ -1,5 +1,7 @@
 package wibiral.tim.javachr;
 
+import wibiral.tim.javachr.constraints.Constraint;
+import wibiral.tim.javachr.constraints.ConstraintStore;
 import wibiral.tim.javachr.exceptions.EmptyRuleSetException;
 import wibiral.tim.javachr.rules.Rule;
 

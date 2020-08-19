@@ -1,4 +1,4 @@
-package wibiral.tim.javachr;
+package wibiral.tim.javachr.constraints;
 
 import java.util.Arrays;
 import java.util.LinkedList;

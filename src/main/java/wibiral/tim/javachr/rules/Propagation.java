@@ -1,7 +1,7 @@
 package wibiral.tim.javachr.rules;
 
-import wibiral.tim.javachr.Constraint;
-import wibiral.tim.javachr.ConstraintStore;
+import wibiral.tim.javachr.constraints.Constraint;
+import wibiral.tim.javachr.constraints.ConstraintStore;
 import wibiral.tim.javachr.exceptions.AlreadyDefinedException;
 import wibiral.tim.javachr.exceptions.BodyUndefinedException;
 

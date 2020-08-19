@@ -1,6 +1,7 @@
 package wibiral.tim.javachr;
 
 import org.junit.Test;
+import wibiral.tim.javachr.constraints.ConstraintStore;
 import wibiral.tim.javachr.rules.Propagation;
 import wibiral.tim.javachr.rules.Simplification;
 

@@ -1,6 +1,6 @@
 package wibiral.tim.javachr.rules;
 
-import wibiral.tim.javachr.Constraint;
+import wibiral.tim.javachr.constraints.Constraint;
 
 import java.util.List;
 

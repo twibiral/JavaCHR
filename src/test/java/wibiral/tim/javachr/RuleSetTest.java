@@ -1,6 +1,7 @@
 package wibiral.tim.javachr;
 
 import org.junit.Test;
+import wibiral.tim.javachr.constraints.ConstraintStore;
 import wibiral.tim.javachr.exceptions.RuleSetIsBlockedException;
 import wibiral.tim.javachr.rules.Propagation;
 

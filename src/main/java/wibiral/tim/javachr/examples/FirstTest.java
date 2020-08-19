@@ -1,7 +1,7 @@
 package wibiral.tim.javachr.examples;
 
-import wibiral.tim.javachr.Constraint;
-import wibiral.tim.javachr.ConstraintStore;
+import wibiral.tim.javachr.constraints.Constraint;
+import wibiral.tim.javachr.constraints.ConstraintStore;
 import wibiral.tim.javachr.RuleSet;
 import wibiral.tim.javachr.SimpleSolver;
 import wibiral.tim.javachr.rules.Simpagation;

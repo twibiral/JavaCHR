@@ -1,7 +1,7 @@
 package wibiral.tim.javachr.rules;
 
-import wibiral.tim.javachr.Constraint;
-import wibiral.tim.javachr.ConstraintStore;
+import wibiral.tim.javachr.constraints.Constraint;
+import wibiral.tim.javachr.constraints.ConstraintStore;
 
 import java.util.List;
 
@@ -25,7 +25,7 @@ public abstract class Rule {
 
     /**
      * @param constraints The store to check.
-     * @return True if the guard of the Rule accepts the given {@link wibiral.tim.javachr.ConstraintStore}.
+     * @return True if the guard of the Rule accepts the given {@link ConstraintStore}.
      */
     public abstract boolean accepts(ConstraintStore constraints);
 

@@ -1,5 +1,7 @@
 package wibiral.tim.javachr;
 
+import wibiral.tim.javachr.constraints.Constraint;
+import wibiral.tim.javachr.constraints.ConstraintStore;
 import wibiral.tim.javachr.rules.Rule;
 
 import java.util.ArrayList;
