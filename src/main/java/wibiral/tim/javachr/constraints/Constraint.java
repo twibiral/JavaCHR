@@ -1,19 +1,11 @@
 package wibiral.tim.javachr.constraints;
 
-import wibiral.tim.javachr.exceptions.AlreadyBoundException;
-
 public class Constraint<T> {
-    private boolean isBound = false;
     private T value = null;
-
-    public Constraint(){
-
-    }
 
     public Constraint(T value){
         if(value != null){
             this.value = value;
-            isBound = true;
         }
     }
 
