@@ -6,7 +6,7 @@ import java.util.List;
 
 /**
  * Holds a set of constraints.
- * Constraints can be added with the add(Constrain<T> constraint) method and as constructor parameter.
+ * Constraints can be added with add(Constrain<T>) method and as constructor parameter.
  */
 public class ConstraintStore {
     private final List<Constraint<?>> store = new LinkedList<>();
@@ -43,6 +43,10 @@ public class ConstraintStore {
         store.clear();
     }
 
+    /**
+     * @param index The index of the constraint that should be returned.
+     * @return Returns the constraint at the specified index.
+     */
     public Constraint<?> get(int index){
         return store.get(index);
     }
@@ -98,12 +102,44 @@ public class ConstraintStore {
         return store.add(constraint);
     }
 
+    /**
+     * Add all the constraints in the list to the ConstraintStore.
+     * @param constraints The constraints to add.
+     * @return True if added successfully.
+     */
     public boolean addAll(List<Constraint<?>> constraints){
         return store.addAll(constraints);
     }
 
+    /**
+     * Add all the constraints in the ConstraintStore to this ConstraintStore.
+     * @param constraintStore The constraints to add.
+     * @return True if added successfully.
+     */
     public boolean addAll(ConstraintStore constraintStore){
         return store.addAll(constraintStore.getAll());
+    }
+
+    /**
+     * @param constraint The constraint to check if it's already in the ConstraintStore.
+     * @return True if constraint is already in the ConstraintStore.
+     */
+    public boolean contains(Constraint<?> constraint){
+        return store.contains(constraint);
+    }
+
+    /**
+     * Checks if there is a constraint in this ConstraintStore that contains the given object.
+     * @param object The object to check for.
+     * @return True if a constraint that contains the object is already in the ConstraintStore.
+     */
+    public boolean contains(Object object){
+        for(Constraint<?> c : store){
+            if(c.equals(object))
+                return true;
+        }
+
+        return false;
     }
 
     /**
