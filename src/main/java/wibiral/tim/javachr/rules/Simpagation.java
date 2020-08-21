@@ -26,10 +26,10 @@ public class Simpagation extends Rule {
 
     @Override
     public boolean apply(ConstraintStore store) {
-        if(!bodyIsSet)
-            throw new BodyUndefinedException("To apply rules to constraints, the rule body must be defined!");
+//        if(!bodyIsSet)
+//            throw new BodyUndefinedException("To apply rules to constraints, the rule body must be defined!");
 
-        else if(store.size() != headSize())
+        if(store.size() != headSize())
             return false;
 
         Constraint<?>[] constraintsHead1 = new Constraint<?>[nrConstraintsHead1];
