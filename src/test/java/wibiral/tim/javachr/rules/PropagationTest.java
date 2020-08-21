@@ -57,7 +57,7 @@ public class PropagationTest {
 
         assertFalse("Too many constraints, must be false!", rule1.accepts(
                 Arrays.asList(new Constraint<?>[]{new Constraint<>(12), new Constraint<>(7)})));
-        assertFalse("Too few constraints, must be false!", rule1.accepts(new ArrayList<Constraint<?>>()));
+        assertFalse("Too few constraints, must be false!", rule1.accepts(new ArrayList<>()));
 
         assertFalse("Constraints don't fulfill the conditions, must be false!", rule1.accepts(Arrays.asList(new Constraint<?>[]{new Constraint<>(42)})));
         assertFalse("Constraints don't fulfill the conditions, must be false!", rule1.accepts(Arrays.asList(new Constraint<?>[]{new Constraint<>(-12)})));
