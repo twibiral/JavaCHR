@@ -11,7 +11,9 @@ public class GreatestCommonDivisor {
         // Define rules to find the greatest common divisor:
         RuleSet ruleSet = new RuleSet();
         ruleSet.add(new Simpagation(1, 1).guard(
-                (h1, h2) -> h1[0].value() instanceof Integer && h2[0].value() instanceof Integer &&
+                (h1, h2) ->
+                        // h1[0].value() instanceof Integer && h2[0].value() instanceof Integer &&
+                        // Not necessary if you can be sure that all Constraints are Integers.
                         (int) h1[0].value() > 0 && (int) h1[0].value() <= (int) h2[0].value()
         ).body(
                 (x1, x2, newConstraints) -> {
@@ -20,9 +22,14 @@ public class GreatestCommonDivisor {
                     newConstraints.add(new Constraint<>(m - n));
                 }
         ));
-        ruleSet.add(new Simplification(1).guard(
-                x -> x[0].value() instanceof Integer && (int) x[0].value() == 0
-                ).body(
+        ruleSet.add(new Simplification(1)
+                .guard(
+                x ->
+                        // Not necessary if you can be sure that all Constraints are Integers.
+                        // x[0].value() instanceof Integer &&
+                        (int) x[0].value() == 0
+                )
+                .body(
                 (x,y) -> {  }
                 )
         );
@@ -53,6 +60,12 @@ public class GreatestCommonDivisor {
         System.out.println("Greatest common divisor for 12.312, 12.132, 112, 4234 and 1211:");
         start = System.currentTimeMillis();
         result = solver.solve(12312, 12132, 112, 4234, 1211);
+        end = System.currentTimeMillis();
+        System.out.println("Duration: " + (end-start) + "ms\n" + result + "\n");
+
+        System.out.println("Greatest common divisor for 9897392, 2837812, 1211, 283749:");
+        start = System.currentTimeMillis();
+        result = solver.solve(9897392, 2837812, 1211, 283749);
         end = System.currentTimeMillis();
         System.out.println("Duration: " + (end-start) + "ms\n" + result);
 
