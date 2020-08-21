@@ -56,7 +56,7 @@ public class SimpleSolver extends ConstraintSolver {
                         if(rule.accepts(temp)){
                             store.removeAll(selectedIdx);
 
-                            noRuleApplied = rule.apply(temp) ? 0 : noRuleApplied + 1;
+                            rule.apply(temp);
                             store.addAll(temp);
 
                         } else {

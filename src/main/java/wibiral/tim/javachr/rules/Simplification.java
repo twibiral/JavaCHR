@@ -28,9 +28,11 @@ public class Simplification extends Rule {
             return false;
 
         Constraint<?>[] constraints = new Constraint[headSize()];
-        for (int i = 0; i < store.size(); i++) {
-            constraints[i] = store.remove(i);
+        for (int i = 0; i < headSize(); i++) {
+            constraints[i] = store.get(i);
         }
+
+        store.clear();
 
         ArrayList<Constraint<?>> newConstraints = new ArrayList<>();
         body.execute(constraints, newConstraints);
