@@ -1,4 +1,4 @@
-package wibiral.tim.javachr;
+package wibiral.tim.javachr.constraints;
 
 import org.junit.Test;
 import wibiral.tim.javachr.constraints.Constraint;
