@@ -5,20 +5,20 @@ import wibiral.tim.javachr.constraints.ConstraintStore;
 import wibiral.tim.javachr.rules.Rule;
 
 import java.util.ArrayList;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.List;
 
 public class SimpleSolver extends ConstraintSolver {
     /**
      * Contains for all header the rules have a List with all rules with that specific header size.
      */
-    private final Hashtable<Integer, List<Rule>> ruleHash;
+    private final HashMap<Integer, List<Rule>> ruleHash;
 
     private final List<Integer> headerSizes = new ArrayList<>();
 
     public SimpleSolver(RuleSet rules) {
         super(rules);
-        ruleHash = new Hashtable<>(3 * rules.size());
+        ruleHash = new HashMap<>(3 * rules.size());
 
         for (int i = 0; i < rules.size(); i++) {
             Rule rule = rules.get(i);
