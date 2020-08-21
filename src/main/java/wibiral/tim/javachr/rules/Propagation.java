@@ -41,9 +41,6 @@ public class Propagation extends Rule {
             constraints[i] = store.get(i);
         }
 
-        if(guardIsSet && !guard.check(constraints))
-            return false;
-
         ArrayList<Constraint<?>> newConstraints = new ArrayList<>();
         body.execute(constraints, newConstraints);
         store.addAll(newConstraints);

@@ -18,6 +18,9 @@ public abstract class Rule {
 
     /**
      * Applies the rule to the {@link ConstraintStore}.
+     * DOES NOT CHECK IF THE GIVEN CONSTRAINTS ARE ACCEPTED TO IMPROVE PERFORMANCE!
+     * If there are wrong constraints in the ConstraintStore the method may throws an exception but may just executes
+     * the wrong way.
      * @param store The constraint store to which the rule should be applied.
      * @return true if the rule was successfully applied to any constraints.
      */
