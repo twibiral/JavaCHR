@@ -22,8 +22,7 @@ public class SimpleSolverTest {
         assertEquals(1, store.size());
         assertTrue(store.contains(7));
 
-        store = new ConstraintStore(9, 3);
-        solver.solve(store);
+        store = solver.solve(9, 3);
         assertEquals(1, store.size());
         assertTrue(store.contains(3));
     }

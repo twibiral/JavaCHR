@@ -3,8 +3,8 @@ package wibiral.tim.javachr;
 import wibiral.tim.javachr.exceptions.RuleSetIsBlockedException;
 import wibiral.tim.javachr.rules.Rule;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -12,10 +12,8 @@ import java.util.List;
  * Rules can be added with the add(Rule rule) method and as constructor parameter.
  */
 public class RuleSet {
-    private final ArrayList<Rule> rules = new ArrayList<>();
-
+    private final List<Rule> rules = new LinkedList<>();
     private boolean blocked = false;
-    private int counter = 0;
 
     public RuleSet() {    }
 
@@ -27,16 +25,6 @@ public class RuleSet {
     public RuleSet(Rule[] rules){
         if(rules.length > 0)
             this.rules.addAll(Arrays.asList(rules));
-    }
-
-    /**
-     * Returns the next rule in the RuleSet. Begins with the first rule again after the last rule.
-     * @return The next rule.
-     */
-    public Rule next(){
-        Rule nextRule = rules.get(counter);
-        counter = (counter + 1) % rules.size();
-        return nextRule;
     }
 
     public Rule get(int index){
