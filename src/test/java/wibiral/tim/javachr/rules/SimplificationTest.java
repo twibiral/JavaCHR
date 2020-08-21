@@ -10,18 +10,18 @@ import java.util.Arrays;
 
 import static org.junit.Assert.*;
 
-public class PropagationTest {
-    Propagation rule1;
+public class SimplificationTest {
+    Simplification rule1;
 
     @Before
     public void setUp() {
-        rule1 = new Propagation(1);
+        rule1 = new Simplification(1);
         rule1.guard(x -> {
             int i = (int) x[0].value();
             return i > 2 && i < 21;
         });
         rule1.body((oldC, newC) -> newC.add(new Constraint<>((int) oldC[0].value() - 1)));
-   }
+    }
 
     @Test
     public void apply() {
@@ -29,9 +29,9 @@ public class PropagationTest {
         ConstraintStore store = new ConstraintStore(15);
         assertTrue(rule1.apply(store));
         assertTrue(store.contains(new Constraint<>(14)));
-        assertTrue(store.contains(new Constraint<>(15)));
+        assertFalse(store.contains(new Constraint<>(15)));
         assertTrue(store.contains(14));
-        assertTrue(store.contains(15));
+        assertFalse(store.contains(15));
     }
 
     @Test
