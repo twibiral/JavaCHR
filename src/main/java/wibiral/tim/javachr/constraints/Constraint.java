@@ -25,45 +25,11 @@ public class Constraint<T> {
     }
 
     /**
-     * Binds a new value to the constraint unless the constraint is already bound to a value.
-     * @param value Binds the constraint to this value.
-     * @return true if binding was successful, throws {@link AlreadyBoundException} if the constraint is already bound!
-     */
-    public boolean bind(T value){
-        if(isBound){
-            throw new AlreadyBoundException("Tried to bind new value to constraint that is already bound!");
-
-        } else {
-            isBound = true;
-            this.value = value;
-            return true;
-        }
-    }
-
-    /**
-     * Unbinds the constraint from its value and returns the old value.
-     * @return The old value.
-     */
-    public T unbind(){
-        if(isBound){
-            isBound = false;
-            return value;
-
-        } else {
-            return null;
-        }
-    }
-
-    /**
      * Return the value the constraint holds.
      * @return value.
      */
     public T value(){
         return value;
-    }
-
-    public boolean isBound(){
-        return isBound;
     }
 
     /**

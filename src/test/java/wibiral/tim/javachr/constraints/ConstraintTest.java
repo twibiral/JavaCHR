@@ -8,35 +8,10 @@ import wibiral.tim.javachr.exceptions.AlreadyBoundException;
 import static org.junit.Assert.*;
 
 public class ConstraintTest {
-
-    @Test
-    public void bind() {
-        Constraint<Integer> c = new Constraint<>();
-        assertTrue(c.bind(42));
-        assertTrue(c.isBound());
-
-        try {
-            c.bind(43);
-            fail("Shouldn't bind value, constraint is already bound!");
-
-        } catch (Exception e){
-            assertTrue("Wrong Exception thrown!", e instanceof AlreadyBoundException);
-        }
-    }
-
-    @Test
-    public void unbind() {
-        Constraint<String> c = new Constraint<>("Hello World!");
-        assertTrue(c.isBound());
-        assertEquals("Hello World!", c.unbind());
-        assertFalse(c.isBound());
-    }
-
     @Test
     public void value() {
         Double pi = 3.14159;
         Constraint<Double> c = new Constraint<>(pi);
-        assertTrue(c.isBound());
         assertNotNull(c.value());
         Double d = c.value();
         assertEquals(pi, d);
@@ -48,6 +23,9 @@ public class ConstraintTest {
         Constraint<Character> c2 = new Constraint<>('a');
         assertTrue(c1.equals(c2));
         assertTrue(c1.equals('a'));
+
+        assertFalse(c1.equals(null));
+        assertFalse(c1.equals('y'));
 
         ConstraintStore store = new ConstraintStore();
         store.add(c1);
