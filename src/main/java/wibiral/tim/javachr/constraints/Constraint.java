@@ -62,14 +62,6 @@ public class Constraint<T> {
         return value;
     }
 
-    /**
-     * Updates the value of the constraint.
-     * @param newValue The new value of the constraint.
-     */
-    public void update(T newValue){
-        this.value = newValue;
-    }
-
     public boolean isBound(){
         return isBound;
     }
