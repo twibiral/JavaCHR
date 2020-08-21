@@ -56,6 +56,9 @@ public class Simpagation extends Rule {
 
     @Override
     public boolean accepts(ConstraintStore constraints) {
+        if(constraints.size() != headSize())
+            return false;
+
         Constraint<?>[] constraintsHead1 = new Constraint<?>[nrConstraintsHead1];
         Constraint<?>[] constraintsHead2 = new Constraint<?>[nrConstraintsHead2];
 
@@ -71,6 +74,9 @@ public class Simpagation extends Rule {
 
     @Override
     public boolean accepts(List<Constraint<?>> constraints) {
+        if(constraints.size() != headSize())
+            return false;
+
         Constraint<?>[] constraintsHead1 = new Constraint<?>[nrConstraintsHead1];
         Constraint<?>[] constraintsHead2 = new Constraint<?>[nrConstraintsHead2];
 

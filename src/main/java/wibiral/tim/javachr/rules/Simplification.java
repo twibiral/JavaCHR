@@ -44,12 +44,12 @@ public class Simplification extends Rule {
 
     @Override
     public boolean accepts(ConstraintStore constraints) {
-        return guard.check(constraints.getAll().toArray(new Constraint[0]));
+        return constraints.size() == headSize() && guard.check(constraints.getAll().toArray(new Constraint[0]));
     }
 
     @Override
     public boolean accepts(List<Constraint<?>> constraints) {
-        return guard.check(constraints.toArray(new Constraint[0]));
+        return constraints.size() == headSize() && guard.check(constraints.toArray(new Constraint[0]));
     }
 
     public Simplification guard(Guard guard){
