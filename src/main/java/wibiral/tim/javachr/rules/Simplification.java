@@ -21,9 +21,6 @@ public class Simplification extends Rule {
 
     @Override
     public boolean apply(ConstraintStore store) {
-//        if(!bodyIsSet)
-//            throw new BodyUndefinedException("To apply rules to constraints, the rule body must be defined!");
-
         if(store.size() != headSize())
             return false;
 
