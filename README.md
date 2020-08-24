@@ -86,7 +86,7 @@ System.out.println(result);
 
 ``solver.solve()`` returns a ``ConstraintStore`` that contains all ``Constraint``s that are in the result.
 
-More examples can be found in the [examples package](/src/main/java/wibiral/tim/javachr/examples) and in the [tests](/src/main/java/wibiral/tim/javachr).
+More examples can be found in the [examples package](/src/main/java/wibiral/tim/javachr/examples) and in the [tests](/src/test/java/wibiral/tim/javachr/).
 
 ### Use as local library
 To use the library you can download the JavaCHR-X.X.jar file and use it as library for your project.
