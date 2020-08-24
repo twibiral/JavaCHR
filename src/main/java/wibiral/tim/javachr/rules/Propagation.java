@@ -33,7 +33,7 @@ public class Propagation extends Rule {
 //        if(!bodyIsSet)
 //            throw new BodyUndefinedException("To apply rules to constraints, the rule body must be defined!");
 
-        if(store.size() != headSize() || propagatedConstrains.contains(store.getAll()))
+        if(store.size() != headSize())
             return false;
 
         Constraint<?>[] constraints = new Constraint[headSize()];
@@ -52,12 +52,14 @@ public class Propagation extends Rule {
 
     @Override
     public boolean accepts(ConstraintStore constraints) {
-        return constraints.size() == headSize() && guard.check(constraints.getAll().toArray(new Constraint[0]));
+        return constraints.size() == headSize() && guard.check(constraints.getAll().toArray(new Constraint[0]))
+                && ! propagatedConstrains.contains(constraints.getAll());
     }
 
     @Override
     public boolean accepts(List<Constraint<?>> constraints) {
-        return constraints.size() == headSize() && guard.check(constraints.toArray(new Constraint[0]));
+        return constraints.size() == headSize() && guard.check(constraints.toArray(new Constraint[0]))
+                && ! propagatedConstrains.contains(constraints);
     }
 
     public Propagation guard(Guard guard){
