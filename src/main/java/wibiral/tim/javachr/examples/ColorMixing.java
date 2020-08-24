@@ -4,7 +4,6 @@ import wibiral.tim.javachr.ConstraintSolver;
 import wibiral.tim.javachr.RuleSet;
 import wibiral.tim.javachr.SimpleSolver;
 import wibiral.tim.javachr.constraints.Constraint;
-import wibiral.tim.javachr.constraints.ConstraintStore;
 import wibiral.tim.javachr.rules.Simpagation;
 import wibiral.tim.javachr.rules.Simplification;
 
