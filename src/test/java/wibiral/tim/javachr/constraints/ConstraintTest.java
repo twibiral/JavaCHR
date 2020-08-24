@@ -1,9 +1,6 @@
 package wibiral.tim.javachr.constraints;
 
 import org.junit.Test;
-import wibiral.tim.javachr.constraints.Constraint;
-import wibiral.tim.javachr.constraints.ConstraintStore;
-import wibiral.tim.javachr.exceptions.AlreadyBoundException;
 
 import static org.junit.Assert.*;
 

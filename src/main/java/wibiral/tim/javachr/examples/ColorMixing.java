@@ -4,13 +4,13 @@ import wibiral.tim.javachr.ConstraintSolver;
 import wibiral.tim.javachr.RuleSet;
 import wibiral.tim.javachr.SimpleSolver;
 import wibiral.tim.javachr.constraints.Constraint;
-import wibiral.tim.javachr.constraints.ConstraintStore;
 import wibiral.tim.javachr.rules.Simpagation;
 import wibiral.tim.javachr.rules.Simplification;
 
 /**
  * CHR program that gives you the result of mixing some colors.
- * Inspired by Thom Frühwirth's example at {@link http://www.chr.informatik.uni-ulm.de/~webchr/}.
+ * Inspired by Thom Frühwirth's example at http://www.chr.informatik.uni-ulm.de/~webchr/.
+ * @see <a href="http://chr.informatik.uni-ulm.de/~webchr/">interaktive chr website</a>
  */
 public class ColorMixing {
     public enum color {
@@ -50,33 +50,33 @@ public class ColorMixing {
 
 
         // Version 1: Just Simplification
-//        rules.add(new Simplification(2)
-//                .guard(x -> x[0].equals(color.brown) && x[1].equals(color.blue))
-//                .body((oldC, newC) -> newC.add(new Constraint<>(color.brown))));
-//        rules.add(new Simplification(2)
-//                .guard(x -> x[0].equals(color.brown) && x[1].equals(color.red))
-//                .body((oldC, newC) -> newC.add(new Constraint<>(color.brown))));
-//        rules.add(new Simplification(2)
-//                .guard(x -> x[0].equals(color.brown) && x[1].equals(color.yellow))
-//                .body((oldC, newC) -> newC.add(new Constraint<>(color.brown))));
-//        rules.add(new Simplification(2)
-//                .guard(x -> x[0].equals(color.brown) && x[1].equals(color.purple))
-//                .body((oldC, newC) -> newC.add(new Constraint<>(color.brown))));
-//        rules.add(new Simplification(2)
-//                .guard(x -> x[0].equals(color.brown) && x[1].equals(color.green))
-//                .body((oldC, newC) -> newC.add(new Constraint<>(color.brown))));
-//        rules.add(new Simplification(2)
-//                .guard(x -> x[0].equals(color.brown) && x[1].equals(color.orange))
-//                .body((oldC, newC) -> newC.add(new Constraint<>(color.brown))));
-//        rules.add(new Simplification(2)
-//                .guard(x -> x[0].equals(color.brown) && x[1].equals(color.brown))
-//                .body((oldC, newC) -> newC.add(new Constraint<>(color.brown))));
+        rules.add(new Simplification(2)
+                .guard(x -> x[0].equals(color.brown) && x[1].equals(color.blue))
+                .body((oldC, newC) -> newC.add(new Constraint<>(color.brown))));
+        rules.add(new Simplification(2)
+                .guard(x -> x[0].equals(color.brown) && x[1].equals(color.red))
+                .body((oldC, newC) -> newC.add(new Constraint<>(color.brown))));
+        rules.add(new Simplification(2)
+                .guard(x -> x[0].equals(color.brown) && x[1].equals(color.yellow))
+                .body((oldC, newC) -> newC.add(new Constraint<>(color.brown))));
+        rules.add(new Simplification(2)
+                .guard(x -> x[0].equals(color.brown) && x[1].equals(color.purple))
+                .body((oldC, newC) -> newC.add(new Constraint<>(color.brown))));
+        rules.add(new Simplification(2)
+                .guard(x -> x[0].equals(color.brown) && x[1].equals(color.green))
+                .body((oldC, newC) -> newC.add(new Constraint<>(color.brown))));
+        rules.add(new Simplification(2)
+                .guard(x -> x[0].equals(color.brown) && x[1].equals(color.orange))
+                .body((oldC, newC) -> newC.add(new Constraint<>(color.brown))));
+        rules.add(new Simplification(2)
+                .guard(x -> x[0].equals(color.brown) && x[1].equals(color.brown))
+                .body((oldC, newC) -> newC.add(new Constraint<>(color.brown))));
 
 
-        // Version 2: Simpagation instead of Simplification:
-        rules.add(new Simpagation(1, 1).guard((head1, head2) -> head1[0].equals(color.brown))
-        // .body((head1, head2, newC) -> {  })   // Body is not necessary
-        );
+//        // Version 2: Simpagation instead of Simplification:
+//        rules.add(new Simpagation(1, 1).guard((head1, head2) -> head1[0].equals(color.brown))
+//        // .body((head1, head2, newC) -> {  })   // Body is not necessary
+//        );
 
         // Additional:
         // remove duplicates:

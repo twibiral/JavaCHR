@@ -6,7 +6,7 @@ import java.util.List;
 
 /**
  * Holds a set of constraints.
- * Constraints can be added with add(Constrain<T>) method and as constructor parameter.
+ * Constraints can be added with add({@link Constraint}) method and as constructor parameter.
  */
 public class ConstraintStore {
     private final List<Constraint<?>> store = new LinkedList<>();

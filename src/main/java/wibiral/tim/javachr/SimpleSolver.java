@@ -37,8 +37,9 @@ public class SimpleSolver extends ConstraintSolver {
 
     @Override
     public ConstraintStore solve(ConstraintStore store) {
-        int noRuleApplied = 0;
-        while (noRuleApplied < store.size()) {
+        boolean ruleApplied = true;
+        while (ruleApplied) {
+            ruleApplied = false;
 
             for (int size : headerSizes) {
                 if(size <= store.size()){
@@ -55,12 +56,8 @@ public class SimpleSolver extends ConstraintSolver {
 
                         if(rule.accepts(temp)){
                             store.removeAll(selectedIdx);
-
-                            noRuleApplied = rule.apply(temp) ? 0 : noRuleApplied + 1;
+                            ruleApplied = rule.apply(temp);
                             store.addAll(temp);
-
-                        } else {
-                            noRuleApplied++;
                         }
                     }
 

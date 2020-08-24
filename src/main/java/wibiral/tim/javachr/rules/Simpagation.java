@@ -3,7 +3,6 @@ package wibiral.tim.javachr.rules;
 import wibiral.tim.javachr.constraints.Constraint;
 import wibiral.tim.javachr.constraints.ConstraintStore;
 import wibiral.tim.javachr.exceptions.AlreadyDefinedException;
-import wibiral.tim.javachr.exceptions.BodyUndefinedException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,9 +25,6 @@ public class Simpagation extends Rule {
 
     @Override
     public boolean apply(ConstraintStore store) {
-//        if(!bodyIsSet)
-//            throw new BodyUndefinedException("To apply rules to constraints, the rule body must be defined!");
-
         if(store.size() != headSize())
             return false;
 
