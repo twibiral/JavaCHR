@@ -50,33 +50,33 @@ public class ColorMixing {
 
 
         // Version 1: Just Simplification
-//        rules.add(new Simplification(2)
-//                .guard(x -> x[0].equals(color.brown) && x[1].equals(color.blue))
-//                .body((oldC, newC) -> newC.add(new Constraint<>(color.brown))));
-//        rules.add(new Simplification(2)
-//                .guard(x -> x[0].equals(color.brown) && x[1].equals(color.red))
-//                .body((oldC, newC) -> newC.add(new Constraint<>(color.brown))));
-//        rules.add(new Simplification(2)
-//                .guard(x -> x[0].equals(color.brown) && x[1].equals(color.yellow))
-//                .body((oldC, newC) -> newC.add(new Constraint<>(color.brown))));
-//        rules.add(new Simplification(2)
-//                .guard(x -> x[0].equals(color.brown) && x[1].equals(color.purple))
-//                .body((oldC, newC) -> newC.add(new Constraint<>(color.brown))));
-//        rules.add(new Simplification(2)
-//                .guard(x -> x[0].equals(color.brown) && x[1].equals(color.green))
-//                .body((oldC, newC) -> newC.add(new Constraint<>(color.brown))));
-//        rules.add(new Simplification(2)
-//                .guard(x -> x[0].equals(color.brown) && x[1].equals(color.orange))
-//                .body((oldC, newC) -> newC.add(new Constraint<>(color.brown))));
-//        rules.add(new Simplification(2)
-//                .guard(x -> x[0].equals(color.brown) && x[1].equals(color.brown))
-//                .body((oldC, newC) -> newC.add(new Constraint<>(color.brown))));
+        rules.add(new Simplification(2)
+                .guard(x -> x[0].equals(color.brown) && x[1].equals(color.blue))
+                .body((oldC, newC) -> newC.add(new Constraint<>(color.brown))));
+        rules.add(new Simplification(2)
+                .guard(x -> x[0].equals(color.brown) && x[1].equals(color.red))
+                .body((oldC, newC) -> newC.add(new Constraint<>(color.brown))));
+        rules.add(new Simplification(2)
+                .guard(x -> x[0].equals(color.brown) && x[1].equals(color.yellow))
+                .body((oldC, newC) -> newC.add(new Constraint<>(color.brown))));
+        rules.add(new Simplification(2)
+                .guard(x -> x[0].equals(color.brown) && x[1].equals(color.purple))
+                .body((oldC, newC) -> newC.add(new Constraint<>(color.brown))));
+        rules.add(new Simplification(2)
+                .guard(x -> x[0].equals(color.brown) && x[1].equals(color.green))
+                .body((oldC, newC) -> newC.add(new Constraint<>(color.brown))));
+        rules.add(new Simplification(2)
+                .guard(x -> x[0].equals(color.brown) && x[1].equals(color.orange))
+                .body((oldC, newC) -> newC.add(new Constraint<>(color.brown))));
+        rules.add(new Simplification(2)
+                .guard(x -> x[0].equals(color.brown) && x[1].equals(color.brown))
+                .body((oldC, newC) -> newC.add(new Constraint<>(color.brown))));
 
 
-        // Version 2: Simpagation instead of Simplification:
-        rules.add(new Simpagation(1, 1).guard((head1, head2) -> head1[0].equals(color.brown))
-        // .body((head1, head2, newC) -> {  })   // Body is not necessary
-        );
+//        // Version 2: Simpagation instead of Simplification:
+//        rules.add(new Simpagation(1, 1).guard((head1, head2) -> head1[0].equals(color.brown))
+//        // .body((head1, head2, newC) -> {  })   // Body is not necessary
+//        );
 
         // Additional:
         // remove duplicates:
