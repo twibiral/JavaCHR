@@ -9,7 +9,8 @@ import wibiral.tim.javachr.rules.Simplification;
 
 /**
  * CHR program that gives you the result of mixing some colors.
- * Inspired by Thom Frühwirth's example at {@link http://www.chr.informatik.uni-ulm.de/~webchr/}.
+ * Inspired by Thom Frühwirth's example at http://www.chr.informatik.uni-ulm.de/~webchr/.
+ * @see <a href="http://chr.informatik.uni-ulm.de/~webchr/">interaktive chr website</a>
  */
 public class ColorMixing {
     public enum color {

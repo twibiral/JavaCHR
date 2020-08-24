@@ -1,12 +1,11 @@
 package wibiral.tim.javachr.constraints;
 
 import org.junit.Test;
-import wibiral.tim.javachr.constraints.Constraint;
-import wibiral.tim.javachr.constraints.ConstraintStore;
 
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class ConstraintStoreTest {
 

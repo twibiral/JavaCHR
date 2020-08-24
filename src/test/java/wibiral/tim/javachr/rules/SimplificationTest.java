@@ -8,7 +8,8 @@ import wibiral.tim.javachr.constraints.ConstraintStore;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class SimplificationTest {
     Simplification rule1;
