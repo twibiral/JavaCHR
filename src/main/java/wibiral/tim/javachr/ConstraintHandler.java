@@ -5,31 +5,22 @@ import wibiral.tim.javachr.constraints.ConstraintStore;
 import wibiral.tim.javachr.exceptions.EmptyRuleSetException;
 import wibiral.tim.javachr.rules.Rule;
 
-import java.util.List;
-
 /**
  * Is used to apply rules to the Constraints.
  */
-public abstract class ConstraintSolver {
+public abstract class ConstraintHandler {
     protected final RuleSet rules;
 
     private static final String ERROR_MESSAGE = "The set of rules must contain at least one rule!";
 
-    public ConstraintSolver(RuleSet rules){
+    public ConstraintHandler(RuleSet rules){
         if(rules.isEmpty()) throw new EmptyRuleSetException(ERROR_MESSAGE);
 
         this.rules = rules;
         this.rules.block();
     }
 
-    public ConstraintSolver(List<Rule> rules){
-        if(rules.isEmpty()) throw new EmptyRuleSetException(ERROR_MESSAGE);
-
-        this.rules = new RuleSet(rules);
-        this.rules.block();
-    }
-
-    public ConstraintSolver(Rule... rules){
+    public ConstraintHandler(Rule... rules){
         if(rules.length < 1) throw new EmptyRuleSetException(ERROR_MESSAGE);
 
         this.rules = new RuleSet(rules);

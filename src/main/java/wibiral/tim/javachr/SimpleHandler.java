@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class SimpleSolver extends ConstraintSolver {
+public class SimpleHandler extends ConstraintHandler {
     /**
      * Contains for all header the rules have a List with all rules with that specific header size.
      */
@@ -16,7 +16,7 @@ public class SimpleSolver extends ConstraintSolver {
 
     private final List<Integer> headerSizes = new ArrayList<>();
 
-    public SimpleSolver(RuleSet rules) {
+    public SimpleHandler(RuleSet rules) {
         super(rules);
         ruleHash = new HashMap<>(3 * rules.size());
 

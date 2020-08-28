@@ -1,8 +1,8 @@
 package wibiral.tim.javachr.examples;
 
-import wibiral.tim.javachr.ConstraintSolver;
+import wibiral.tim.javachr.ConstraintHandler;
 import wibiral.tim.javachr.RuleSet;
-import wibiral.tim.javachr.SimpleSolver;
+import wibiral.tim.javachr.SimpleHandler;
 import wibiral.tim.javachr.constraints.Constraint;
 import wibiral.tim.javachr.rules.Simpagation;
 import wibiral.tim.javachr.rules.Simplification;
@@ -19,7 +19,7 @@ public class ColorMixing {
 
     public static void main(String[] args) {
         RuleSet colorRules = getColorRules();
-        ConstraintSolver solver = new SimpleSolver(colorRules);
+        ConstraintHandler solver = new SimpleHandler(colorRules);
 
         color redAndBlue = (color) solver.solve(color.red, color.blue).get(0).value();
         System.out.println("red and blue is " + redAndBlue.toString());

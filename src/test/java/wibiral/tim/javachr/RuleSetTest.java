@@ -21,7 +21,7 @@ public class RuleSetTest {
         rules.add(new Propagation(1));
         rules.add(new Propagation(2));
 
-        new SimpleSolver(rules);
+        new SimpleHandler(rules);
         try {
             rules.add(new Propagation(1));
             fail("Shouldn't be able to add rules after instantiating solver!");
@@ -45,7 +45,7 @@ public class RuleSetTest {
         RuleSet rules = new RuleSet();
         rules.add(new Propagation(1));
 
-        new ConstraintSolver(rules) {
+        new ConstraintHandler(rules) {
             @Override
             public ConstraintStore solve(ConstraintStore store) {
                 return store;

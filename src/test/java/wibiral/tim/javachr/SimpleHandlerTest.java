@@ -9,12 +9,12 @@ import wibiral.tim.javachr.rules.Simplification;
 
 import static org.junit.Assert.*;
 
-public class SimpleSolverTest {
+public class SimpleHandlerTest {
 
     @Test
     public void solve() {
         RuleSet rules = getGCDRules();
-        ConstraintSolver solver = new SimpleSolver(rules);
+        ConstraintHandler solver = new SimpleHandler(rules);
         ConstraintStore store;
 
         store = new ConstraintStore(7, 28);
@@ -31,7 +31,7 @@ public class SimpleSolverTest {
     public void findAssignment() {
         RuleSet ruleSet = new RuleSet();
         ruleSet.add(new Simplification(1));
-        SimpleSolver solver = new SimpleSolver(ruleSet);
+        SimpleHandler solver = new SimpleHandler(ruleSet);
 
         ConstraintStore store = new ConstraintStore(1, 2, 3, 4);
         Propagation rule1 = new Propagation(1).guard(x -> x[0].type() == Integer.class);
@@ -69,7 +69,7 @@ public class SimpleSolverTest {
     public void notAllEqual() {
         RuleSet ruleSet = new RuleSet();
         ruleSet.add(new Simplification(1));
-        SimpleSolver solver = new SimpleSolver(ruleSet);
+        SimpleHandler solver = new SimpleHandler(ruleSet);
 
         int[] array = new int[]{1, 2, 3, 1, 2};
         assertFalse(solver.notAllEqual(array));

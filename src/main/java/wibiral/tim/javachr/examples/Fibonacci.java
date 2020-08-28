@@ -1,8 +1,8 @@
 package wibiral.tim.javachr.examples;
 
-import wibiral.tim.javachr.ConstraintSolver;
+import wibiral.tim.javachr.ConstraintHandler;
 import wibiral.tim.javachr.RuleSet;
-import wibiral.tim.javachr.SimpleSolver;
+import wibiral.tim.javachr.SimpleHandler;
 import wibiral.tim.javachr.constraints.Constraint;
 import wibiral.tim.javachr.rules.Propagation;
 import wibiral.tim.javachr.rules.Simpagation;
@@ -56,7 +56,7 @@ public class Fibonacci {
                 .guard((h1, h2) -> h1[0].value() instanceof fib && h2[0].value() instanceof Integer
                         && h2[0].equals(((fib) h1[0].value()).a)));
 
-        ConstraintSolver fibonacci = new SimpleSolver(fibRules);
+        ConstraintHandler fibonacci = new SimpleHandler(fibRules);
 
         System.out.println("Fibonacci 42:");
         long start = System.currentTimeMillis();
