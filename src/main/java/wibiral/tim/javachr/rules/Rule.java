@@ -37,10 +37,4 @@ public abstract class Rule {
      * @return True if the guard of the Rule accepts the given {@link Constraint}s.
      */
     public abstract boolean accepts(List<Constraint<?>> constraints);
-
-    @Override
-    public String toString() {
-        return "toString() not implemented for " + this.getClass().getSimpleName() + "!";
-    }
-
 }

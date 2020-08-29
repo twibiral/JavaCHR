@@ -1,8 +1,11 @@
 package wibiral.tim.javachr;
 
 import wibiral.tim.javachr.exceptions.RuleSetIsBlockedException;
+import wibiral.tim.javachr.rules.Propagation;
 import wibiral.tim.javachr.rules.Rule;
+import wibiral.tim.javachr.rules.Simplification;
 
+import java.lang.invoke.StringConcatFactory;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -15,12 +18,7 @@ public class RuleSet {
     private final List<Rule> rules = new LinkedList<>();
     private boolean blocked = false;
 
-    public RuleSet() {    }
-
-    public RuleSet(List<Rule> rules){
-        if(rules != null)
-            this.rules.addAll(rules);
-    }
+    public RuleSet() {  }
 
     public RuleSet(Rule[] rules){
         if(rules.length > 0)
@@ -56,18 +54,33 @@ public class RuleSet {
         return rules.size();
     }
 
+    /**
+     * Package private that it can only be used ConstraintHandlers
+     */
     void block(){
         blocked = true;
     }
 
     @Override
     public String toString() {
-        StringBuilder str = new StringBuilder("Rule set:");
-        for (Rule r : rules){
-            str.append("\n\t").append(r.toString());
-        }
+        int nrOfSimplifications = 0;
+        int nrOfPropagations = 0;
+        int nrOfSimpagations = 0;
 
-        return str.toString();
+        for(Rule rule : rules){
+            if(rule instanceof Simplification)
+                nrOfSimplifications++;
+            else if(rule instanceof Propagation)
+                nrOfPropagations++;
+            else
+                nrOfSimpagations++;
+        }
+         return String.format(
+                 "Simplifications: %d%n" +
+                 "Propagations: %d%n" +
+                 "Simpagations: %d%n"
+                 , nrOfSimplifications, nrOfPropagations, nrOfSimpagations
+         );
     }
 }
 

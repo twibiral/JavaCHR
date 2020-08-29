@@ -22,7 +22,6 @@ public class Propagation extends Rule {
      */
     private final List<List<Constraint<?>>> propagatedConstrains = new ArrayList<>();
 
-
     public Propagation(int nrOfConstraints) {
         super(nrOfConstraints);
     }

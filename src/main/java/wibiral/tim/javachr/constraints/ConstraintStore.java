@@ -134,12 +134,7 @@ public class ConstraintStore {
      * @return True if a constraint that contains the object is already in the ConstraintStore.
      */
     public boolean contains(Object object){
-        for(Constraint<?> c : store){
-            if(c.equals(object))
-                return true;
-        }
-
-        return false;
+        return store.contains(object);
     }
 
     /**

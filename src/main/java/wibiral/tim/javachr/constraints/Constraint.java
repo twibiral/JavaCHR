@@ -1,12 +1,10 @@
 package wibiral.tim.javachr.constraints;
 
 public class Constraint<T> {
-    private T value = null;
+    private final T value;
 
     public Constraint(T value){
-        if(value != null){
-            this.value = value;
-        }
+        this.value = value;
     }
 
     /**
