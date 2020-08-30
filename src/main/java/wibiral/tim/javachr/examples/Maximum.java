@@ -8,11 +8,10 @@ import wibiral.tim.javachr.rules.Simpagation;
 
 public class Maximum {
     public static void main(String[] args) {
-        RuleSet rules = new RuleSet();
-        rules.add(new Simpagation(1, 1)
-                .guard((h1, h2) -> (int) h1[0].value() >= (int) h2[0].value()));
-        ConstraintHandler solver = new SimpleHandler(rules);
-        ConstraintStore result = solver.solve(1, 2, 3, 5);
-        System.out.println(result);
+        Simpagation rule = new Simpagation(1, 1)
+                .guard((h1, h2) -> (int) h1[0].value() >= (int) h2[0].value());
+
+        ConstraintHandler handler = new SimpleHandler(rule);
+        System.out.println(handler.solve(1, 2, 3, 5));
     }
 }
