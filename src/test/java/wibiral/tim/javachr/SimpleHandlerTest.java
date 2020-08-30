@@ -13,11 +13,11 @@ public class SimpleHandlerTest {
 
     @Test
     public void solve() {
-        RuleSet rules = getGCDRules();
-        ConstraintHandler solver = new SimpleHandler(rules);
+        ConstraintHandler solver = getGCDHandler();
         ConstraintStore store;
 
         store = new ConstraintStore(7, 28);
+        System.out.println(store);
         solver.solve(store);
         assertEquals(1, store.size());
         assertTrue(store.contains(7));
@@ -29,9 +29,8 @@ public class SimpleHandlerTest {
 
     @Test
     public void findAssignment() {
-        RuleSet ruleSet = new RuleSet();
-        ruleSet.addRule(new Simplification(1));
-        SimpleHandler solver = new SimpleHandler(ruleSet);
+        SimpleHandler handler = new SimpleHandler();
+        handler.addRule(new Simplification(1));
 
         ConstraintStore store = new ConstraintStore(1, 2, 3, 4);
         Propagation rule1 = new Propagation(1).guard(x -> x[0].type() == Integer.class);
@@ -41,14 +40,14 @@ public class SimpleHandlerTest {
                 x -> (int) x[0].value() == 4 && (int) x[1].value() == 3 && (int) x[2].value() == 2 && (int) x[3].value() == 1
         );
 
-        int[] arr1 = solver.findAssignment(store, rule1, new int[1], 0);
+        int[] arr1 = handler.findAssignment(store, rule1, new int[1], 0);
         assertEquals(0, arr1[0]);
 
-        int[] arr2 = solver.findAssignment(store, rule2, new int[2], 0);
+        int[] arr2 = handler.findAssignment(store, rule2, new int[2], 0);
         assertEquals(3, arr2[0]);
         assertEquals(3, arr2[1]);
 
-        int[] arr3 = solver.findAssignment(store, rule3, new int[4], 0);
+        int[] arr3 = handler.findAssignment(store, rule3, new int[4], 0);
         assertEquals(3, arr3[0]);
         assertEquals(2, arr3[1]);
         assertEquals(1, arr3[2]);
@@ -67,27 +66,26 @@ public class SimpleHandlerTest {
 
     @Test
     public void notAllEqual() {
-        RuleSet ruleSet = new RuleSet();
-        ruleSet.addRule(new Simplification(1));
-        SimpleHandler solver = new SimpleHandler(ruleSet);
+        SimpleHandler handler = new SimpleHandler();
+        handler.addRule(new Simplification(1));
 
         int[] array = new int[]{1, 2, 3, 1, 2};
-        assertFalse(solver.notAllEqual(array));
+        assertFalse(handler.notAllEqual(array));
         array = new int[]{1, 2, 3, 1, 34, 4};
-        assertFalse(solver.notAllEqual(array));
+        assertFalse(handler.notAllEqual(array));
         array = new int[]{2, 3, 1, 2};
-        assertFalse(solver.notAllEqual(array));
+        assertFalse(handler.notAllEqual(array));
 
         array = new int[]{1, 2, 3, 5, 36};
-        assertTrue(solver.notAllEqual(array));
+        assertTrue(handler.notAllEqual(array));
         array = new int[]{1};
-        assertTrue(solver.notAllEqual(array));
+        assertTrue(handler.notAllEqual(array));
     }
 
 
-    RuleSet getGCDRules(){
-        RuleSet ruleSet = new RuleSet();
-        ruleSet.addRule(new Simpagation(1, 1).guard(
+    ConstraintHandler getGCDHandler(){
+        ConstraintHandler gcdHandler = new SimpleHandler();
+        gcdHandler.addRule(new Simpagation(1, 1).guard(
                 (h1, h2) ->
                         // h1[0].value() instanceof Integer && h2[0].value() instanceof Integer &&
                         // Not necessary if you can be sure that all Constraints are Integers.
@@ -99,7 +97,7 @@ public class SimpleHandlerTest {
                     newConstraints.add(new Constraint<>(m - n));
                 }
         ));
-        ruleSet.addRule(new Simplification(1)
+        gcdHandler.addRule(new Simplification(1)
                 .guard(
                         x ->
                                 // Not necessary if you can be sure that all Constraints are Integers.
@@ -111,6 +109,6 @@ public class SimpleHandlerTest {
                 )
         );
 
-        return ruleSet;
+        return gcdHandler;
     }
 }
