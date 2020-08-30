@@ -13,7 +13,7 @@ import wibiral.tim.javachr.rules.Simplification;
  */
 public class FastGCD {
     public static void main(String[] args) {
-        // Define rules to find the greatest common divisor:
+        // SimpleHandler is a naive implementation to apply some rules to some Constraints:
         ConstraintHandler gcdHandler = new SimpleHandler();
         gcdHandler.addRule(new Simpagation(1, 1).guard(
                 (h1, h2) ->
@@ -35,7 +35,6 @@ public class FastGCD {
                         (int) x[0].value() == 0
                 ));
 
-        // SimpleHandler is a naive implementation to apply some rules to some Constraints:
         ConstraintStore result;
         long start, end;
 
