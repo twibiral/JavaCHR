@@ -15,8 +15,6 @@ import java.util.LinkedList;
 public abstract class ConstraintHandler {
     protected final LinkedList<Rule> rules = new LinkedList<>();
 
-    private static final String ERROR_MESSAGE = "The set of rules must contain at least one rule!";
-
     public ConstraintHandler(Rule rule){
         if(rule == null) throw new NullPointerException("Rule can't be null!");
 
