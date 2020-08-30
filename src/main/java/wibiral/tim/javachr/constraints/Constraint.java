@@ -42,11 +42,6 @@ public class Constraint<T> {
     }
 
     @Override
-    public int hashCode() {
-        return super.hashCode();
-    }
-
-    @Override
     public String toString() {
         return  "Constraint<" + value.getClass().getSimpleName() + ">, Value: " + value;
     }
