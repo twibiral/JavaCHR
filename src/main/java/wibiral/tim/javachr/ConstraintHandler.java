@@ -2,7 +2,6 @@ package wibiral.tim.javachr;
 
 import wibiral.tim.javachr.constraints.Constraint;
 import wibiral.tim.javachr.constraints.ConstraintStore;
-import wibiral.tim.javachr.exceptions.EmptyRuleSetException;
 import wibiral.tim.javachr.rules.Propagation;
 import wibiral.tim.javachr.rules.Rule;
 import wibiral.tim.javachr.rules.Simplification;
@@ -58,6 +57,15 @@ public abstract class ConstraintHandler {
      */
     public boolean isEmpty(){
         return rules.isEmpty();
+    }
+
+    /**
+     * Adds a rule to the constraint handler.
+     * @param rule The rule to add.
+     * @return True if successfully added.
+     */
+    public boolean addRule(Rule rule){
+        return rules.add(rule);
     }
 
     @Override
