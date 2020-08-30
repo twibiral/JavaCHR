@@ -5,7 +5,6 @@ import wibiral.tim.javachr.rules.Propagation;
 import wibiral.tim.javachr.rules.Rule;
 import wibiral.tim.javachr.rules.Simplification;
 
-import java.lang.invoke.StringConcatFactory;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;

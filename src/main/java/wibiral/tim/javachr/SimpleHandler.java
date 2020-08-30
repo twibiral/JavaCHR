@@ -16,23 +16,38 @@ public class SimpleHandler extends ConstraintHandler {
 
     private final List<Integer> headerSizes = new ArrayList<>();
 
-    public SimpleHandler(RuleSet rules) {
+    public SimpleHandler(Rule... rules) {
         super(rules);
-        ruleHash = new HashMap<>(3 * rules.size());
+        ruleHash = instantiateRuleHash();
+    }
 
-        for (int i = 0; i < rules.size(); i++) {
-            Rule rule = rules.get(i);
+    public SimpleHandler(Rule rule) {
+        super(rule);
+        ruleHash = instantiateRuleHash();
+    }
+
+    public SimpleHandler() {
+        super();
+        ruleHash = instantiateRuleHash();
+    }
+
+    private HashMap<Integer, List<Rule>> instantiateRuleHash(){
+        final HashMap<Integer, List<Rule>> temp = new HashMap<>(3 * rules.size());
+
+        for (Rule rule : rules) {
             int headerSize = rule.headSize();
-            if (ruleHash.containsKey(headerSize)) {
-                ruleHash.get(headerSize).add(rule);
+            if (temp.containsKey(headerSize)) {
+                temp.get(headerSize).add(rule);
 
             } else {
                 List<Rule> ruleList = new ArrayList<>();
                 ruleList.add(rule);
-                ruleHash.put(headerSize, ruleList);
+                temp.put(headerSize, ruleList);
                 headerSizes.add(headerSize);
             }
         }
+
+        return temp;
     }
 
     @Override

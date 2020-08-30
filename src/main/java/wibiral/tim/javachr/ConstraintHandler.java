@@ -3,29 +3,32 @@ package wibiral.tim.javachr;
 import wibiral.tim.javachr.constraints.Constraint;
 import wibiral.tim.javachr.constraints.ConstraintStore;
 import wibiral.tim.javachr.exceptions.EmptyRuleSetException;
+import wibiral.tim.javachr.rules.Propagation;
 import wibiral.tim.javachr.rules.Rule;
+import wibiral.tim.javachr.rules.Simplification;
+
+import java.util.Collections;
+import java.util.LinkedList;
 
 /**
  * Is used to apply rules to the Constraints.
  */
 public abstract class ConstraintHandler {
-    protected final RuleSet rules;
+    protected final LinkedList<Rule> rules = new LinkedList<>();
 
     private static final String ERROR_MESSAGE = "The set of rules must contain at least one rule!";
 
-    public ConstraintHandler(RuleSet rules){
-        if(rules.isEmpty()) throw new EmptyRuleSetException(ERROR_MESSAGE);
+    public ConstraintHandler(Rule rule){
+        if(rule == null) throw new NullPointerException("Rule can't be null!");
 
-        this.rules = rules;
-        this.rules.block();
+        this.rules.add(rule);
     }
 
     public ConstraintHandler(Rule... rules){
-        if(rules.length < 1) throw new EmptyRuleSetException(ERROR_MESSAGE);
-
-        this.rules = new RuleSet(rules);
-        this.rules.block();
+        Collections.addAll(this.rules, rules);
     }
+
+    public ConstraintHandler() { /* nothing to do */ }
 
     /**
      * Applies the given rules to the given constraints.
@@ -48,5 +51,34 @@ public abstract class ConstraintHandler {
         }
 
         return solve(store);
+    }
+
+    /**
+     * @return true if no rules are set for this handler, otherwise false.
+     */
+    public boolean isEmpty(){
+        return rules.isEmpty();
+    }
+
+    @Override
+    public String toString() {
+        int nrOfSimplifications = 0;
+        int nrOfPropagations = 0;
+        int nrOfSimpagations = 0;
+
+        for(Rule rule : rules){
+            if(rule instanceof Simplification)
+                nrOfSimplifications++;
+            else if(rule instanceof Propagation)
+                nrOfPropagations++;
+            else
+                nrOfSimpagations++;
+        }
+        return String.format(
+                "Simplifications: %d%n" +
+                        "Propagations: %d%n" +
+                        "Simpagations: %d%n"
+                , nrOfSimplifications, nrOfPropagations, nrOfSimpagations
+        );
     }
 }
