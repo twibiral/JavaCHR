@@ -51,6 +51,22 @@ public class SimpleHandler extends ConstraintHandler {
     }
 
     @Override
+    public boolean addRule(Rule rule) {
+        int headerSize = rule.headSize();
+        if (ruleHash.containsKey(headerSize)) {
+            ruleHash.get(headerSize).add(rule);
+
+        } else {
+            List<Rule> ruleList = new ArrayList<>();
+            ruleList.add(rule);
+            ruleHash.put(headerSize, ruleList);
+            headerSizes.add(headerSize);
+        }
+
+        return rules.add(rule);
+    }
+
+    @Override
     public ConstraintStore solve(ConstraintStore store) {
         boolean ruleApplied = true;
         while (ruleApplied) {
