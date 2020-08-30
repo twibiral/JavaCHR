@@ -1,7 +1,6 @@
 package wibiral.tim.javachr.examples;
 
 import wibiral.tim.javachr.ConstraintHandler;
-import wibiral.tim.javachr.RuleSet;
 import wibiral.tim.javachr.SimpleHandler;
 import wibiral.tim.javachr.constraints.Constraint;
 import wibiral.tim.javachr.rules.Propagation;
@@ -30,8 +29,8 @@ public class Fibonacci {
     }
 
     public static void main(String[] args) {
-        RuleSet fibRules = new RuleSet();
-        fibRules.add(new Propagation(1)  // MAX => fib(0, 1), fib(1, 1).
+        ConstraintHandler fibHandler = new SimpleHandler();
+        fibHandler.addRule(new Propagation(1)  // MAX => fib(0, 1), fib(1, 1).
                 .guard(x -> x[0].value() instanceof Integer)
                 .body((oldC, newC) -> {
                     newC.add(new Constraint<>(new fib(0, 1)));
@@ -39,7 +38,7 @@ public class Fibonacci {
                 })
         );
 
-        fibRules.add(new Propagation(3)
+        fibHandler.addRule(new Propagation(3)
                 // MAX, fib(N1, M1), fib(N2, M2) =>  N1 == N2 - 1 | fib(N2 + 1, M1 + M2).
                 .guard(x -> x[0].value() instanceof Integer && x[1].value() instanceof fib && x[2].value() instanceof fib
                             && ((fib) x[1].value()).a == ((fib) x[2].value()).a - 1
@@ -52,15 +51,13 @@ public class Fibonacci {
                 })
         );
 
-        fibRules.add(new Simpagation(1, 1)
+        fibHandler.addRule(new Simpagation(1, 1)
                 .guard((h1, h2) -> h1[0].value() instanceof fib && h2[0].value() instanceof Integer
                         && h2[0].equals(((fib) h1[0].value()).a)));
 
-        ConstraintHandler fibonacci = new SimpleHandler(fibRules);
-
         System.out.println("Fibonacci 42:");
         long start = System.currentTimeMillis();
-        System.out.println(fibonacci.solve(42));
+        System.out.println(fibHandler.solve(42));
         long end = System.currentTimeMillis();
         System.out.println("Duration: " + (end - start) + "ms");
     }

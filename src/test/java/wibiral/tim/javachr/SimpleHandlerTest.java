@@ -30,7 +30,7 @@ public class SimpleHandlerTest {
     @Test
     public void findAssignment() {
         RuleSet ruleSet = new RuleSet();
-        ruleSet.add(new Simplification(1));
+        ruleSet.addRule(new Simplification(1));
         SimpleHandler solver = new SimpleHandler(ruleSet);
 
         ConstraintStore store = new ConstraintStore(1, 2, 3, 4);
@@ -68,7 +68,7 @@ public class SimpleHandlerTest {
     @Test
     public void notAllEqual() {
         RuleSet ruleSet = new RuleSet();
-        ruleSet.add(new Simplification(1));
+        ruleSet.addRule(new Simplification(1));
         SimpleHandler solver = new SimpleHandler(ruleSet);
 
         int[] array = new int[]{1, 2, 3, 1, 2};
@@ -87,7 +87,7 @@ public class SimpleHandlerTest {
 
     RuleSet getGCDRules(){
         RuleSet ruleSet = new RuleSet();
-        ruleSet.add(new Simpagation(1, 1).guard(
+        ruleSet.addRule(new Simpagation(1, 1).guard(
                 (h1, h2) ->
                         // h1[0].value() instanceof Integer && h2[0].value() instanceof Integer &&
                         // Not necessary if you can be sure that all Constraints are Integers.
@@ -99,7 +99,7 @@ public class SimpleHandlerTest {
                     newConstraints.add(new Constraint<>(m - n));
                 }
         ));
-        ruleSet.add(new Simplification(1)
+        ruleSet.addRule(new Simplification(1)
                 .guard(
                         x ->
                                 // Not necessary if you can be sure that all Constraints are Integers.

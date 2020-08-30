@@ -41,7 +41,7 @@ public class RuleSet {
      * @param rule The rule to add.
      * @return true if added successful, otherwise false.
      */
-    public boolean add(Rule rule){
+    public boolean addRule(Rule rule){
         if(blocked) throw new RuleSetIsBlockedException("Can't add new Rules after instantiating a solver!");
         return rules.add(rule);
     }

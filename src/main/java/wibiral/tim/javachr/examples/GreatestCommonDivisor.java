@@ -12,7 +12,7 @@ public class GreatestCommonDivisor {
     public static void main(String[] args) {
         // Define rules to find the greatest common divisor:
         RuleSet ruleSet = new RuleSet();
-        ruleSet.add(new Simpagation(1, 1).guard(
+        ruleSet.addRule(new Simpagation(1, 1).guard(
                 (h1, h2) ->
                         // h1[0].value() instanceof Integer && h2[0].value() instanceof Integer &&
                         // Not necessary if you can be sure that all Constraints are Integers.
@@ -24,7 +24,7 @@ public class GreatestCommonDivisor {
                     newConstraints.add(new Constraint<>(m - n));
                 }
         ));
-        ruleSet.add(new Simplification(1)
+        ruleSet.addRule(new Simplification(1)
                 .guard(
                 x ->
                         // Not necessary if you can be sure that all Constraints are Integers.
