@@ -23,6 +23,12 @@ public class Simpagation extends Rule {
         this.nrConstraintsHead2 = nrConstraintsHead2;
     }
 
+    public Simpagation(int nrConstraintsHead1, int nrConstraintsHead2, String name) {
+        super(nrConstraintsHead1 + nrConstraintsHead2, name);
+        this.nrConstraintsHead1 = nrConstraintsHead1;
+        this.nrConstraintsHead2 = nrConstraintsHead2;
+    }
+
     @Override
     public boolean apply(ConstraintStore store) {
         if(store.size() != headSize())

@@ -7,13 +7,24 @@ import java.util.List;
 
 public abstract class Rule {
     protected final int nrConstraintsInHead;
+    protected final String name;
 
     public Rule(int nrConstraintsInHead){
         this.nrConstraintsInHead = nrConstraintsInHead;
+        name = null;
+    }
+
+    public Rule(int nrConstraintsInHead, String name){
+        this.nrConstraintsInHead = nrConstraintsInHead;
+        this.name = name;
     }
 
     public int headSize(){
         return nrConstraintsInHead;
+    }
+
+    public String name(){
+        return name;
     }
 
     /**

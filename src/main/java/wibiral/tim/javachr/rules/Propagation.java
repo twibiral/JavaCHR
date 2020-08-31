@@ -26,6 +26,10 @@ public class Propagation extends Rule {
         super(nrOfConstraints);
     }
 
+    public Propagation(int nrOfConstraints, String name) {
+        super(nrOfConstraints, name);
+    }
+
     @Override
     public boolean apply(ConstraintStore store) {
         if(store.size() != headSize())

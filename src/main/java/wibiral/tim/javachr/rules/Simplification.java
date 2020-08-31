@@ -18,6 +18,10 @@ public class Simplification extends Rule {
         super(nrConstraintsInHead);
     }
 
+    public Simplification(int nrConstraintsInHead, String name) {
+        super(nrConstraintsInHead, name);
+    }
+
     @Override
     public boolean apply(ConstraintStore store) {
         if(store.size() != headSize())
