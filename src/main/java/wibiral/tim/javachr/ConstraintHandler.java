@@ -28,6 +28,12 @@ public abstract class ConstraintHandler {
     public ConstraintHandler() { /* nothing to do */ }
 
     /**
+     * Switch to turn tracing on and of.
+     * @return True if tracing is on after calling this method, false if not.
+     */
+    public abstract boolean trace();
+
+    /**
      * Applies the given rules to the given constraints.
      * The computation of the solution happens in-place.
      * @param store A {@link ConstraintStore} with the constraints of the problem set.

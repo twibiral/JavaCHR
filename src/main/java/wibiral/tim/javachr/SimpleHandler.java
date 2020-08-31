@@ -3,6 +3,8 @@ package wibiral.tim.javachr;
 import wibiral.tim.javachr.constraints.Constraint;
 import wibiral.tim.javachr.constraints.ConstraintStore;
 import wibiral.tim.javachr.rules.Rule;
+import wibiral.tim.javachr.tracing.CommandLineTracer;
+import wibiral.tim.javachr.tracing.Tracer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,8 +15,10 @@ public class SimpleHandler extends ConstraintHandler {
      * Contains for all header the rules have a List with all rules with that specific header size.
      */
     private final HashMap<Integer, List<Rule>> ruleHash;
-
     private final List<Integer> headerSizes = new ArrayList<>();
+
+    private Tracer tracer;
+    private boolean tracingOn = false;
 
     public SimpleHandler(Rule... rules) {
         super(rules);
@@ -29,6 +33,13 @@ public class SimpleHandler extends ConstraintHandler {
     public SimpleHandler() {
         super();
         ruleHash = instantiateRuleHash();
+    }
+
+    @Override
+    public boolean trace() {
+        tracingOn = !tracingOn;
+        tracer = tracer == null ? new CommandLineTracer() : tracer;
+        return tracingOn;
     }
 
     private HashMap<Integer, List<Rule>> instantiateRuleHash(){
@@ -68,6 +79,9 @@ public class SimpleHandler extends ConstraintHandler {
 
     @Override
     public ConstraintStore solve(ConstraintStore store) {
+        if(tracingOn)
+            tracer.startMessage(store);
+
         boolean ruleApplied = true;
         while (ruleApplied) {
             ruleApplied = false;
@@ -86,9 +100,17 @@ public class SimpleHandler extends ConstraintHandler {
                         }
 
                         if(rule.accepts(temp)){
+                            Constraint<?>[] before = tracingOn ? temp.getAll().toArray(new Constraint<?>[0]) : null;
+
                             store.removeAll(selectedIdx);
                             ruleApplied = rule.apply(temp);
                             store.addAll(temp);
+
+                            Constraint<?>[] after = tracingOn ? temp.getAll().toArray(new Constraint<?>[0]) : null;
+                            if(tracingOn && !tracer.step(rule, before, after)){
+                                tracer.stopMessage(store);
+                                return store;
+                            }
                         }
                     }
 
@@ -96,6 +118,10 @@ public class SimpleHandler extends ConstraintHandler {
             }
 
         }
+
+        if (tracingOn)
+            tracer.terminatedMessage(store);
+
         return store;
     }
 
