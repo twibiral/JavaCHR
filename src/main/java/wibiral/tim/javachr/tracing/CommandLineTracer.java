@@ -15,11 +15,13 @@ public class CommandLineTracer extends Tracer {
 
     @Override
     public boolean step(Rule appliedRule, Constraint<?>[] oldConstraints, Constraint<?>[] addedConstraints) {
-        String name = appliedRule.name() == null ? appliedRule.getClass().getSimpleName() : appliedRule.name();
+        String name = appliedRule.name() == null ? appliedRule.getClass().getSimpleName() : "'" + appliedRule.name() + "'";
         String output = "Apply rule " + name + "\n" +
-                        "to: " + constraintsToString(oldConstraints) + "\n" +
+                        "on: " + constraintsToString(oldConstraints) + "\n" +
                         "generated: " + constraintsToString(addedConstraints);
         print(output);
+
+        System.out.flush();
 
         String input = readLine();
         switch (input.toLowerCase()){
@@ -72,6 +74,9 @@ public class CommandLineTracer extends Tracer {
     }
 
     private String constraintsToString(Constraint<?>[] constraints){
+        if(constraints.length == 0)
+            return "--";
+
         StringBuilder str = new StringBuilder();
         for (int i = 0; i < constraints.length - 1; i++) {
             str.append(constraints[i].type().getSimpleName()).append(": ")

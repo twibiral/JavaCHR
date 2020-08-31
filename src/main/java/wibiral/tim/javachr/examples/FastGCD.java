@@ -15,7 +15,9 @@ public class FastGCD {
     public static void main(String[] args) {
         // SimpleHandler is a naive implementation to apply some rules to some Constraints:
         ConstraintHandler gcdHandler = new SimpleHandler();
-        gcdHandler.addRule(new Simpagation(1, 1).guard(
+//        gcdHandler.trace();   // use to trace execution
+
+        gcdHandler.addRule(new Simpagation(1, 1, "m % n").guard(
                 (h1, h2) ->
                         // h1[0].value() instanceof Integer && h2[0].value() instanceof Integer &&
                         // Not necessary if you can be sure that all Constraints are Integers.
@@ -27,7 +29,7 @@ public class FastGCD {
                     newConstraints.add(new Constraint<>(m % n));
                 }
         ));
-        gcdHandler.addRule(new Simplification(1)
+        gcdHandler.addRule(new Simplification(1, "Delete zero")
                 .guard(
                 x ->
                         // Not necessary if you can be sure that all Constraints are Integers.
