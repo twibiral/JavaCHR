@@ -18,6 +18,7 @@ public class ColorMixing {
 
     public static void main(String[] args) {
         ConstraintHandler colorHandler = getConstraintHandler();
+//        colorHandler.trace(); // Use to see the process of the rule application
 
         color redAndBlue = (color) colorHandler.solve(color.red, color.blue).get(0).value();
         System.out.println("red and blue is " + redAndBlue.toString());
