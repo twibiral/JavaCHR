@@ -74,11 +74,11 @@ public class CommandLineTracer extends Tracer {
     private String constraintsToString(Constraint<?>[] constraints){
         StringBuilder str = new StringBuilder();
         for (int i = 0; i < constraints.length - 1; i++) {
-            str.append(constraints[i].getClass().getSimpleName()).append(": ")
+            str.append(constraints[i].type().getSimpleName()).append(": ")
                     .append(constraints[i].value()).append(", ");
         }
 
-        str.append(constraints[constraints.length-1].getClass().getSimpleName()).append(": ")
+        str.append(constraints[constraints.length-1].type().getSimpleName()).append(": ")
                 .append(constraints[constraints.length-1].value());
 
         return str.toString();

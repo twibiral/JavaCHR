@@ -1,7 +1,7 @@
 # JavaCHR
 Object-oriented implementation of Constraint Handling Rules in Java.
 
-The [JavaDoc](docs/index.html) can be found here and a short introduction follows below.
+Here you find the [JavaDoc](docs/index.html) and a short introduction follows below.
 
 ### Constraint Handling Rules (CHR)
 CHR was created by Thom Frühwirth in 1991 and consists of constraints and rules that are applied to them. There are 3 types of rules:
@@ -11,7 +11,7 @@ CHR was created by Thom Frühwirth in 1991 and consists of constraints and rules
 - Simpagation: Head1 \ Head2 <=> \[Guard | \] Body.
 
 Head and body can each consist of several constraints. The Guard is the admission requirement for the constraints from the Head.
-The constraints from the body are added to the existing set of constraints. During the simplification the complete head is removed. With the Simplification only the Head2. During propagation the constraints of the head remain in the original set. 
+The constraints from the body get added to the existing set of constraints. A Simplification removes the complete head. The Simpagation removes only Head2 and Propagation keeps the constraints of the Head in the original set. 
 More information about CHR can be found in [Wikipedia](https://en.wikipedia.org/wiki/Constraint_Handling_Rules), in the [Prolog documentation](https://www.swi-prolog.org/man/chr.html) and in this [introduction](https://www.informatik.uni-ulm.de/pm/fileadmin/pm/home/fruehwirth/Papers/chr-lnai08.pdf).
 
 ### JavaCHR
@@ -22,9 +22,8 @@ With Java the CHR rules can not be just used for primitive data types but also f
 
 ## How to use
 
-
-### ConstraintSolver
-An algorithm that applies ``Rule``'s to a set of ``Constraint``'s. Takes a ``RuleSet`` or some ``Rules``'s as varargs.
+### ConstraintHandler
+An algorithm that applies ``Rule``'s to a set of ``Constraint``'s. Takes some ``Rules``'s as varargs.
 
 ### Rule
 Rule consist of guard and body, the number of constraints in the head(s) is specified in the constructor.
@@ -60,15 +59,13 @@ Rule rule2 = new Simpagation(1 /* n constraints in head1 */, 1 /* n constraints 
         });
 ```
 
-Now we can add this constraints to a RuleSet and give the RuleSet to a ConstraintSolver:
+Now we can create a ConstraintHandler with the rules:
 ````java
-RuleSet rules = new RuleSet(rule1, rule2);
-ConstraintSolver solver = new SimpleSolver(rules);  // SimpleSolver is the basic single threaded solver.
+ConstraintHandler handler = new SimpleHandler(rule1, rule2);  // SimpleHandler is the basic single threaded handler.
 ````
-It's also possible to add the Rules with `rules.add(rule)` to an existing RuleSet or give them directly to the 
-ConstraintSolver: `new SimpleSolver(rule1, rule2)`. An arbitrary number of rules can be used.   
+It's also possible to add the Rules with `handler.add(rule)` to an existing ConstraintHandler. An arbitrary number of rules can be used.   
 
-Now let's compute the greatest common divisor from a set of numbers. `ConstraintSolver.solve()` can take 
+Now let's compute the greatest common divisor from a set of numbers. `ConstraintHandler.solve()` can take 
 a ``ConstraintStore`` that contains some ``Constraint``s or directly an array of generic type ``T`` as varargs:
 ````java
 ConstraintStore store = new ConstraintStore();
@@ -77,16 +74,16 @@ store.add(new Constraint<>(1337));
 // ...
 store.add(new Constraint<>(8080));
 
-ConstraintStore result = solver.solve(store);
+ConstraintStore result = handler.solve(store);
 System.out.println(result);
 ````
 or
 ````java
-ConstraintStore result = solver.solve(42, 1337, 8080 /* , ... */);
+ConstraintStore result = handler.solve(42, 1337, 8080 /* , ... */);
 System.out.println(result);
 ````
 
-``solver.solve()`` returns a ``ConstraintStore`` that contains all ``Constraint``s that are in the result.
+``handler.solve()`` returns a ``ConstraintStore`` that contains all ``Constraint``s that are in the result.
 
 More examples can be found in the [examples package](/src/main/java/wibiral/tim/javachr/examples) and in the [tests](/src/test/java/wibiral/tim/javachr/).
 
