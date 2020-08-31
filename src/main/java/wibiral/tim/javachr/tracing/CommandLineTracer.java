@@ -10,6 +10,8 @@ import java.io.InputStreamReader;
 
 public class CommandLineTracer extends Tracer {
     private final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+    public static final String ANSI_BLUE = "\u001B[34m";
+    public static final String ANSI_RESET = "\u001B[0m";
 
     @Override
     public boolean step(Rule appliedRule, Constraint<?>[] oldConstraints, Constraint<?>[] addedConstraints) {
@@ -17,17 +19,20 @@ public class CommandLineTracer extends Tracer {
         String output = "Apply rule " + name + "\n" +
                         "to: " + constraintsToString(oldConstraints) + "\n" +
                         "generated: " + constraintsToString(addedConstraints);
-        System.out.println(output);
+        print(output);
 
         String input = readLine();
         switch (input.toLowerCase()){
             case "":
+            case ".":
                 return true;
+
             case "stop":
             case "!":
                 return false;
+
             default:
-                System.out.println("Wrong input!");
+                print("Wrong input!");
         }
 
         return true;
@@ -35,19 +40,23 @@ public class CommandLineTracer extends Tracer {
 
     @Override
     public void startMessage(ConstraintStore store) {
-        System.out.println("\n=== Executing handler ===");
-        System.out.println("Constraints: " + store.toString());
+        print("\n=== Executing handler ===");
+        print("Constraints: " + constraintsToString(store.getAll().toArray(new Constraint<?>[0])) + "\n");
     }
 
     @Override
     public void stopMessage(ConstraintStore store) {
-        System.out.println("=== Stopping execution... ===\n");
+        print("=== Stopping execution... ===\n");
     }
 
     @Override
     public void terminatedMessage(ConstraintStore store) {
-        System.out.println("Constraints after execution: " + store.toString());
-        System.out.println("=== Terminating handler ===");
+        print("Constraints after execution: " + constraintsToString(store.getAll().toArray(new Constraint<?>[0])));
+        print("=== Terminating handler ===\n");
+    }
+
+    private void print(String toPrint){
+        System.out.println(ANSI_BLUE + toPrint + ANSI_RESET);
     }
 
     private String readLine(){
@@ -65,10 +74,12 @@ public class CommandLineTracer extends Tracer {
     private String constraintsToString(Constraint<?>[] constraints){
         StringBuilder str = new StringBuilder();
         for (int i = 0; i < constraints.length - 1; i++) {
-            str.append(constraints[i]).append(", ");
+            str.append(constraints[i].getClass().getSimpleName()).append(": ")
+                    .append(constraints[i].value()).append(", ");
         }
 
-        str.append(constraints[constraints.length - 1]);
+        str.append(constraints[constraints.length-1].getClass().getSimpleName()).append(": ")
+                .append(constraints[constraints.length-1].value());
 
         return str.toString();
     }
