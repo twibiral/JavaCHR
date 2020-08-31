@@ -1,6 +1,7 @@
 package wibiral.tim.javachr.tracing;
 
 import wibiral.tim.javachr.constraints.Constraint;
+import wibiral.tim.javachr.constraints.ConstraintStore;
 import wibiral.tim.javachr.rules.Rule;
 
 import java.io.BufferedReader;
@@ -30,6 +31,23 @@ public class CommandLineTracer extends Tracer {
         }
 
         return true;
+    }
+
+    @Override
+    public void startMessage(ConstraintStore store) {
+        System.out.println("\n=== Executing handler ===");
+        System.out.println("Constraints: " + store.toString());
+    }
+
+    @Override
+    public void stopMessage(ConstraintStore store) {
+        System.out.println("=== Stopping execution... ===\n");
+    }
+
+    @Override
+    public void terminatedMessage(ConstraintStore store) {
+        System.out.println("Constraints after execution: " + store.toString());
+        System.out.println("=== Terminating handler ===");
     }
 
     private String readLine(){

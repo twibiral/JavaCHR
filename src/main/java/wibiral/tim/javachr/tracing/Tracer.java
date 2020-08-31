@@ -1,6 +1,7 @@
 package wibiral.tim.javachr.tracing;
 
 import wibiral.tim.javachr.constraints.Constraint;
+import wibiral.tim.javachr.constraints.ConstraintStore;
 import wibiral.tim.javachr.rules.Rule;
 
 /**
@@ -17,4 +18,10 @@ public abstract class Tracer {
      * @return False if execution should be stopped, true if Handler should execute next step.
      */
     public abstract boolean step(Rule appliedRule, Constraint<?>[] oldConstraints, Constraint<?>[] addedConstraints);
+
+    public abstract void startMessage(ConstraintStore store);
+
+    public abstract void stopMessage(ConstraintStore store);
+
+    public abstract void terminatedMessage(ConstraintStore store);
 }
