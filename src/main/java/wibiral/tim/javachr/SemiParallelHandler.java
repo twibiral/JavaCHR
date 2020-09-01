@@ -39,6 +39,13 @@ public class SemiParallelHandler extends ConstraintHandler {
         pool = new ThreadPool(workerThreads);
     }
 
+    /**
+     * Kills the threads of the Handler. This is necessary because they are still waiting for the next call to solve()
+     */
+    public void kill(){
+        pool.kill();
+    }
+
     @Override
     public boolean trace() {
         tracingOn = !tracingOn;
@@ -86,10 +93,9 @@ public class SemiParallelHandler extends ConstraintHandler {
         if(tracingOn)
             tracer.startMessage(store);
 
-
         boolean ruleApplied;
         int cnt = 0;
-        while(cnt < 2){
+        while(cnt < 2 && !pool.isTerminated()){
             ruleApplied = true;
 
             while (ruleApplied) {
@@ -108,6 +114,8 @@ public class SemiParallelHandler extends ConstraintHandler {
                 cnt = 0;
             else
                 cnt++;
+
+            System.out.println(cnt);
         }
 
         while(!pool.isTerminated());
