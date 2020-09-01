@@ -55,6 +55,9 @@ class ThreadPool {
     }
 
     void kill(){
+        for(Semaphore semaphore : semaphores)
+            semaphore.release();
+
         for (Worker worker : workers)
             worker.kill();
     }
