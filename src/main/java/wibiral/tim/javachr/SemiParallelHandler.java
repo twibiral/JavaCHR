@@ -10,29 +10,33 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class SimpleHandler extends ConstraintHandler {
+public class SemiParallelHandler extends ConstraintHandler {
     /**
      * Contains for all header the rules have a List with all rules with that specific header size.
      */
     private final HashMap<Integer, List<Rule>> ruleHash;
     private final List<Integer> headerSizes = new ArrayList<>();
+    private final ThreadPool pool;
 
     private Tracer tracer;
     private boolean tracingOn = false;
 
-    public SimpleHandler(Rule... rules) {
+    public SemiParallelHandler(int workerThreads, Rule... rules) {
         super(rules);
         ruleHash = instantiateRuleHash();
+        pool = new ThreadPool(workerThreads);
     }
 
-    public SimpleHandler(Rule rule) {
+    public SemiParallelHandler(int workerThreads, Rule rule) {
         super(rule);
         ruleHash = instantiateRuleHash();
+        pool = new ThreadPool(workerThreads);
     }
 
-    public SimpleHandler() {
+    public SemiParallelHandler(int workerThreads) {
         super();
         ruleHash = instantiateRuleHash();
+        pool = new ThreadPool(workerThreads);
     }
 
     @Override
@@ -82,46 +86,69 @@ public class SimpleHandler extends ConstraintHandler {
         if(tracingOn)
             tracer.startMessage(store);
 
-        boolean ruleApplied = true;
-        while (ruleApplied) {
-            ruleApplied = false;
 
-            for (int size : headerSizes) {
-                if(size <= store.size()){
-                    List<Rule> sameHeaderRules = ruleHash.get(size);
+        boolean ruleApplied;
+        int cnt = 0;
+        while(cnt < 2){
+            ruleApplied = true;
 
-                    for (Rule rule : sameHeaderRules) {
-                        int[] selectedIdx = findAssignment(store, rule, new int[size], 0);
+            while (ruleApplied) {
+                ruleApplied = false;
 
-                        ConstraintStore temp = new ConstraintStore();
-                        for (int i : selectedIdx) {
-                            temp.add(store.get(i));
-                        }
+                for (int size : headerSizes) {
+                    if(size <= store.size()){
+                        List<Rule> sameHeaderRules = ruleHash.get(size);
 
-                        if(rule.accepts(temp)){
-                            Constraint<?>[] before = tracingOn ? temp.getAll().toArray(new Constraint<?>[0]) : null;
-
-                            store.removeAll(selectedIdx);
-                            ruleApplied = rule.apply(temp);
-                            store.addAll(temp);
-
-                            Constraint<?>[] after = tracingOn ? temp.getAll().toArray(new Constraint<?>[0]) : null;
-                            if(tracingOn && !tracer.step(rule, before, after)){
-                                tracer.stopMessage(store);
-                                return store;
-                            }
-                        }
+                        ruleApplied = applyRule(size, sameHeaderRules, store);
                     }
-
                 }
             }
 
+            if(!pool.isTerminated())
+                cnt = 0;
+            else
+                cnt++;
         }
+
+        while(!pool.isTerminated());
 
         if (tracingOn)
             tracer.terminatedMessage(store);
 
         return store;
+    }
+
+    private boolean applyRule(int size, List<Rule> sameHeaderRules, ConstraintStore store){
+        boolean ruleApplied = false;
+
+        for (Rule rule : sameHeaderRules) {
+            int[] selectedIdx = findAssignment(store, rule, new int[size], 0);
+
+            ConstraintStore temp = new ConstraintStore();
+            for (int i : selectedIdx) {
+                temp.add(store.get(i));
+            }
+
+            if(rule.accepts(temp)){
+//              Constraint<?>[] before = tracingOn ? temp.getAll().toArray(new Constraint<?>[0]) : null;
+
+                ruleApplied = true;
+                store.removeAll(selectedIdx);
+
+                pool.execute(() -> {
+                    rule.apply(temp);
+                    store.addAll(temp);
+                });
+
+//              Constraint<?>[] after = tracingOn ? temp.getAll().toArray(new Constraint<?>[0]) : null;
+//              if(tracingOn && !tracer.step(rule, before, after)){
+//                  tracer.stopMessage(store);
+//                  return store;
+//              }
+            }
+        }
+
+        return ruleApplied;
     }
 
     protected int[] findAssignment(ConstraintStore store, Rule rule, int[] selectedIdx, int pos) {
