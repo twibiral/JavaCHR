@@ -3,7 +3,6 @@ package wibiral.tim.javachr;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.ReentrantLock;
 
 class Worker implements Runnable {
     private final BlockingQueue<Runnable> pending;
