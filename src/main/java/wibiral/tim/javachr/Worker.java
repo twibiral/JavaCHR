@@ -41,7 +41,14 @@ class Worker implements Runnable {
     @Override
     public void run() {
         while(!dead){
-            lock.lock();
+            try {
+                lock.lockInterruptibly();
+
+            } catch (InterruptedException e) {
+                // Interrupted when pool shuts down while waiting for lock.
+                // Worker is dead -> stops execution after continue.
+                continue;
+            }
 
             if(!pending.isEmpty()){
                 try {

@@ -4,11 +4,13 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 class ThreadPool {
+    private final Thread[] threads;
+
     private final Worker[] workers;
     private final BlockingQueue<Runnable> pending = new LinkedBlockingQueue<>();
 
     ThreadPool(int workerTreads){
-        Thread[] threads = new Thread[workerTreads];
+        this.threads = new Thread[workerTreads];
         this.workers = new Worker[workerTreads];
 
         for (int i = 0; i < workerTreads; i++) {
@@ -47,6 +49,9 @@ class ThreadPool {
     void kill(){
         for (Worker worker : workers)
             worker.kill();
+
+        for(Thread t : threads)
+            t.interrupt();
     }
 
     boolean isTerminated(){
