@@ -8,7 +8,7 @@ public class ThreadPoolTest {
 
     @Test
     public void execute() throws InterruptedException {
-        ThreadPool pool = new ThreadPool(8);
+        ThreadPool pool = new ThreadPool(4);
         for (int i = 0; i < 8; i++) {
             int finalI = i;
             pool.execute(() -> {
@@ -21,9 +21,22 @@ public class ThreadPoolTest {
         }
 
         while(!pool.isTerminated());
-        System.out.println("Terminated!");
+//        System.out.println("Terminated!");
 
-        while (true);
+        pool.block();
+        System.out.println("Blocked!");
+        pool.execute(() -> System.out.println("Executing after blocking!"));
+        Thread.sleep(15000);
+
+        System.out.println("Releasing!");
+//        Thread.sleep(150);
+        pool.release();
+//
+        pool.block();
+        System.out.println("Blocked!");
+
+        Thread.sleep(60 * 1000);
+        System.out.println("Terminating...");
     }
 
     @Test

@@ -2,34 +2,27 @@ package wibiral.tim.javachr;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.Semaphore;
 
 class ThreadPool {
-    private final Thread[] threads;
     private final Worker[] workers;
-    private final Semaphore[] semaphores;
-
     private final BlockingQueue<Runnable> pending = new LinkedBlockingQueue<>();
 
     ThreadPool(int workerTreads){
-        this.threads = new Thread[workerTreads];
+        Thread[] threads = new Thread[workerTreads];
         this.workers = new Worker[workerTreads];
-        this.semaphores = new java.util.concurrent.Semaphore[workerTreads];
 
         for (int i = 0; i < workerTreads; i++) {
-            semaphores[i] = new Semaphore(1);
-            try {
-                semaphores[i].acquire();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            workers[i] = new Worker(pending, semaphores[i]);
+            workers[i] = new Worker(pending);
+            workers[i].lock();
             threads[i] = new Thread(workers[i]);
             threads[i].start();
         }
     }
 
     boolean execute(Runnable runnable){
+        for(Worker worker : workers)
+            worker.unlock();
+
         try {
             pending.put(runnable);
 
@@ -38,28 +31,22 @@ class ThreadPool {
             return false;
         }
 
-        for(Semaphore semaphore : semaphores)
-            semaphore.release();
-
         return true;
     }
 
-    void block() throws InterruptedException {
-        for(Semaphore semaphore : semaphores)
-            semaphore.acquire();
+    void block() {
+        for(Worker worker : workers)
+            worker.lock();
     }
 
     void release(){
-        for(Semaphore semaphore : semaphores)
-            semaphore.release();
+        for(Worker worker : workers)
+            worker.unlock();
     }
 
     void kill(){
         for (Worker worker : workers)
             worker.kill();
-
-        for(Semaphore semaphore : semaphores)
-            semaphore.release();
     }
 
     boolean isTerminated(){

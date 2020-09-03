@@ -1,19 +1,19 @@
 package wibiral.tim.javachr;
 
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantLock;
 
 class Worker implements Runnable {
     private final BlockingQueue<Runnable> pending;
-    private final Semaphore semaphore;
 
     private boolean dead = false;
     private boolean hasExercise = false;
 
-    Worker(BlockingQueue<Runnable> pending, Semaphore lock) {
+    private final ReentrantLock lock = new ReentrantLock();
+
+    Worker(BlockingQueue<Runnable> pending) {
         this.pending = pending;
-        this.semaphore = lock;
     }
 
     /**
@@ -21,6 +21,14 @@ class Worker implements Runnable {
      */
     void kill(){
         dead = true;
+    }
+
+    void lock(){
+        lock.lock();
+    }
+
+    void unlock(){
+        lock.unlock();
     }
 
     /**
@@ -33,15 +41,11 @@ class Worker implements Runnable {
     @Override
     public void run() {
         while(!dead){
-            try {
-                semaphore.acquire();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            lock.lock();
 
             if(!pending.isEmpty()){
                 try {
-                    Runnable exercise = pending.poll(10, TimeUnit.MILLISECONDS);
+                    Runnable exercise = pending.poll(50, TimeUnit.MILLISECONDS);
                     if (exercise != null){
                         hasExercise = true;
                         exercise.run();
@@ -53,6 +57,8 @@ class Worker implements Runnable {
 
                 hasExercise = false;
             }
+
+            lock.unlock();
         }
     }
 }
