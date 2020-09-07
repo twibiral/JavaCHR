@@ -95,8 +95,6 @@ public class SemiParallelHandler extends SimpleHandler {
             }
 
             if (rule.accepts(temp)) {
-                Constraint<?>[] before = tracingOn ? temp.getAll().toArray(new Constraint<?>[0]) : null;
-
                 ruleApplied = true;
                 store.removeAll(selectedIdx);
 
@@ -104,11 +102,6 @@ public class SemiParallelHandler extends SimpleHandler {
                     rule.apply(temp);
                     store.addAll(temp);
                 });
-
-                Constraint<?>[] after = tracingOn ? temp.getAll().toArray(new Constraint<?>[0]) : null;
-                if (tracingOn && !tracer.step(rule, before, after)) {
-                    tracer.stopMessage(store);
-                }
             }
         }
 
