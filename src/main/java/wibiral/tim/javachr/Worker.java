@@ -28,7 +28,8 @@ class Worker implements Runnable {
     }
 
     void unlock(){
-        lock.unlock();
+        if(lock.isHeldByCurrentThread())
+            lock.unlock();
     }
 
     /**
