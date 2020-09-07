@@ -1,15 +1,18 @@
 package wibiral.tim.javachr.constraints;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Holds a set of constraints.
  * Constraints can be added with add({@link Constraint}) method and as constructor parameter.
  */
 public class ConstraintStore {
-    private final List<Constraint<?>> store = new LinkedList<>();
+    // TODO: Use faster list implementation when possible
+    private final List<Constraint<?>> store = new ArrayList<>();
+    private final ReentrantLock lock = new ReentrantLock();
 
     public ConstraintStore(){   }
 
@@ -67,7 +70,10 @@ public class ConstraintStore {
      * @return The constraint at the given index.
      */
     public Constraint<?> remove(int index){
-        return store.remove(index);
+        lock.lock();
+        Constraint<?> temp = store.remove(index);
+        lock.unlock();
+        return temp;
     }
 
     /**
@@ -81,6 +87,8 @@ public class ConstraintStore {
 
         Arrays.sort(allIndexes);
 
+        lock.lock();
+
         // Start from behind to avoid problems caused by already removed constraints.
         int old = -1;
         for (int i = allIndexes.length - 1; i >= 0; i--) {
@@ -89,6 +97,8 @@ public class ConstraintStore {
                 old = allIndexes[i];
             }
         }
+
+        lock.unlock();
 
         return true;
     }
