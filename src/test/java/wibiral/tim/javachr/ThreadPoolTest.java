@@ -26,7 +26,7 @@ public class ThreadPoolTest {
         pool.block();
         System.out.println("Blocked!");
         pool.execute(() -> System.out.println("Executing after blocking!"));
-        Thread.sleep(15000);
+        Thread.sleep(150);
 
         System.out.println("Releasing!");
 //        Thread.sleep(150);
@@ -35,7 +35,7 @@ public class ThreadPoolTest {
         pool.block();
         System.out.println("Blocked!");
 
-        Thread.sleep(60 * 1000);
+//        Thread.sleep(60 * 1000);
         System.out.println("Terminating...");
     }
 
