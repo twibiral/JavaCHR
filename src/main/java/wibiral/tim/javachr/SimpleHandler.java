@@ -8,6 +8,7 @@ import wibiral.tim.javachr.tracing.Tracer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 public class SimpleHandler extends ConstraintHandler {
@@ -15,7 +16,7 @@ public class SimpleHandler extends ConstraintHandler {
      * Contains for all header the rules have a List with all rules with that specific header size.
      */
     protected final HashMap<Integer, List<Rule>> ruleHash;
-    protected final List<Integer> headerSizes = new ArrayList<>();
+    protected final List<Integer> headerSizes = new LinkedList<>();
 
     private Tracer tracer;
     private boolean tracingOn = false;
