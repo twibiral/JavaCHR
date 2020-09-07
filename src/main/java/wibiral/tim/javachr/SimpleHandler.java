@@ -14,8 +14,8 @@ public class SimpleHandler extends ConstraintHandler {
     /**
      * Contains for all header the rules have a List with all rules with that specific header size.
      */
-    private final HashMap<Integer, List<Rule>> ruleHash;
-    private final List<Integer> headerSizes = new ArrayList<>();
+    protected final HashMap<Integer, List<Rule>> ruleHash;
+    protected final List<Integer> headerSizes = new ArrayList<>();
 
     private Tracer tracer;
     private boolean tracingOn = false;
@@ -46,16 +46,7 @@ public class SimpleHandler extends ConstraintHandler {
         final HashMap<Integer, List<Rule>> temp = new HashMap<>(3 * rules.size());
 
         for (Rule rule : rules) {
-            int headerSize = rule.headSize();
-            if (temp.containsKey(headerSize)) {
-                temp.get(headerSize).add(rule);
-
-            } else {
-                List<Rule> ruleList = new ArrayList<>();
-                ruleList.add(rule);
-                temp.put(headerSize, ruleList);
-                headerSizes.add(headerSize);
-            }
+            handleRuleAndRuleHash(rule, temp);
         }
 
         return temp;
@@ -63,6 +54,13 @@ public class SimpleHandler extends ConstraintHandler {
 
     @Override
     public boolean addRule(Rule rule) {
+        handleRuleAndRuleHash(rule, ruleHash);
+
+        return rules.add(rule);
+    }
+
+    // TODO: Should be renamed
+    private void handleRuleAndRuleHash(Rule rule, HashMap<Integer, List<Rule>> ruleHash) {
         int headerSize = rule.headSize();
         if (ruleHash.containsKey(headerSize)) {
             ruleHash.get(headerSize).add(rule);
@@ -73,8 +71,6 @@ public class SimpleHandler extends ConstraintHandler {
             ruleHash.put(headerSize, ruleList);
             headerSizes.add(headerSize);
         }
-
-        return rules.add(rule);
     }
 
     @Override

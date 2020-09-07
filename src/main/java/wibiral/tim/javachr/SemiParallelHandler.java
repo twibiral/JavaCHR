@@ -10,12 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class SemiParallelHandler extends ConstraintHandler {
-    /**
-     * Contains for all header the rules have a List with all rules with that specific header size.
-     */
-    private final HashMap<Integer, List<Rule>> ruleHash;
-    private final List<Integer> headerSizes = new ArrayList<>();
+public class SemiParallelHandler extends SimpleHandler {
     private final ThreadPool pool;
 
     private Tracer tracer;
@@ -23,19 +18,16 @@ public class SemiParallelHandler extends ConstraintHandler {
 
     public SemiParallelHandler(int workerThreads, Rule... rules) {
         super(rules);
-        ruleHash = instantiateRuleHash();
         pool = new ThreadPool(workerThreads);
     }
 
     public SemiParallelHandler(int workerThreads, Rule rule) {
         super(rule);
-        ruleHash = instantiateRuleHash();
         pool = new ThreadPool(workerThreads);
     }
 
     public SemiParallelHandler(int workerThreads) {
         super();
-        ruleHash = instantiateRuleHash();
         pool = new ThreadPool(workerThreads);
     }
 
@@ -53,41 +45,6 @@ public class SemiParallelHandler extends ConstraintHandler {
         return tracingOn;
     }
 
-    private HashMap<Integer, List<Rule>> instantiateRuleHash(){
-        final HashMap<Integer, List<Rule>> temp = new HashMap<>(3 * rules.size());
-
-        for (Rule rule : rules) {
-            int headerSize = rule.headSize();
-            if (temp.containsKey(headerSize)) {
-                temp.get(headerSize).add(rule);
-
-            } else {
-                List<Rule> ruleList = new ArrayList<>();
-                ruleList.add(rule);
-                temp.put(headerSize, ruleList);
-                headerSizes.add(headerSize);
-            }
-        }
-
-        return temp;
-    }
-
-    @Override
-    public boolean addRule(Rule rule) {
-        int headerSize = rule.headSize();
-        if (ruleHash.containsKey(headerSize)) {
-            ruleHash.get(headerSize).add(rule);
-
-        } else {
-            List<Rule> ruleList = new ArrayList<>();
-            ruleList.add(rule);
-            ruleHash.put(headerSize, ruleList);
-            headerSizes.add(headerSize);
-        }
-
-        return rules.add(rule);
-    }
-
     @Override
     public ConstraintStore solve(ConstraintStore store) {
         if(tracingOn)
@@ -95,7 +52,7 @@ public class SemiParallelHandler extends ConstraintHandler {
 
         boolean ruleApplied;
         int cnt = 0;
-        while(cnt < 2 && !pool.isTerminated()){
+        while(cnt < 2 || !pool.isTerminated()){
             ruleApplied = true;
 
             while (ruleApplied) {
@@ -115,10 +72,12 @@ public class SemiParallelHandler extends ConstraintHandler {
             else
                 cnt++;
 
-            System.out.println(cnt);
         }
 
-        while(!pool.isTerminated());
+        while(!pool.isTerminated())
+            System.out.println("Not terminated!");
+
+        pool.block();
 
         if (tracingOn)
             tracer.terminatedMessage(store);
@@ -138,7 +97,7 @@ public class SemiParallelHandler extends ConstraintHandler {
             }
 
             if(rule.accepts(temp)){
-//              Constraint<?>[] before = tracingOn ? temp.getAll().toArray(new Constraint<?>[0]) : null;
+              Constraint<?>[] before = tracingOn ? temp.getAll().toArray(new Constraint<?>[0]) : null;
 
                 ruleApplied = true;
                 store.removeAll(selectedIdx);
@@ -148,56 +107,13 @@ public class SemiParallelHandler extends ConstraintHandler {
                     store.addAll(temp);
                 });
 
-//              Constraint<?>[] after = tracingOn ? temp.getAll().toArray(new Constraint<?>[0]) : null;
-//              if(tracingOn && !tracer.step(rule, before, after)){
-//                  tracer.stopMessage(store);
-//                  return store;
-//              }
+              Constraint<?>[] after = tracingOn ? temp.getAll().toArray(new Constraint<?>[0]) : null;
+              if(tracingOn && !tracer.step(rule, before, after)){
+                  tracer.stopMessage(store);
+              }
             }
         }
 
         return ruleApplied;
     }
-
-    protected int[] findAssignment(ConstraintStore store, Rule rule, int[] selectedIdx, int pos) {
-        if (pos == selectedIdx.length) {
-            return selectedIdx;
-
-        } else {
-            for (int i = 0; i < store.size(); i++) {
-                selectedIdx[pos] = i;
-                findAssignment(store, rule, selectedIdx, pos + 1);
-
-                if(notAllEqual(selectedIdx)){
-                    List<Constraint<?>> constraints = new ArrayList<>();
-                    for (int j : selectedIdx) {
-                        constraints.add(store.get(j));
-                    }
-
-                    if (rule.accepts(constraints)) {
-                        return selectedIdx;
-                    }
-                }
-            }
-        }
-
-        return selectedIdx;
-    }
-
-    /**
-     * @param array The array to check.
-     * @return Return true if there are duplicates in the entry.
-     */
-    protected boolean notAllEqual(int[] array){
-        for(int i : array){
-            int cnt = 0;
-            for(int j : array){
-                cnt += j == i ? 1 : 0;
-            }
-            if(cnt > 1)
-                return false;
-        }
-        return true;
-    }
-
 }
