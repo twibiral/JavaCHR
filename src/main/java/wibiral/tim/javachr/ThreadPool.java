@@ -9,7 +9,7 @@ class ThreadPool {
     private final Worker[] workers;
     private final BlockingQueue<Runnable> pending = new LinkedBlockingQueue<>();
 
-    ThreadPool(int workerTreads){
+    ThreadPool(int workerTreads) {
         this.threads = new Thread[workerTreads];
         this.workers = new Worker[workerTreads];
 
@@ -21,8 +21,8 @@ class ThreadPool {
         }
     }
 
-    boolean execute(Runnable runnable){
-        for(Worker worker : workers)
+    boolean execute(Runnable runnable) {
+        for (Worker worker : workers)
             worker.unlock();
 
         try {
@@ -37,29 +37,29 @@ class ThreadPool {
     }
 
     void block() {
-        for(Worker worker : workers)
+        for (Worker worker : workers)
             worker.lock();
     }
 
-    void release(){
-        for(Worker worker : workers)
+    void release() {
+        for (Worker worker : workers)
             worker.unlock();
     }
 
-    void kill(){
+    void kill() {
         for (Worker worker : workers)
             worker.kill();
 
-        for(Thread t : threads)
+        for (Thread t : threads)
             t.interrupt();
     }
 
-    boolean isTerminated(){
-        if(!pending.isEmpty())
+    boolean isTerminated() {
+        if (!pending.isEmpty())
             return false;
 
-        for(Worker worker : workers){
-            if(worker.isWorking())
+        for (Worker worker : workers) {
+            if (worker.isWorking())
                 return false;
         }
 

@@ -6,8 +6,6 @@ import wibiral.tim.javachr.rules.Rule;
 import wibiral.tim.javachr.tracing.CommandLineTracer;
 import wibiral.tim.javachr.tracing.Tracer;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class SemiParallelHandler extends SimpleHandler {
@@ -34,7 +32,7 @@ public class SemiParallelHandler extends SimpleHandler {
     /**
      * Kills the threads of the Handler. This is necessary because they are still waiting for the next call to solve()
      */
-    public void kill(){
+    public void kill() {
         pool.kill();
     }
 
@@ -47,19 +45,19 @@ public class SemiParallelHandler extends SimpleHandler {
 
     @Override
     public ConstraintStore solve(ConstraintStore store) {
-        if(tracingOn)
+        if (tracingOn)
             tracer.startMessage(store);
 
         boolean ruleApplied;
         int cnt = 0;
-        while(cnt < 2 || !pool.isTerminated()){
+        while (cnt < 2 || !pool.isTerminated()) {
             ruleApplied = true;
 
             while (ruleApplied) {
                 ruleApplied = false;
 
                 for (int size : headerSizes) {
-                    if(size <= store.size()){
+                    if (size <= store.size()) {
                         List<Rule> sameHeaderRules = ruleHash.get(size);
 
                         ruleApplied = applyRule(size, sameHeaderRules, store);
@@ -67,14 +65,14 @@ public class SemiParallelHandler extends SimpleHandler {
                 }
             }
 
-            if(!pool.isTerminated())
+            if (!pool.isTerminated())
                 cnt = 0;
             else
                 cnt++;
 
         }
 
-        while(!pool.isTerminated())
+        while (!pool.isTerminated())
             System.out.println("Not terminated!");
 
         pool.block();
@@ -85,7 +83,7 @@ public class SemiParallelHandler extends SimpleHandler {
         return store;
     }
 
-    private boolean applyRule(int size, List<Rule> sameHeaderRules, ConstraintStore store){
+    private boolean applyRule(int size, List<Rule> sameHeaderRules, ConstraintStore store) {
         boolean ruleApplied = false;
 
         for (Rule rule : sameHeaderRules) {
@@ -96,8 +94,8 @@ public class SemiParallelHandler extends SimpleHandler {
                 temp.add(store.get(i));
             }
 
-            if(rule.accepts(temp)){
-              Constraint<?>[] before = tracingOn ? temp.getAll().toArray(new Constraint<?>[0]) : null;
+            if (rule.accepts(temp)) {
+                Constraint<?>[] before = tracingOn ? temp.getAll().toArray(new Constraint<?>[0]) : null;
 
                 ruleApplied = true;
                 store.removeAll(selectedIdx);
@@ -107,10 +105,10 @@ public class SemiParallelHandler extends SimpleHandler {
                     store.addAll(temp);
                 });
 
-              Constraint<?>[] after = tracingOn ? temp.getAll().toArray(new Constraint<?>[0]) : null;
-              if(tracingOn && !tracer.step(rule, before, after)){
-                  tracer.stopMessage(store);
-              }
+                Constraint<?>[] after = tracingOn ? temp.getAll().toArray(new Constraint<?>[0]) : null;
+                if (tracingOn && !tracer.step(rule, before, after)) {
+                    tracer.stopMessage(store);
+                }
             }
         }
 
