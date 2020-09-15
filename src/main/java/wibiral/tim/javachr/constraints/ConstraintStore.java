@@ -86,7 +86,7 @@ public class ConstraintStore {
      * @param allIndexes An int array that contains the indexes that should be removed.
      * @return true if removing successful.
      */
-    public boolean removeAll(int[] allIndexes) {
+    public synchronized boolean removeAll(int[] allIndexes) {
         if (allIndexes.length > store.size())
             return false;
 
@@ -114,7 +114,7 @@ public class ConstraintStore {
      * @param constraint The constraint to add.
      * @return true if added successful, otherwise false.
      */
-    public boolean add(Constraint<?> constraint) {
+    public synchronized boolean add(Constraint<?> constraint) {
         return store.add(constraint);
     }
 
@@ -124,7 +124,7 @@ public class ConstraintStore {
      * @param constraints The constraints to add.
      * @return True if added successfully.
      */
-    public boolean addAll(List<Constraint<?>> constraints) {
+    public synchronized boolean addAll(List<Constraint<?>> constraints) {
         return store.addAll(constraints);
     }
 
@@ -134,7 +134,7 @@ public class ConstraintStore {
      * @param constraintStore The constraints to add.
      * @return True if added successfully.
      */
-    public boolean addAll(ConstraintStore constraintStore) {
+    public synchronized boolean addAll(ConstraintStore constraintStore) {
         return store.addAll(constraintStore.getAll());
     }
 

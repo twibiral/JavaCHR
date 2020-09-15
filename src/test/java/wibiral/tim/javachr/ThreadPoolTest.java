@@ -1,6 +1,11 @@
 package wibiral.tim.javachr;
 
 import org.junit.Test;
+import wibiral.tim.javachr.constraints.Constraint;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.zip.CheckedOutputStream;
 
 import static org.junit.Assert.*;
 
