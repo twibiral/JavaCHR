@@ -52,17 +52,19 @@ class Worker implements Runnable {
             }
 
             if(!pending.isEmpty()){
+                hasExercise = true;
                 try {
                     Runnable exercise = pending.poll(50, TimeUnit.MILLISECONDS);
                     if (exercise != null){
-                        hasExercise = true;
                         exercise.run();
                     }
 
                 } catch (InterruptedException e) {
                     e.printStackTrace();
+                    hasExercise = false;
                 }
 
+            } else {
                 hasExercise = false;
             }
 
