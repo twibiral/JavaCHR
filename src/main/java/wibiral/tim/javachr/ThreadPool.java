@@ -4,8 +4,6 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 class ThreadPool {
-    public String grund = "";
-
     private final Thread[] threads;
 
     private final Worker[] workers;
@@ -57,25 +55,14 @@ class ThreadPool {
     }
 
     boolean isTerminated() {
-        if (!pending.isEmpty()){
-            grund = "Something pending!";
+        if (!pending.isEmpty())
             return false;
-        }
 
         for (Worker worker : workers) {
-            if (worker.isWorking()){
-                grund = "Worker is working!";
+            if (worker.isWorking())
                 return false;
-            }
         }
 
-        grund = "All okay.";
         return true;
-    }
-
-    void awaitTermination(){
-        while(!isTerminated()){
-            // Do nothing, just busy waiting
-        }
     }
 }
