@@ -65,4 +65,9 @@ class ThreadPool {
 
         return true;
     }
+
+    void awaitTermination(){
+        while(!isTerminated());
+            // Do nothing, just busy waiting
+    }
 }
