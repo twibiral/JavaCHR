@@ -1,6 +1,5 @@
 package wibiral.tim.javachr;
 
-import wibiral.tim.javachr.constraints.Constraint;
 import wibiral.tim.javachr.constraints.ConstraintStore;
 import wibiral.tim.javachr.rules.Rule;
 import wibiral.tim.javachr.tracing.CommandLineTracer;
@@ -48,11 +47,11 @@ public class SemiParallelHandler extends SimpleHandler {
         if (tracingOn)
             tracer.startMessage(store);
 
-        boolean ruleApplied;
-        int cnt = 0;
-        while (cnt < 2 || !pool.isTerminated()) {
-            ruleApplied = true;
+        boolean anyRuleApplied = true;
+        while (anyRuleApplied || !pool.isTerminated()) {
+            anyRuleApplied = false;
 
+            boolean ruleApplied = true;
             while (ruleApplied) {
                 ruleApplied = false;
 
@@ -60,20 +59,15 @@ public class SemiParallelHandler extends SimpleHandler {
                     if (size <= store.size()) {
                         List<Rule> sameHeaderRules = ruleHash.get(size);
 
-                        ruleApplied = applyRule(size, sameHeaderRules, store);
+                        ruleApplied = ruleApplied || applyRule(size, sameHeaderRules, store) || ruleApplied;
+                        anyRuleApplied = ruleApplied || anyRuleApplied;
                     }
                 }
+
             }
 
-            if (!pool.isTerminated())
-                cnt = 0;
-            else
-                cnt++;
-
+            pool.awaitTermination();
         }
-
-        while (!pool.isTerminated())
-            System.out.println("Not terminated!");
 
         pool.block();
 
@@ -84,8 +78,6 @@ public class SemiParallelHandler extends SimpleHandler {
     }
 
     private boolean applyRule(int size, List<Rule> sameHeaderRules, ConstraintStore store) {
-        boolean ruleApplied = false;
-
         for (Rule rule : sameHeaderRules) {
             int[] selectedIdx = findAssignment(store, rule, new int[size], 0);
 
@@ -95,16 +87,17 @@ public class SemiParallelHandler extends SimpleHandler {
             }
 
             if (rule.accepts(temp)) {
-                ruleApplied = true;
                 store.removeAll(selectedIdx);
 
                 pool.execute(() -> {
                     rule.apply(temp);
                     store.addAll(temp);
                 });
+
+                return true;
             }
         }
 
-        return ruleApplied;
+        return false;
     }
 }
