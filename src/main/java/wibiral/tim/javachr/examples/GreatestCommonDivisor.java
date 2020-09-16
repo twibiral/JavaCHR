@@ -12,31 +12,33 @@ public class GreatestCommonDivisor {
     public static void main(String[] args) {
         // SimpleHandler is a naive implementation to apply some rules to some Constraints:
 //        ConstraintHandler gcdHandler = new SimpleHandler();
-        SemiParallelHandler gcdHandler = new SemiParallelHandler(8);
+        SemiParallelHandler gcdHandler = new SemiParallelHandler(1);
 //        gcdHandler.trace();
-        gcdHandler.addRule(new Simpagation(1, 1).guard(
+        gcdHandler.addRule(new Simpagation(1, 1)
+            .guard(
                 (h1, h2) ->
                         // h1[0].value() instanceof Integer && h2[0].value() instanceof Integer &&
                         // Not necessary if you can be sure that all Constraints are Integers.
                         (int) h1[0].value() > 0 && (int) h1[0].value() <= (int) h2[0].value()
-        ).body(
+            ).body(
                 (x1, x2, newConstraints) -> {
                     int n = (int) x1[0].value();
                     int m = (int) x2[0].value();
                     newConstraints.add(new Constraint<>(m - n));
                 }
-        ));
+            )
+        );
         gcdHandler.addRule(new Simplification(1)
-                .guard(
-                        x ->
-                                // Not necessary if you can be sure that all Constraints are Integers.
-                                // x[0].value() instanceof Integer &&
-                                (int) x[0].value() == 0
-                )
-                .body(
-                        (x, y) -> {
-                        }
-                )
+            .guard(
+                x ->{
+                    // Not necessary if you can be sure that all Constraints are Integers.
+                    // x[0].value() instanceof Integer &&
+                    return (int) x[0].value() == 0;
+                }
+            ).body(
+                (x, y) -> {
+                }
+            )
         );
 
         ConstraintStore result;
