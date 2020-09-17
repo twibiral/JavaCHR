@@ -1,1 +1,0 @@
-packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"wibiral.tim.javachr"},{"l":"wibiral.tim.javachr.constraints"},{"l":"wibiral.tim.javachr.examples"},{"l":"wibiral.tim.javachr.exceptions"},{"l":"wibiral.tim.javachr.rules"},{"l":"wibiral.tim.javachr.tracing"}]
