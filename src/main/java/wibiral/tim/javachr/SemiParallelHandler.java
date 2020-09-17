@@ -15,17 +15,17 @@ public class SemiParallelHandler extends SimpleHandler {
 
     public SemiParallelHandler(int workerThreads, Rule... rules) {
         super(rules);
-        pool = new ThreadPool(workerThreads);
+        pool = new ThreadPool(workerThreads > 1 ? workerThreads - 1 : 1);
     }
 
     public SemiParallelHandler(int workerThreads, Rule rule) {
         super(rule);
-        pool = new ThreadPool(workerThreads);
+        pool = new ThreadPool(workerThreads > 1 ? workerThreads - 1 : 1);
     }
 
     public SemiParallelHandler(int workerThreads) {
         super();
-        pool = new ThreadPool(workerThreads);
+        pool = new ThreadPool(workerThreads > 1 ? workerThreads - 1 : 1);
     }
 
     /**
