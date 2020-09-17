@@ -59,7 +59,7 @@ public class SemiParallelHandler extends SimpleHandler {
                     if (size <= store.size()) {
                         List<Rule> sameHeaderRules = ruleHash.get(size);
 
-                        ruleApplied = ruleApplied || applyRule(size, sameHeaderRules, store) || ruleApplied;
+                        ruleApplied = ruleApplied || applyRule(size, sameHeaderRules, store);
                         anyRuleApplied = ruleApplied || anyRuleApplied;
                     }
                 }
