@@ -31,7 +31,7 @@ public class Maximum {
 
 
         // Semi-parallel approach:
-        SemiParallelHandler parallelHandler = new SemiParallelHandler(8, rule);
+        SemiParallelHandler parallelHandler = new SemiParallelHandler(2, rule);
         start = System.currentTimeMillis();
         result = parallelHandler.solve(array);
         end = System.currentTimeMillis();

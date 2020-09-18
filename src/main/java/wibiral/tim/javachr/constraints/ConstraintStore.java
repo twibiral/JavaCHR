@@ -1,7 +1,7 @@
 package wibiral.tim.javachr.constraints;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -10,8 +10,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * Constraints can be added with add({@link Constraint}) method and as constructor parameter.
  */
 public class ConstraintStore {
-    // TODO: Use faster list implementation when possible
-    private final List<Constraint<?>> store = new ArrayList<>();
+    private final List<Constraint<?>> store = new LinkedList<>();
     private final ReentrantLock lock = new ReentrantLock();
 
     public ConstraintStore() {

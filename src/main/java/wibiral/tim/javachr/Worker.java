@@ -48,13 +48,14 @@ class Worker implements Runnable {
             } catch (InterruptedException e) {
                 // Interrupted when pool shuts down while waiting for lock.
                 // Worker is dead -> stops execution after continue.
+                hasExercise = false;
                 continue;
             }
 
             if(!pending.isEmpty()){
                 hasExercise = true;
                 try {
-                    Runnable exercise = pending.poll(50, TimeUnit.MILLISECONDS);
+                    Runnable exercise = pending.poll(1, TimeUnit.MILLISECONDS);
                     if (exercise != null){
                         exercise.run();
                     }
