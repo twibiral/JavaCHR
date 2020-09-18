@@ -87,7 +87,9 @@ System.out.println(result);
 
 More examples can be found in the [examples package](/src/main/java/wibiral/tim/javachr/examples) and in the [tests](/src/test/java/wibiral/tim/javachr/).
 
-### Parallel Execution
+## Parallel Execution
+
+### Semi-parallel Handler
 CHR is highly parallelizable what can give the execution a huge speedup. Handlers can only be parallelized if the order in which rules are applied makes no difference. This is for example the case with GCD and finding the maximum of a set of numbers.
 To use semi-parallel execution you must use the ``SemiParallelHandler`` instead of the ``SimpleHandler``. The additional constructor parameter determines the number of Threads to use.
 In the ``SemiParallelHandler`` just the applying of the Rules is parallel, the matching of rules and constraint is executed sequentially.
@@ -100,7 +102,14 @@ handler.solve(constraints);
 handler.kill();
 ```
 
-### Use as local library
+### Problems with parallelization
+Because the ``SemiParallelHandler`` isn't completely parallel it can't be scaled unlimited. If the matching of 
+constraints and rules is more complex than the execution of the rules themselves, then the workers just wait most of 
+the time.  This can even increase the execution time by more threads. The ``SemiParallelHandler`` is most effective 
+when the rules are very complex and the amount of constraints is limited.
+
+
+## Use as local library
 To use the library you can download the JavaCHR-X.X.jar file and use it as library for your project.
 Here is how to use it for [gradle](https://appmediation.com/how-to-add-local-libraries-to-gradle/) and for 
 [IntelliJ](https://stackoverflow.com/questions/1051640/correct-way-to-add-external-jars-lib-jar-to-an-intellij-idea-project).
