@@ -5,6 +5,7 @@ import wibiral.tim.javachr.constraints.ConstraintStore;
 import wibiral.tim.javachr.rules.Propagation;
 import wibiral.tim.javachr.rules.Rule;
 import wibiral.tim.javachr.rules.Simplification;
+import wibiral.tim.javachr.tracing.Tracer;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -31,7 +32,7 @@ public abstract class ConstraintHandler {
      * Switch to turn tracing on and of.
      * @return True if tracing is on after calling this method, false if not.
      */
-    public abstract boolean trace();
+    public abstract boolean setTrace(Tracer tracer);
 
     /**
      * Applies the given rules to the given constraints.

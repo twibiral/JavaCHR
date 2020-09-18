@@ -10,9 +10,6 @@ import java.util.List;
 public class SemiParallelHandler extends SimpleHandler {
     private final ThreadPool pool;
 
-    private Tracer tracer;
-    private boolean tracingOn = false;
-
     public SemiParallelHandler(int workerThreads, Rule... rules) {
         super(rules);
         pool = new ThreadPool(workerThreads > 1 ? workerThreads - 1 : 1);
@@ -33,13 +30,6 @@ public class SemiParallelHandler extends SimpleHandler {
      */
     public void kill() {
         pool.kill();
-    }
-
-    @Override
-    public boolean trace() {
-        tracingOn = !tracingOn;
-        tracer = tracer == null ? new CommandLineTracer() : tracer;
-        return tracingOn;
     }
 
     @Override

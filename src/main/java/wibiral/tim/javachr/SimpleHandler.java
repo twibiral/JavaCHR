@@ -18,8 +18,8 @@ public class SimpleHandler extends ConstraintHandler {
     protected final HashMap<Integer, List<Rule>> ruleHash;
     protected final List<Integer> headerSizes = new LinkedList<>();
 
-    private Tracer tracer;
-    private boolean tracingOn = false;
+    protected Tracer tracer;
+    protected boolean tracingOn = false;
 
     public SimpleHandler(Rule... rules) {
         super(rules);
@@ -37,9 +37,9 @@ public class SimpleHandler extends ConstraintHandler {
     }
 
     @Override
-    public boolean trace() {
-        tracingOn = !tracingOn;
-        tracer = tracer == null ? new CommandLineTracer() : tracer;
+    public boolean setTrace(Tracer tracer) {
+        tracingOn = tracer != null;
+        this.tracer = tracer;
         return tracingOn;
     }
 
