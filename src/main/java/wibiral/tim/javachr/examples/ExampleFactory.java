@@ -8,7 +8,7 @@ public class ExampleFactory {
         COLOR_MIXING, FIBONACCI, FIB_FAST, GREATEST_COMMON_DIVISOR, GCD_FAST, MAX;
     }
 
-    public ConstraintHandler get(EXAMPLE name){
+    public static ConstraintHandler get(EXAMPLE name){
         switch (name){
             case COLOR_MIXING:
                 return new SimpleHandler(ColorMixing.getRules());
