@@ -11,30 +11,8 @@ import wibiral.tim.javachr.rules.Simplification;
 
 public class GreatestCommonDivisor {
     public static void main(String[] args) {
-        Rule r1 = new Simpagation(1, 1)
-            .guard(
-                (h1, h2) ->
-                        // h1[0].value() instanceof Integer && h2[0].value() instanceof Integer &&
-                        // Not necessary if you can be sure that all Constraints are Integers.
-                        (int) h1[0].value() > 0 && (int) h1[0].value() <= (int) h2[0].value()
-            ).body(
-                (x1, x2, newConstraints) -> {
-                    int n = (int) x1[0].value();
-                    int m = (int) x2[0].value();
-                    newConstraints.add(new Constraint<>(m - n));
-                }
-            );
-        Rule r2 = new Simplification(1)
-            .guard(
-                x ->{
-                    // Not necessary if you can be sure that all Constraints are Integers.
-                    // x[0].value() instanceof Integer &&
-                    return (int) x[0].value() == 0;
-                }
-            ).body( (x, y) -> {} );
-
-        ConstraintHandler gcdHandler = new SimpleHandler(r1, r2);
-        SemiParallelHandler gcdHandlerParallel = new SemiParallelHandler(2, r1, r2);
+        ConstraintHandler gcdHandler = new SimpleHandler(getRules());
+        SemiParallelHandler gcdHandlerParallel = new SemiParallelHandler(2, getRules());
 
         ConstraintStore result;
         long start, end;
@@ -95,5 +73,31 @@ public class GreatestCommonDivisor {
 
 
         gcdHandlerParallel.kill();
+    }
+
+    public static Rule[] getRules(){
+        Rule r1 = new Simpagation(1, 1)
+                .guard(
+                        (h1, h2) ->
+                                // h1[0].value() instanceof Integer && h2[0].value() instanceof Integer &&
+                                // Not necessary if you can be sure that all Constraints are Integers.
+                                (int) h1[0].value() > 0 && (int) h1[0].value() <= (int) h2[0].value()
+                ).body(
+                        (x1, x2, newConstraints) -> {
+                            int n = (int) x1[0].value();
+                            int m = (int) x2[0].value();
+                            newConstraints.add(new Constraint<>(m - n));
+                        }
+                );
+        Rule r2 = new Simplification(1)
+                .guard(
+                        x ->{
+                            // Not necessary if you can be sure that all Constraints are Integers.
+                            // x[0].value() instanceof Integer &&
+                            return (int) x[0].value() == 0;
+                        }
+                ).body( (x, y) -> {} );
+
+        return new Rule[]{r1, r2};
     }
 }

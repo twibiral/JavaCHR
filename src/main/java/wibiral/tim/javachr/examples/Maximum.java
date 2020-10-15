@@ -4,6 +4,7 @@ import wibiral.tim.javachr.ConstraintHandler;
 import wibiral.tim.javachr.SemiParallelHandler;
 import wibiral.tim.javachr.SimpleHandler;
 import wibiral.tim.javachr.constraints.ConstraintStore;
+import wibiral.tim.javachr.rules.Rule;
 import wibiral.tim.javachr.rules.Simpagation;
 
 import java.util.Random;
@@ -37,5 +38,12 @@ public class Maximum {
         end = System.currentTimeMillis();
         System.out.println("Parallel computed: " + result.toString() + "\nTime: " + (end - start) + "ms\n");
         parallelHandler.kill();
+    }
+
+    public static Rule[] getRules(){
+        return new Rule[]{
+                new Simpagation(1, 1)
+                .guard((h1, h2) -> (Integer) h1[0].value() >= (Integer) h2[0].value())
+        };
     }
 }

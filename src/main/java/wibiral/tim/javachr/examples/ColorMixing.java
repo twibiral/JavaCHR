@@ -3,8 +3,13 @@ package wibiral.tim.javachr.examples;
 import wibiral.tim.javachr.ConstraintHandler;
 import wibiral.tim.javachr.SimpleHandler;
 import wibiral.tim.javachr.constraints.Constraint;
+import wibiral.tim.javachr.rules.Rule;
 import wibiral.tim.javachr.rules.Simpagation;
 import wibiral.tim.javachr.rules.Simplification;
+import wibiral.tim.javachr.tracing.CommandLineTracer;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * CHR program that gives you the result of mixing some colors.
@@ -17,8 +22,8 @@ public class ColorMixing {
     }
 
     public static void main(String[] args) {
-        ConstraintHandler colorHandler = getConstraintHandler();
-//        colorHandler.trace(); // Use to see the process of the rule application
+        ConstraintHandler colorHandler = new SimpleHandler(getRules());
+//        colorHandler.setTrace(new CommandLineTracer()); // Use to see the process of the rule application
 
         color redAndBlue = (color) colorHandler.solve(color.red, color.blue).get(0).value();
         System.out.println("red and blue is " + redAndBlue.toString());
@@ -33,54 +38,54 @@ public class ColorMixing {
         System.out.println("orange and brown is " + orangeAndBrown.toString());
     }
 
-    public static ConstraintHandler getConstraintHandler(){
-        ConstraintHandler constraintHandler = new SimpleHandler();
-        constraintHandler.addRule(new Simplification(2)
+    public static Rule[] getRules(){
+        List<Rule> rules = new ArrayList<>();
+        rules.add(new Simplification(2)
                 .guard(x -> x[0].equals(color.red) && x[1].equals(color.blue))
                 .body((oldC, newC) -> newC.add(new Constraint<>(color.purple))));
 
-        constraintHandler.addRule(new Simplification(2)
+        rules.add(new Simplification(2)
                 .guard(x -> x[0].equals(color.blue) && x[1].equals(color.yellow))
                 .body((oldC, newC) -> newC.add(new Constraint<>(color.green))));
 
-        constraintHandler.addRule(new Simplification(2)
+        rules.add(new Simplification(2)
                 .guard(x -> x[0].equals(color.yellow) && x[1].equals(color.red))
                 .body((oldC, newC) -> newC.add(new Constraint<>(color.orange))));
 
 
         // Version 1: Just Simplification
-        constraintHandler.addRule(new Simplification(2)
+        rules.add(new Simplification(2)
                 .guard(x -> x[0].equals(color.brown) && x[1].equals(color.blue))
                 .body((oldC, newC) -> newC.add(new Constraint<>(color.brown))));
-        constraintHandler.addRule(new Simplification(2)
+        rules.add(new Simplification(2)
                 .guard(x -> x[0].equals(color.brown) && x[1].equals(color.red))
                 .body((oldC, newC) -> newC.add(new Constraint<>(color.brown))));
-        constraintHandler.addRule(new Simplification(2)
+        rules.add(new Simplification(2)
                 .guard(x -> x[0].equals(color.brown) && x[1].equals(color.yellow))
                 .body((oldC, newC) -> newC.add(new Constraint<>(color.brown))));
-        constraintHandler.addRule(new Simplification(2)
+        rules.add(new Simplification(2)
                 .guard(x -> x[0].equals(color.brown) && x[1].equals(color.purple))
                 .body((oldC, newC) -> newC.add(new Constraint<>(color.brown))));
-        constraintHandler.addRule(new Simplification(2)
+        rules.add(new Simplification(2)
                 .guard(x -> x[0].equals(color.brown) && x[1].equals(color.green))
                 .body((oldC, newC) -> newC.add(new Constraint<>(color.brown))));
-        constraintHandler.addRule(new Simplification(2)
+        rules.add(new Simplification(2)
                 .guard(x -> x[0].equals(color.brown) && x[1].equals(color.orange))
                 .body((oldC, newC) -> newC.add(new Constraint<>(color.brown))));
-        constraintHandler.addRule(new Simplification(2)
+        rules.add(new Simplification(2)
                 .guard(x -> x[0].equals(color.brown) && x[1].equals(color.brown))
                 .body((oldC, newC) -> newC.add(new Constraint<>(color.brown))));
 
 
 //        // Version 2: Simpagation instead of Simplification:
-//        constraintHandler.addRule(new Simpagation(1, 1).guard((head1, head2) -> head1[0].equals(color.brown))
+//        rules.add(new Simpagation(1, 1).guard((head1, head2) -> head1[0].equals(color.brown))
 //        // .body((head1, head2, newC) -> {  })   // Body is not necessary
 //        );
 
         // Additional:
         // remove duplicates:
-        constraintHandler.addRule(new Simpagation(1, 1).guard((head1, head2) -> head1[0].equals(head2[0])));
+        rules.add(new Simpagation(1, 1).guard((head1, head2) -> head1[0].equals(head2[0])));
 
-        return constraintHandler;
+        return rules.toArray(new Rule[0]);
     }
 }

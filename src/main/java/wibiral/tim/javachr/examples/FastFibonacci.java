@@ -4,13 +4,14 @@ import wibiral.tim.javachr.ConstraintHandler;
 import wibiral.tim.javachr.SimpleHandler;
 import wibiral.tim.javachr.constraints.Constraint;
 import wibiral.tim.javachr.rules.Propagation;
+import wibiral.tim.javachr.rules.Rule;
 import wibiral.tim.javachr.rules.Simplification;
 
 import wibiral.tim.javachr.examples.Fibonacci.fib;
 
 public class FastFibonacci {
     public static void main(String[] args) {
-        ConstraintHandler fastFibHandler = getConstraintHandler();
+        ConstraintHandler fastFibHandler = new SimpleHandler(getRules());
 
         System.out.println("Fibonacci 42:");
         long start = System.currentTimeMillis();
@@ -19,17 +20,15 @@ public class FastFibonacci {
         System.out.println("Duration: " + (end - start) + "ms");
     }
 
-    public static ConstraintHandler getConstraintHandler(){
-        ConstraintHandler fibHandler = new SimpleHandler();
-        fibHandler.addRule(new Propagation(1)  // MAX => fib(0, 1), fib(1, 1).
+    public static Rule[] getRules(){
+        Rule r1 = new Propagation(1)  // MAX => fib(0, 1), fib(1, 1).
                 .guard(x -> x[0].value() instanceof Integer)
                 .body((oldC, newC) -> {
                     newC.add(new Constraint<>(new fib(0, 0)));
                     newC.add(new Constraint<>(new fib(1, 1)));
-                })
-        );
+                });
 
-        fibHandler.addRule(new Simplification(3)
+        Rule r2 = new Simplification(3)
                 .guard(x -> x[0].value() instanceof Integer
                             && !(x[1].value() instanceof Integer) //&& !(x[2].value() instanceof Integer)
                             && ((fib) x[1].value()).a + 1 == ((fib) x[2].value()).a)
@@ -48,9 +47,8 @@ public class FastFibonacci {
                         newC.add(oldC[2]);
                         newC.add(oldC[0]);
                     }
-                })
-        );
+                });
 
-        return fibHandler;
+        return new Rule[]{r1, r2};
     }
 }

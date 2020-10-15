@@ -4,6 +4,7 @@ import wibiral.tim.javachr.ConstraintHandler;
 import wibiral.tim.javachr.SimpleHandler;
 import wibiral.tim.javachr.constraints.Constraint;
 import wibiral.tim.javachr.constraints.ConstraintStore;
+import wibiral.tim.javachr.rules.Rule;
 import wibiral.tim.javachr.rules.Simpagation;
 import wibiral.tim.javachr.rules.Simplification;
 
@@ -14,28 +15,9 @@ import wibiral.tim.javachr.rules.Simplification;
 public class FastGCD {
     public static void main(String[] args) {
         // SimpleHandler is a naive implementation to apply some rules to some Constraints:
-        ConstraintHandler gcdHandler = new SimpleHandler();
+        ConstraintHandler gcdHandler = new SimpleHandler(getRules());
 //        gcdHandler.trace();   // use to trace execution
 
-        gcdHandler.addRule(new Simpagation(1, 1, "m % n").guard(
-                (h1, h2) ->
-                        // h1[0].value() instanceof Integer && h2[0].value() instanceof Integer &&
-                        // Not necessary if you can be sure that all Constraints are Integers.
-                        (int) h1[0].value() > 0 && (int) h1[0].value() <= (int) h2[0].value()
-        ).body(
-                (x1, x2, newConstraints) -> {
-                    int n = (int) x1[0].value();
-                    int m = (int) x2[0].value();
-                    newConstraints.add(new Constraint<>(m % n));
-                }
-        ));
-        gcdHandler.addRule(new Simplification(1, "Delete zero")
-                .guard(
-                x ->
-                        // Not necessary if you can be sure that all Constraints are Integers.
-                        // x[0].value() instanceof Integer &&
-                        (int) x[0].value() == 0
-                ));
 
         ConstraintStore result;
         long start, end;
@@ -70,5 +52,29 @@ public class FastGCD {
         end = System.currentTimeMillis();
         System.out.println("Duration: " + (end-start) + "ms\n" + result);
 
+    }
+
+    public static Rule[] getRules(){
+        Rule r1 = new Simpagation(1, 1, "m % n").guard(
+                (h1, h2) ->
+                        // h1[0].value() instanceof Integer && h2[0].value() instanceof Integer &&
+                        // Not necessary if you can be sure that all Constraints are Integers.
+                        (int) h1[0].value() > 0 && (int) h1[0].value() <= (int) h2[0].value()
+        ).body(
+                (x1, x2, newConstraints) -> {
+                    int n = (int) x1[0].value();
+                    int m = (int) x2[0].value();
+                    newConstraints.add(new Constraint<>(m % n));
+                }
+        );
+        Rule r2  = new Simplification(1, "Delete zero")
+                .guard(
+                        x ->
+                                // Not necessary if you can be sure that all Constraints are Integers.
+                                // x[0].value() instanceof Integer &&
+                                (int) x[0].value() == 0
+                );
+
+        return new Rule[]{r1, r2};
     }
 }
