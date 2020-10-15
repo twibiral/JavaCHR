@@ -9,9 +9,10 @@ import java.util.List;
  */
 public interface Body {
     /**
-     * Executes the body of the rule.
-     * @param constraints The constraints from the head. Its guaranteed that they were accepted by the guard.
+     * Executes the body of the rule. Example:
+     * (head, newConstraints) -> newConstraints.add(new Constraint<Integer>(42))
+     * @param head The constraints from the head. Its guaranteed that they were accepted by the guard.
      * @param newConstraints Add all constraints to this list, which should be added to the constraint store.
      */
-    void execute(Constraint<?>[] constraints, List<Constraint<?>> newConstraints);
+    void execute(Constraint<?>[] head, List<Constraint<?>> newConstraints);
 }

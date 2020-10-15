@@ -117,6 +117,10 @@ public class ConstraintStore {
         return store.add(constraint);
     }
 
+    public synchronized <S> boolean addObj(S obj){
+        return store.add(new Constraint<>(obj));
+    }
+
     /**
      * Add all the constraints in the list to the ConstraintStore.
      *
