@@ -75,7 +75,7 @@ public class GreatestCommonDivisor {
         gcdHandlerParallel.kill();
     }
 
-    public static Rule[] getRules(){
+    static Rule[] getRules(){
         Rule r1 = new Simpagation(1, 1)
                 .guard(
                         (h1, h2) ->

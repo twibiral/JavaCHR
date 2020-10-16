@@ -38,7 +38,7 @@ public class ColorMixing {
         System.out.println("orange and brown is " + orangeAndBrown.toString());
     }
 
-    public static Rule[] getRules(){
+    static Rule[] getRules(){
         List<Rule> rules = new ArrayList<>();
         rules.add(new Simplification(2)
                 .guard(x -> x[0].equals(color.red) && x[1].equals(color.blue))

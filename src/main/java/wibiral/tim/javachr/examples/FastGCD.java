@@ -54,7 +54,7 @@ public class FastGCD {
 
     }
 
-    public static Rule[] getRules(){
+    static Rule[] getRules(){
         Rule r1 = new Simpagation(1, 1, "m % n").guard(
                 (h1, h2) ->
                         // h1[0].value() instanceof Integer && h2[0].value() instanceof Integer &&

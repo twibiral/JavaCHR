@@ -40,7 +40,7 @@ public class Maximum {
         parallelHandler.kill();
     }
 
-    public static Rule[] getRules(){
+    static Rule[] getRules(){
         return new Rule[]{
                 new Simpagation(1, 1)
                 .guard((h1, h2) -> (Integer) h1[0].value() >= (Integer) h2[0].value())

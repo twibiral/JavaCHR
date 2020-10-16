@@ -38,7 +38,7 @@ public class Fibonacci {
         System.out.println("Duration: " + (end - start) + "ms");
     }
 
-    public static Rule[] getRules(){
+    static Rule[] getRules(){
         Rule r1 = new Propagation(1)  // MAX => fib(0, 1), fib(1, 1).
                 .guard(x -> x[0].value() instanceof Integer)
                 .body((oldC, newC) -> {
