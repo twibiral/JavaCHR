@@ -18,7 +18,6 @@ public class FastGCD {
         ConstraintHandler gcdHandler = new SimpleHandler(getRules());
 //        gcdHandler.trace();   // use to trace execution
 
-
         ConstraintStore result;
         long start, end;
 
@@ -68,12 +67,7 @@ public class FastGCD {
                 }
         );
         Rule r2  = new Simplification(1, "Delete zero")
-                .guard(
-                        x ->
-                                // Not necessary if you can be sure that all Constraints are Integers.
-                                // x[0].value() instanceof Integer &&
-                                (int) x[0].value() == 0
-                );
+                .guard(x -> (int) x[0].value() == 0);
 
         return new Rule[]{r1, r2};
     }

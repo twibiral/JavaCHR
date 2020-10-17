@@ -30,6 +30,7 @@ public abstract class ConstraintHandler {
 
     /**
      * Switch to turn tracing on and of.
+     * @param tracer The {@link Tracer} you want to use.
      * @return True if tracing is on after calling this method, false if not.
      */
     public abstract boolean setTrace(Tracer tracer);
