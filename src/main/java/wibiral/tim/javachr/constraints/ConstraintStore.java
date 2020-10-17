@@ -173,7 +173,7 @@ public class ConstraintStore {
 
     @Override
     public String toString() {
-        StringBuilder str = new StringBuilder("Constraint store:");
+        StringBuilder str = new StringBuilder("ConstraintStore:");
         for (Constraint<?> c : store) {
             str.append("\n\t").append(c.toString());
         }

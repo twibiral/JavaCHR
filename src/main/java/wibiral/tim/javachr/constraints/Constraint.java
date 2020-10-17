@@ -43,7 +43,7 @@ public class Constraint<T> {
 
     @Override
     public String toString() {
-        return  "Constraint<" + value.getClass().getSimpleName() + ">, Value: " + value;
+        return  "Constraint<" + value.getClass().getSimpleName() + ">: " + value;
     }
 }
 

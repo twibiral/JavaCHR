@@ -3,6 +3,7 @@ package wibiral.tim.javachr.examples;
 import wibiral.tim.javachr.ConstraintHandler;
 import wibiral.tim.javachr.SimpleHandler;
 import wibiral.tim.javachr.constraints.Constraint;
+import wibiral.tim.javachr.constraints.ConstraintStore;
 import wibiral.tim.javachr.rules.Propagation;
 import wibiral.tim.javachr.rules.Rule;
 import wibiral.tim.javachr.rules.Simpagation;
@@ -33,9 +34,9 @@ public class Fibonacci {
 
         System.out.println("Fibonacci 42:");
         long start = System.currentTimeMillis();
-        System.out.println(fibHandler.solve(42));
+        ConstraintStore result = fibHandler.solve(42);
         long end = System.currentTimeMillis();
-        System.out.println("Duration: " + (end - start) + "ms");
+        System.out.println(result + "\nDuration: " + (end - start) + "ms");
     }
 
     static Rule[] getRules(){
