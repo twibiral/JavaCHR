@@ -1,8 +1,6 @@
 # JavaCHR
 Object-oriented implementation of Constraint Handling Rules in Java.
 
-Here you find the [JavaDoc](docs/index.html) and a short introduction follows below.
-
 ### Constraint Handling Rules (CHR)
 CHR was created by Thom Frühwirth in 1991 and consists of constraints and rules that are applied to them. There are 3 types of rules:
 
