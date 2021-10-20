@@ -1,6 +1,9 @@
 package wibiral.tim.newjavachr;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Implementation of a Constraint Store, oriented toward the definition of the constraint store by
@@ -8,11 +11,33 @@ import java.util.Iterator;
  * Stores {@link Constraint}-objects and a rule application history (which rules where applied to which constraints)
  */
 public class ConstraintStore {
+    private ArrayList<Constraint<?>> store = new ArrayList<>();
+
+    public ConstraintStore(List<Constraint<?>> constraints) {
+        if (constraints != null)
+            store.addAll(constraints);
+    }
+
+    public ConstraintStore(Constraint<?>[] constraints) {
+        if (constraints.length > 0)
+            store.addAll(Arrays.asList(constraints));
+    }
+
+    @SafeVarargs
+    public <T> ConstraintStore(T... values) {
+        for (T value : values)
+            store.add(new Constraint<>(value));
+    }
+
     /**
      * Add the given constraint to the store.
      */
     public void add(Constraint<?> constraint){
+        // Check if the constraint is already in the store.
+        if(store.stream().anyMatch(x -> x.ID() == constraint.ID()))
+            return;
 
+        store.add(constraint);
     }
 
     /**
@@ -28,7 +53,12 @@ public class ConstraintStore {
      * Remove the constraint with the given ID.
      */
     public void remove(long ID){
-
+        store.forEach(x -> {
+            if(x.ID() == ID){
+                x.setDead();
+            }
+        });
+        store.removeIf(x -> x.ID() == ID);
     }
 
     /**
@@ -36,7 +66,7 @@ public class ConstraintStore {
      * @return An iterator with all elements in the ConstraintStore.
      */
     public Iterator<Constraint<?>> lookup(){
-        return null;
+        return store.iterator();
     }
 
     /**
@@ -45,6 +75,6 @@ public class ConstraintStore {
      * @return An iterator with all elements of type constraintType.
      */
     public Iterator<Constraint<?>> lookup(Class<?> constraintType){
-        return null;
+        return store.stream().filter(x -> x.isOfType(constraintType)).iterator();
     }
 }
