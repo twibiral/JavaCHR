@@ -24,7 +24,7 @@ public abstract class Rule {
         this.headTypes = null;
     }
 
-    protected Rule(Class... headTypes){
+    protected Rule(Class<?>... headTypes){
         this.nrConstraintsInHead = headTypes.length;
         this.name = null;
         headTypesSpecified = true;
