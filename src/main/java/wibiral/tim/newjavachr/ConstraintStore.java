@@ -11,7 +11,7 @@ import java.util.List;
  * Stores {@link Constraint}-objects and a rule application history (which rules where applied to which constraints)
  */
 public class ConstraintStore {
-    private ArrayList<Constraint<?>> store = new ArrayList<>();
+    private final ArrayList<Constraint<?>> store = new ArrayList<>();
 
     public ConstraintStore(List<Constraint<?>> constraints) {
         if (constraints != null)
@@ -76,5 +76,13 @@ public class ConstraintStore {
      */
     public Iterator<Constraint<?>> lookup(Class<?> constraintType){
         return store.stream().filter(x -> x.isOfType(constraintType)).iterator();
+    }
+
+    /**
+     * Set all constraints to dead and remove them from the internal data structure.
+     */
+    public void clear(){
+        store.forEach(Constraint::setDead);
+        store.clear();
     }
 }
