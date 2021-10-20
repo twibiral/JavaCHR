@@ -5,8 +5,8 @@ import java.util.concurrent.atomic.AtomicLong;
 public class Constraint<T> {
     private static final AtomicLong ID_COUNTER = new AtomicLong(0);
 
+    private final long ID;
     private T value;
-    private long id;
     private boolean alive;
 
     public Constraint(T value){
@@ -14,7 +14,7 @@ public class Constraint<T> {
         this.alive = true;
 
         // gives this constraint a new id and increments the id counter for the next constraint.
-        id = ID_COUNTER.getAndIncrement();
+        ID = ID_COUNTER.getAndIncrement();
     }
 
     /**
@@ -32,6 +32,10 @@ public class Constraint<T> {
         return value;
     }
 
+    public long ID(){
+        return ID;
+    }
+
 //    /**
 //     * PROBLEM: Maybe during concurrent there are problems with inconsistency.
 //     *
@@ -45,11 +49,9 @@ public class Constraint<T> {
 //    }
 
     /**
-     * If two constraint are compared, they compare their values.
-     * It's possible to call this equals() method with an object of generic type {@link T}!
-     * Then the value of this constraint gets compared to the given object.
-     * @param obj Object of type Constraint or the generic type {@link T}
-     * @return true if the values are equal or if the value of the constraint equals the {@link T} Object.
+     * Compares the IDs of two constraints. Returns false if obj is not of type {@link Constraint}.
+     * @param obj any object.
+     * @return true if the given object is a {@link Constraint} and has the same id as this {@link Constraint}.
      */
     @Override
     public boolean equals(Object obj) {
@@ -57,10 +59,10 @@ public class Constraint<T> {
             return false;
 
         else if(obj instanceof Constraint)
-            return ((Constraint<?>) obj).value.equals(value);
+            return ((Constraint<?>) obj).ID() == this.ID();
 
         else
-            return value.equals(obj);
+            return false;
     }
 
     @Override
