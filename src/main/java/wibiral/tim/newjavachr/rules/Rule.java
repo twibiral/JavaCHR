@@ -46,8 +46,9 @@ public abstract class Rule {
     }
 
     /**
-     * Applies the rule to the list of constraints.
-     * The result of the rule application is saved in the list that was given as parameter! Maybe some constraints get removed from the list and maybe some others are added.
+     * Applies the rule to the list of constraints. (By using the defined body)
+     * The result of the rule application is saved in the list that was given as parameter! Maybe some constraints get
+     * removed from the list and maybe some others are added.
      * If there are wrong constraints in the ConstraintStore the method maybe throws an exception but maybe just executes the wrong way.
      * DOES NOT CHECK IF THE GIVEN CONSTRAINTS ARE ACCEPTED TO IMPROVE PERFORMANCE!
      *
@@ -57,7 +58,7 @@ public abstract class Rule {
     public abstract boolean apply(List<Constraint<?>> constraints);
 
     /**
-     * Takes the constraints of the list and tests if the guard of the rule accepts them.
+     * Takes the constraints of the list and tests if the guard of the rule accepts them. (By using the defined guard.)
      * @param constraints List of constraints that are tested by the guard.
      * @return True if the guard of the Rule accepts the given {@link Constraint}s.
      */
