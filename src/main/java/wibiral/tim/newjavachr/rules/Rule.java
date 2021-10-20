@@ -47,9 +47,9 @@ public abstract class Rule {
 
     /**
      * Applies the rule to the list of constraints.
-     * DOES NOT CHECK IF THE GIVEN CONSTRAINTS ARE ACCEPTED TO IMPROVE PERFORMANCE!
+     * The result of the rule application is saved in the list that was given as parameter! Maybe some constraints get removed from the list and maybe some others are added.
      * If there are wrong constraints in the ConstraintStore the method maybe throws an exception but maybe just executes the wrong way.
-     * The result of the rule application is saved in the list that was given as parameter. Maybe some constraints get removed from the list and maybe some others are added.
+     * DOES NOT CHECK IF THE GIVEN CONSTRAINTS ARE ACCEPTED TO IMPROVE PERFORMANCE!
      *
      * @param constraints A list of constraint on which the rule is applied.
      * @return true if the rule was successfully applied to the constraints of the list.
