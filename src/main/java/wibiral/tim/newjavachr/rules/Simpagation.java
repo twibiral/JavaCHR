@@ -11,6 +11,7 @@ public class Simpagation extends Rule {
     private final int nrConstraintsHead1;
     private final int nrConstraintsHead2;
 
+    // Default definitions for guard and head.
     private SimpagationGuard guard = (x1, x2) -> true;    // Guard that accepts evey constraints from head 1.
     private SimpagationBody body = (x1, x2, y) -> { };   // Empty body for the rule.
 
@@ -30,34 +31,7 @@ public class Simpagation extends Rule {
     }
 
     @Override
-    public boolean apply(ConstraintStore store) {
-        if(store.size() != headSize())
-            return false;
-
-        Constraint<?>[] constraintsHead1 = new Constraint<?>[nrConstraintsHead1];
-        Constraint<?>[] constraintsHead2 = new Constraint<?>[nrConstraintsHead2];
-
-        for (int i = 0; i < nrConstraintsHead1; i++) {
-            constraintsHead1[i] = store.get(i);
-        }
-
-        int[] toRemove = new int[nrConstraintsHead2];
-        for (int i = 0; i <  nrConstraintsHead2; i++) {
-            constraintsHead2[i] = store.get(i + nrConstraintsHead1);
-            toRemove[i] = i + nrConstraintsHead1;
-        }
-
-        store.removeAll(toRemove);
-
-        ArrayList<Constraint<?>> newConstraints = new ArrayList<>();
-        body.execute(constraintsHead1, constraintsHead2, newConstraints);
-        store.addAll(newConstraints);
-
-        return true;
-    }
-
-    @Override
-    public boolean accepts(ConstraintStore constraints) {
+    public boolean apply(List<Constraint<?>> constraints) {
         if(constraints.size() != headSize())
             return false;
 
@@ -67,11 +41,22 @@ public class Simpagation extends Rule {
         for (int i = 0; i < nrConstraintsHead1; i++) {
             constraintsHead1[i] = constraints.get(i);
         }
-        for (int i = 0; i < nrConstraintsHead2; i++) {
+
+        for (int i = 0; i <  nrConstraintsHead2; i++) {
             constraintsHead2[i] = constraints.get(i + nrConstraintsHead1);
         }
 
-        return guard.check(constraintsHead1, constraintsHead2);
+        // Remove all the constraints of the second head.
+        // TODO: Extensive tests; this part is very problematic!
+        if (nrConstraintsHead2 > 0) {
+            constraints.subList(nrConstraintsHead1, nrConstraintsHead1 + nrConstraintsHead2).clear();
+        }
+
+        ArrayList<Constraint<?>> newConstraints = new ArrayList<>();
+        body.execute(constraintsHead1, constraintsHead2, newConstraints);
+        constraints.addAll(newConstraints);
+
+        return true;
     }
 
     @Override
