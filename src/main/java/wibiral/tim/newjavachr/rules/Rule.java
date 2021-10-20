@@ -8,7 +8,7 @@ public abstract class Rule {
     protected final int nrConstraintsInHead;
     protected final String name;
     protected final boolean headTypesSpecified;
-    protected final Class[] headTypes;
+    protected final Class<?>[] headTypes;
 
     protected Rule(int nrConstraintsInHead){
         this.nrConstraintsInHead = nrConstraintsInHead;

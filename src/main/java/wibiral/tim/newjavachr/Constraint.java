@@ -37,6 +37,15 @@ public class Constraint<T> {
     }
 
     /**
+     * Returns true if the value this constraint contains is of the same class as or a subclass of the given Class parameter.
+     * @param type Some class type.
+     * @return True if the value of this constraint is assignable to the given type.
+     */
+    public boolean isOfType(Class<?> type){
+        return type.isAssignableFrom(this.type());
+    }
+
+    /**
      * @return true if the constraint is still alive. Dead constraints are unregarded by {@link ConstraintSolver}s.
      */
     public boolean isAlive(){
