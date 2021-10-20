@@ -7,9 +7,11 @@ public class Constraint<T> {
 
     private T value;
     private long id;
+    private boolean alive;
 
     public Constraint(T value){
         this.value = value;
+        this.alive = true;
 
         // gives this constraint a new id and increments the id counter for the next constraint.
         id = ID_COUNTER.getAndIncrement();
@@ -30,15 +32,17 @@ public class Constraint<T> {
         return value;
     }
 
-    /**
-     * Instead of deleting an old constraint and creating a new one this method allows you to update an existing constraint.
-     * This way is more efficient.
-     * @param newValue The new value that is assigned to the constraint.
-     */
-    public void update(T newValue){
-        value = newValue;
-        id = ID_COUNTER.getAndIncrement();
-    }
+//    /**
+//     * PROBLEM: Maybe during concurrent there are problems with inconsistency.
+//     *
+//     * Instead of deleting an old constraint and creating a new one this method allows you to update an existing constraint.
+//     * This way is more efficient.
+//     * @param newValue The new value that is assigned to the constraint.
+//     */
+//    public void update(T newValue){
+//        value = newValue;
+//        id = ID_COUNTER.getAndIncrement();
+//    }
 
     /**
      * If two constraint are compared, they compare their values.
