@@ -6,6 +6,11 @@ import wibiral.tim.javachr.exceptions.AlreadyDefinedException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The type of rule that just adds new constraints and removes none.
+ * Original syntax:
+ * {@code Head => Guard | Body.}
+ */
 public class Propagation extends Rule {
     // Default definitions of body and guard
     private Guard guard = x -> true;    // Guard that accepts evey constraints for the rule.

@@ -1,12 +1,16 @@
 package wibiral.tim.newjavachr.rules;
 
 import wibiral.tim.javachr.constraints.Constraint;
-import wibiral.tim.javachr.constraints.ConstraintStore;
 import wibiral.tim.javachr.exceptions.AlreadyDefinedException;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Type of rule that removes a part of the head after execution (head1 stays, head2 gets removed).
+ * Original syntax:
+ * {@code Head1 / Head2 <=> Guard | Body.}
+ */
 public class Simpagation extends Rule {
     private final int nrConstraintsHead1;
     private final int nrConstraintsHead2;
@@ -77,6 +81,15 @@ public class Simpagation extends Rule {
         return guard.check(constraintsHead1, constraintsHead2);
     }
 
+    /**
+     * Used to define the guard of the rule by defining a lambda function. The lambda gets two arrays with constraints
+     * (the two heads of the rule) and should return true if the constraints are accepted.
+     * Example for the lambda:
+     * {@code head1, head2 -> head1[0] > head2[1]}
+     * where head is an array with constraints.
+     * @param guard lambda function defined according to {@link SimpagationGuard}.
+     * @return This object. (Used to chain function calls.)
+     */
     public Simpagation guard(SimpagationGuard guard){
         if(guardIsSet) throw new AlreadyDefinedException("Guard is already defined for this rule!");
 
@@ -86,6 +99,13 @@ public class Simpagation extends Rule {
         return this;
     }
 
+    /**
+     * Used to define the body of the rule by defining a lambda function. The lambda gets two arrays with constraints
+     * (the two heads of the rule) and an empty list were new arrays are added. The body uses the constraints to calculate
+     * something and adds new constraints to the given list.
+     * @param body lambda function defined according to {@link SimpagationBody}.
+     * @return This object. (Used to chain function calls.)
+     */
     public Simpagation body(SimpagationBody body){
         if(bodyIsSet) throw new AlreadyDefinedException("Body is already defined for this rule!");
 

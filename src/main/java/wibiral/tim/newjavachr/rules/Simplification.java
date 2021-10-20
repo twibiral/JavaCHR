@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Type of rule that removes all header constraints and maybe adds new constraints in the body. (It "simplifies")
  * Original syntax:
- * Head <=> Guard | Body.
+ * {@code Head <=> Guard | Body.}
  */
 public class Simplification extends Rule {
     // Default definitions of body and guard
