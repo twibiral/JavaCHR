@@ -18,7 +18,7 @@ public class ConstraintStore {
             store.addAll(constraints);
     }
 
-    public ConstraintStore(Constraint<?>[] constraints) {
+    public ConstraintStore(Constraint<?>... constraints) {
         if (constraints.length > 0)
             store.addAll(Arrays.asList(constraints));
     }
