@@ -8,6 +8,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+/**
+ * A tracer that prints simple statements to the command line. Helpful for debugging.
+ * TODO: Replace System.out by logger.
+ */
 public class CommandLineTracer implements Tracer {
     private final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
     public static final String ANSI_BLUE = "\u001B[34m";
