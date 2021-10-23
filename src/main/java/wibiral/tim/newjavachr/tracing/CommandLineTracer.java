@@ -1,17 +1,30 @@
 package wibiral.tim.newjavachr.tracing;
 
-import wibiral.tim.javachr.constraints.Constraint;
-import wibiral.tim.javachr.constraints.ConstraintStore;
-import wibiral.tim.javachr.rules.Rule;
+import wibiral.tim.newjavachr.Constraint;
+import wibiral.tim.newjavachr.ConstraintStore;
+import wibiral.tim.newjavachr.rules.Rule;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-public class CommandLineTracer extends Tracer {
+public class CommandLineTracer implements Tracer {
     private final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
     public static final String ANSI_BLUE = "\u001B[34m";
     public static final String ANSI_RESET = "\u001B[0m";
+
+    private final boolean stopAfterEveryStep;
+
+    public CommandLineTracer(){
+        stopAfterEveryStep = false;
+    }
+
+    /**
+     * @param stopAfterEveryStep If true: Asks user for permission to execute next step for every step. (Press enter to execute next step, type "!" or "stop" to stop execution.)
+     */
+    public CommandLineTracer(boolean stopAfterEveryStep){
+        this.stopAfterEveryStep = stopAfterEveryStep;
+    }
 
     @Override
     public boolean step(Rule appliedRule, Constraint<?>[] oldConstraints, Constraint<?>[] addedConstraints) {
@@ -23,27 +36,29 @@ public class CommandLineTracer extends Tracer {
 
         System.out.flush();
 
-        String input = readLine();
-        switch (input.toLowerCase()){
-            case "":
-            case ".":
-                return true;
+        if(stopAfterEveryStep){
+            String input = readLine();
+            switch (input.toLowerCase()){
+                case "":
+                case ".":
+                    return true;
 
-            case "stop":
-            case "!":
-                return false;
+                case "stop":
+                case "!":
+                    return false;
 
-            default:
-                print("Wrong input!");
+                default:
+                    print("Wrong input!");
+            }
         }
 
         return true;
     }
 
     @Override
-    public void startMessage(ConstraintStore store) {
+    public void initMessage(ConstraintStore store) {
         print("\n=== Executing handler ===");
-        print("Constraints: " + constraintsToString(store.getAll().toArray(new Constraint<?>[0])) + "\n");
+        print("Constraints: " + constraintsToString(store.toList().toArray(new Constraint<?>[0])) + "\n");
     }
 
     @Override
@@ -53,7 +68,7 @@ public class CommandLineTracer extends Tracer {
 
     @Override
     public void terminatedMessage(ConstraintStore store) {
-        print("Constraints after execution: " + constraintsToString(store.getAll().toArray(new Constraint<?>[0])));
+        print("Constraints after execution: " + constraintsToString(store.toList().toArray(new Constraint<?>[0])));
         print("=== Terminating handler ===\n");
     }
 
