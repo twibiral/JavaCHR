@@ -11,7 +11,7 @@ import java.util.List;
  * Stores {@link Constraint}-objects and a rule application history (which rules where applied to which constraints)
  */
 public class ConstraintStore {
-    private final ArrayList<Constraint<?>> store = new ArrayList<>();
+    private final List<Constraint<?>> store = new ArrayList<>();
 
     public ConstraintStore(List<Constraint<?>> constraints) {
         if (constraints != null)
@@ -84,5 +84,13 @@ public class ConstraintStore {
     public void clear(){
         store.forEach(Constraint::setDead);
         store.clear();
+    }
+
+    public int size(){
+        return store.size();
+    }
+
+    public List<Constraint<?>> toList(){
+        return new ArrayList<>(store);
     }
 }
