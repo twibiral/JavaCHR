@@ -17,16 +17,16 @@ public abstract class Rule {
         this.headTypes = null;
     }
 
-    protected Rule(int nrConstraintsInHead, String name){
+    protected Rule(String name, int nrConstraintsInHead){
         this.nrConstraintsInHead = nrConstraintsInHead;
         this.name = name;
         headTypesSpecified = false;
         this.headTypes = null;
     }
 
-    protected Rule(Class<?>... headTypes){
+    protected Rule(String name, Class<?>... headTypes){
         this.nrConstraintsInHead = headTypes.length;
-        this.name = null;
+        this.name = name;
         headTypesSpecified = true;
         this.headTypes = headTypes;
     }
