@@ -16,6 +16,7 @@ import java.util.*;
 public class SimpleConstraintSolver implements ConstraintSolver {
     /**
      * Contains for all header the rules have a List with all rules with that specific header size.
+     * (The header sizes are the key)
      */
     protected final HashMap<Integer, List<Rule>> ruleHash;
     protected final List<Integer> headerSizes = new LinkedList<>();
@@ -26,15 +27,17 @@ public class SimpleConstraintSolver implements ConstraintSolver {
     protected ConstraintStore store;
 
     public SimpleConstraintSolver(Rule... rules) {
-        ruleHash = instantiateRuleHash();
+        this.rules.addAll(Arrays.asList(rules));
+        ruleHash = instantiateRuleHash(this.rules);
     }
 
     public SimpleConstraintSolver(Rule rule) {
-        ruleHash = instantiateRuleHash();
+        this.rules.add(rule);
+        ruleHash = instantiateRuleHash(this.rules);
     }
 
     public SimpleConstraintSolver() {
-        ruleHash = instantiateRuleHash();
+        ruleHash = instantiateRuleHash(rules);
     }
 
     @Override
@@ -45,7 +48,7 @@ public class SimpleConstraintSolver implements ConstraintSolver {
 
     @Override
     public void addRule(Rule rule) {
-        handleRuleAndRuleHash(rule, ruleHash);
+        hashRule(rule, ruleHash);
         rules.add(rule);
     }
 
@@ -87,14 +90,16 @@ public class SimpleConstraintSolver implements ConstraintSolver {
         final HashMap<Integer, List<Rule>> temp = new HashMap<>(3 * rules.size());
 
         for (Rule rule : rules) {
-            handleRuleAndRuleHash(rule, temp);
+            hashRule(rule, temp);
         }
 
         return temp;
     }
 
-    // TODO: Should be renamed
-    private void handleRuleAndRuleHash(Rule rule, HashMap<Integer, List<Rule>> ruleHash) {
+    /**
+     * Add rule to the hash.
+     */
+    private void hashRule(Rule rule, HashMap<Integer, List<Rule>> ruleHash) {
         int headerSize = rule.headSize();
         if (ruleHash.containsKey(headerSize)) {
             ruleHash.get(headerSize).add(rule);
@@ -107,6 +112,10 @@ public class SimpleConstraintSolver implements ConstraintSolver {
         }
     }
 
+    /**
+     * Finds matching constraints for the rule.
+     * @return constraint with indices of the matching constraints.
+     */
     protected int[] findAssignment(List<Constraint<?>> store, Rule rule, int[] selectedIdx, int pos) {
         if (pos == selectedIdx.length) {
             return selectedIdx;
@@ -116,7 +125,7 @@ public class SimpleConstraintSolver implements ConstraintSolver {
                 selectedIdx[pos] = i;
                 findAssignment(store, rule, selectedIdx, pos + 1);
 
-                if(notAllEqual(selectedIdx)){
+                if(noDuplicatesIn(selectedIdx)){
                     List<Constraint<?>> constraints = new ArrayList<>();
                     for (int j : selectedIdx) {
                         constraints.add(store.get(j));
@@ -148,7 +157,7 @@ public class SimpleConstraintSolver implements ConstraintSolver {
      * @param array The array to check.
      * @return Return true if there are duplicates in the entry.
      */
-    protected boolean notAllEqual(int[] array){
+    protected boolean noDuplicatesIn(int[] array){
         for(int i : array){
             int cnt = 0;
             for(int j : array){
