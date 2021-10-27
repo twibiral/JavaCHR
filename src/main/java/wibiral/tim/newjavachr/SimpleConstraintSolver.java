@@ -67,10 +67,12 @@ public class SimpleConstraintSolver implements ConstraintSolver {
                 ruleApplied = false;
 
             } else {
-                List<Constraint<?>> constraintList = Arrays.asList(ruleAndMatch.match);
+                List<Constraint<?>> constraintList = new ArrayList<>(Arrays.asList(ruleAndMatch.match));
                 ruleAndMatch.rule.apply(constraintList);
                 store.addAll(constraintList);
-                tracer.step(ruleAndMatch.rule, ruleAndMatch.match, constraintList.toArray(new Constraint<?>[0]));
+
+                if(tracingOn)
+                    tracer.step(ruleAndMatch.rule, ruleAndMatch.match, constraintList.toArray(new Constraint<?>[0]));
             }
 
         }
@@ -134,7 +136,7 @@ public class SimpleConstraintSolver implements ConstraintSolver {
                     matchingConstraints[pointer] = currentIter.next();
 
                     for (Rule rule : ruleHash.get(hSize)) {
-                        if (rule.accepts(Arrays.asList(matchingConstraints))) {
+                        if (noDuplicatesIn(matchingConstraints) && rule.accepts(Arrays.asList(matchingConstraints))) {
                             for(Constraint<?> constraint : matchingConstraints){
                                 store.remove(constraint.ID());
                             }
@@ -156,6 +158,22 @@ public class SimpleConstraintSolver implements ConstraintSolver {
 
         // No match found:
         return null;
+    }
+
+    /**
+     * @param array The array to check.
+     * @return Return true if there are duplicates in the entry.
+     */
+    protected boolean noDuplicatesIn(Constraint<?>[] array){
+        for(Constraint<?> i : array){
+            int cnt = 0;
+            for(Constraint<?> j : array){
+                cnt += j.ID() == i.ID() ? 1 : 0;
+            }
+            if(cnt > 1)
+                return false;
+        }
+        return true;
     }
 
     /**

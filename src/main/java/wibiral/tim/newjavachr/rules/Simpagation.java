@@ -10,6 +10,8 @@ import java.util.List;
  * Type of rule that removes a part of the head after execution (head1 stays, head2 gets removed).
  * Original syntax:
  * {@code Head1 / Head2 <=> Guard | Body.}
+ *
+ * TODO: Doesnt work
  */
 public class Simpagation extends Rule {
     private final int nrConstraintsHead1;
@@ -55,7 +57,7 @@ public class Simpagation extends Rule {
         // Remove all the constraints of the second head.
         // TODO: Extensive tests; this part is very problematic!
         if (nrConstraintsHead2 > 0) {
-            constraints.subList(nrConstraintsHead1, nrConstraintsHead1 + nrConstraintsHead2).clear();
+            constraints.subList(nrConstraintsHead1, nrConstraintsHead1 + nrConstraintsHead2 - 1).clear();
         }
 
         ArrayList<Constraint<?>> newConstraints = new ArrayList<>();
