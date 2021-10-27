@@ -5,6 +5,14 @@ import wibiral.tim.newjavachr.tracing.Tracer;
 
 import java.util.*;
 
+/**
+ * This constraint solver implements constraint-first matching.
+ * This means it takes a combination of constraints and tries to match it with the heads of the rules. The first
+ * matching rule is executed. If the constraints fit no rule, the next combination is tried.
+ *
+ * A matching as described in Thom Frühwirth, "Constraint Handling Rules" (2009) is not possible, because the constraints
+ * can't be matched separately but must be matched together.
+ */
 public class SimpleConstraintSolver implements ConstraintSolver {
     /**
      * Contains for all header the rules have a List with all rules with that specific header size.
@@ -47,47 +55,19 @@ public class SimpleConstraintSolver implements ConstraintSolver {
 
         if(tracingOn)
             tracer.initMessage(store);
+
 // TODO: Reimplement algorithm!
-//        boolean ruleApplied = true;
-//        while (ruleApplied) {
-//            ruleApplied = false;
-//
-//            for (int size : headerSizes) {
-//                if(size <= store.size()){
-//                    List<Rule> sameHeaderRules = ruleHash.get(size);
-//
-//                    for (Rule rule : sameHeaderRules) {
-//                        int[] selectedIdx = findAssignment(store, rule, new int[size], 0);
-//
-//                        ConstraintStore temp = new ConstraintStore();
-//                        for (int i : selectedIdx) {
-//                            temp.add(store.get(i));
-//                        }
-//
-//                        if(rule.accepts(temp)){
-//                            Constraint<?>[] before = tracingOn ? temp.getAll().toArray(new Constraint<?>[0]) : null;
-//
-//                            store.removeAll(selectedIdx);
-//                            ruleApplied = rule.apply(temp);
-//                            store.addAll(temp);
-//
-//                            Constraint<?>[] after = tracingOn ? temp.getAll().toArray(new Constraint<?>[0]) : null;
-//                            if(tracingOn && !tracer.step(rule, before, after)){
-//                                tracer.stopMessage(store);
-//                                return store;
-//                            }
-//                        }
-//                    }
-//
-//                }
-//            }
-//
-//        }
 
-        if (tracingOn)
-            tracer.terminatedMessage(store);
+        boolean ruleApplied = true;
+        while(ruleApplied){
+            ruleApplied = false;
 
-        return store.toList();
+            Iterator<Constraint<?>> firstElementIterator = store.lookup();
+            Constraint<?> firstElement = firstElementIterator.next();
+
+        }
+
+        return terminate();
     }
 
     @Override
@@ -103,7 +83,7 @@ public class SimpleConstraintSolver implements ConstraintSolver {
         return solve(constraints);
     }
 
-    private HashMap<Integer, List<Rule>> instantiateRuleHash(){
+    private HashMap<Integer, List<Rule>> instantiateRuleHash(List<Rule> rules){
         final HashMap<Integer, List<Rule>> temp = new HashMap<>(3 * rules.size());
 
         for (Rule rule : rules) {
@@ -150,6 +130,18 @@ public class SimpleConstraintSolver implements ConstraintSolver {
         }
 
         return selectedIdx;
+    }
+
+    /**
+     * Executes cleanup and calls tracer.
+     * @return The content of the constraint store after execution.
+     */
+    protected List<Constraint<?>> terminate(){
+        if(tracingOn)
+            tracer.terminatedMessage(store);
+        List<Constraint<?>> result = store.toList();
+        store = null;
+        return result;
     }
 
     /**
