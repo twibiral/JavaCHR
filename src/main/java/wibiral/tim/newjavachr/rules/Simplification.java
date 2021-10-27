@@ -1,7 +1,7 @@
 package wibiral.tim.newjavachr.rules;
 
-import wibiral.tim.javachr.constraints.Constraint;
-import wibiral.tim.javachr.exceptions.AlreadyDefinedException;
+import wibiral.tim.newjavachr.Constraint;
+import wibiral.tim.newjavachr.exceptions.AlreadyDefinedException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,8 +23,8 @@ public class Simplification extends Rule {
         super(nrConstraintsInHead);
     }
 
-    public Simplification(int nrConstraintsInHead, String name) {
-        super(nrConstraintsInHead, name);
+    public Simplification(String name, int nrConstraintsInHead) {
+        super(name, nrConstraintsInHead);
     }
 
     @Override

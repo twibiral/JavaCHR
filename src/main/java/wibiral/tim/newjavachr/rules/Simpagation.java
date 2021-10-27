@@ -1,7 +1,7 @@
 package wibiral.tim.newjavachr.rules;
 
-import wibiral.tim.javachr.constraints.Constraint;
-import wibiral.tim.javachr.exceptions.AlreadyDefinedException;
+import wibiral.tim.newjavachr.Constraint;
+import wibiral.tim.newjavachr.exceptions.AlreadyDefinedException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,11 +28,13 @@ public class Simpagation extends Rule {
         this.nrConstraintsHead2 = nrConstraintsHead2;
     }
 
-    public Simpagation(int nrConstraintsHead1, int nrConstraintsHead2, String name) {
-        super(nrConstraintsHead1 + nrConstraintsHead2, name);
+    public Simpagation(String name, int nrConstraintsHead1, int nrConstraintsHead2) {
+        super(name, nrConstraintsHead1 + nrConstraintsHead2);
         this.nrConstraintsHead1 = nrConstraintsHead1;
         this.nrConstraintsHead2 = nrConstraintsHead2;
     }
+
+    // TODO: Implement missing constuctor with head types
 
     @Override
     public boolean apply(List<Constraint<?>> constraints) {

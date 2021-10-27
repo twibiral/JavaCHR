@@ -1,7 +1,7 @@
 package wibiral.tim.newjavachr.rules;
 
-import wibiral.tim.javachr.constraints.Constraint;
-import wibiral.tim.javachr.exceptions.AlreadyDefinedException;
+import wibiral.tim.newjavachr.Constraint;
+import wibiral.tim.newjavachr.exceptions.AlreadyDefinedException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,11 +23,11 @@ public class Propagation extends Rule {
         super(nrOfConstraints);
     }
 
-    public Propagation(int nrOfConstraints, String name) {
-        super(nrOfConstraints, name);
+    public Propagation(String name, int nrOfConstraints) {
+        super(name, nrOfConstraints);
     }
 
-    public Propagation(Class<?>... headTypes){super(headTypes);}
+    public Propagation(String name, Class<?>... headTypes){super(name, headTypes);}
 
     @Override
     public boolean apply(List<Constraint<?>> constraints) {
@@ -51,7 +51,7 @@ public class Propagation extends Rule {
         if(headTypesSpecified && !fitsHeadTypes(constraints))
             return false;
 
-        return guard.check(constraints.toArray(new Constraint[0]));
+        return guard.check(constraints.toArray(new Constraint<?>[0]));
     }
 
     /**
