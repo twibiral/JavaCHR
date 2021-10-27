@@ -41,6 +41,14 @@ public class ConstraintStore {
     }
 
     /**
+     * Adds all the constraints of the list to the constraint store.
+     * @param constraints Constraints that get added to the store.
+     */
+    public void addAll(List<Constraint<?>> constraints){
+        store.addAll(constraints);
+    }
+
+    /**
      * Create a new constraint and add it to the store.
      * @param object the new object to add.
      * @param <T> Type of the given object and the created constraint.
