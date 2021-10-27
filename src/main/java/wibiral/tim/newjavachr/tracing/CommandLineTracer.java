@@ -31,11 +31,11 @@ public class CommandLineTracer implements Tracer {
     }
 
     @Override
-    public boolean step(Rule appliedRule, Constraint<?>[] oldConstraints, Constraint<?>[] addedConstraints) {
+    public boolean step(Rule appliedRule, Constraint<?>[] matchedConstraints, Constraint<?>[] newConstraints) {
         String name = appliedRule.name() == null ? appliedRule.getClass().getSimpleName() : "'" + appliedRule.name() + "'";
         String output = "Apply rule " + name + "\n" +
-                        "on: " + constraintsToString(oldConstraints) + "\n" +
-                        "generated: " + constraintsToString(addedConstraints);
+                        "on: " + constraintsToString(matchedConstraints) + "\n" +
+                        "generated: " + constraintsToString(newConstraints);
         print(output);
 
         System.out.flush();
