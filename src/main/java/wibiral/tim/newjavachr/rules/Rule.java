@@ -31,6 +31,8 @@ public abstract class Rule {
         this.headTypes = headTypes;
     }
 
+    // TODO: Add header + mechanics for unification and matching based on value and equality
+
     /**
      * @return Number of constraints in the head.
      */
