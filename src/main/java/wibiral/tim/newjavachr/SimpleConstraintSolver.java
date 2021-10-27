@@ -26,6 +26,8 @@ public class SimpleConstraintSolver implements ConstraintSolver {
     protected boolean tracingOn = false;
     protected ConstraintStore store;
 
+    private boolean sorted = false;
+
     public SimpleConstraintSolver(Rule... rules) {
         this.rules.addAll(Arrays.asList(rules));
         ruleHash = instantiateRuleHash(this.rules);
@@ -50,11 +52,13 @@ public class SimpleConstraintSolver implements ConstraintSolver {
     public void addRule(Rule rule) {
         hashRule(rule, ruleHash);
         rules.add(rule);
+        sorted = false;
     }
 
     @Override
     public List<Constraint<?>> solve(List<Constraint<?>> constraints) {
         store = new ConstraintStore(constraints);
+        sortRules();
 
         if(tracingOn)
             tracer.initMessage(store);
@@ -65,8 +69,7 @@ public class SimpleConstraintSolver implements ConstraintSolver {
         while(ruleApplied){
             ruleApplied = false;
 
-            Iterator<Constraint<?>> firstElementIterator = store.lookup();
-            Constraint<?> firstElement = firstElementIterator.next();
+
 
         }
 
@@ -94,22 +97,6 @@ public class SimpleConstraintSolver implements ConstraintSolver {
         }
 
         return temp;
-    }
-
-    /**
-     * Add rule to the hash.
-     */
-    private void hashRule(Rule rule, HashMap<Integer, List<Rule>> ruleHash) {
-        int headerSize = rule.headSize();
-        if (ruleHash.containsKey(headerSize)) {
-            ruleHash.get(headerSize).add(rule);
-
-        } else {
-            List<Rule> ruleList = new ArrayList<>();
-            ruleList.add(rule);
-            ruleHash.put(headerSize, ruleList);
-            headerSizes.add(headerSize);
-        }
     }
 
     /**
@@ -167,6 +154,40 @@ public class SimpleConstraintSolver implements ConstraintSolver {
                 return false;
         }
         return true;
+    }
+
+    /**
+     * Add rule to the hash.
+     */
+    private void hashRule(Rule rule, HashMap<Integer, List<Rule>> ruleHash) {
+        int headerSize = rule.headSize();
+        if (ruleHash.containsKey(headerSize)) {
+            ruleHash.get(headerSize).add(rule);
+
+        } else {
+            List<Rule> ruleList = new ArrayList<>();
+            ruleList.add(rule);
+            ruleHash.put(headerSize, ruleList);
+            headerSizes.add(headerSize);
+        }
+    }
+
+    /**
+     * Sorts the list with rules by head size.
+     */
+    private void sortRules(){
+        if(sorted)
+            return;
+
+        Collections.sort(rules, new Comparator<Rule>() {
+            @Override
+            public int compare(Rule lhs, Rule rhs) {
+                // -1 - less than, 1 - greater than, 0 - equal, all inversed for descending
+                return Integer.compare(lhs.headSize(), rhs.headSize());
+            }
+        });
+
+        sorted = true;
     }
 
 }
