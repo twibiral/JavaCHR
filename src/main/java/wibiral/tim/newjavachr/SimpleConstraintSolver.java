@@ -26,8 +26,6 @@ public class SimpleConstraintSolver implements ConstraintSolver {
     protected boolean tracingOn = false;
     protected ConstraintStore store;
 
-    private boolean sorted = false;
-
     public SimpleConstraintSolver(Rule... rules) {
         this.rules.addAll(Arrays.asList(rules));
         ruleHash = instantiateRuleHash(this.rules);
@@ -52,28 +50,38 @@ public class SimpleConstraintSolver implements ConstraintSolver {
     public void addRule(Rule rule) {
         hashRule(rule, ruleHash);
         rules.add(rule);
-        sorted = false;
     }
 
     @Override
     public List<Constraint<?>> solve(List<Constraint<?>> constraints) {
         store = new ConstraintStore(constraints);
-        sortRules();
 
         if(tracingOn)
             tracer.initMessage(store);
 
-// TODO: Reimplement algorithm!
-
         boolean ruleApplied = true;
         while(ruleApplied){
-            ruleApplied = false;
 
+            RuleAndMatch ruleAndMatch = findMatch();
+            if(ruleAndMatch == null){
+                ruleApplied = false;
 
+            } else {
+                List<Constraint<?>> constraintList = Arrays.asList(ruleAndMatch.match);
+                ruleAndMatch.rule.apply(constraintList);
+                store.addAll(constraintList);
+                tracer.step(ruleAndMatch.rule, ruleAndMatch.match, constraintList.toArray(new Constraint<?>[0]));
+            }
 
         }
 
-        return terminate();
+        if(tracingOn)
+            tracer.terminatedMessage(store);
+
+        List<Constraint<?>> result = store.toList();
+        store = null;
+
+        return result;
     }
 
     @Override
@@ -100,60 +108,54 @@ public class SimpleConstraintSolver implements ConstraintSolver {
     }
 
     /**
-     * Finds matching constraints for the rule.
-     * @return constraint with indices of the matching constraints.
+     * @return Array with constraints that match header
      */
-    protected int[] findAssignment(List<Constraint<?>> store, Rule rule, int[] selectedIdx, int pos) {
-        if (pos == selectedIdx.length) {
-            return selectedIdx;
+    protected RuleAndMatch findMatch(){
+        headerSizes.sort(Integer::compare); // sort list that contains all different header sizes.
+        int biggestHeader = headerSizes.get(headerSizes.size() - 1);
 
-        } else {
-            for (int i = 0; i < store.size(); i++) {
-                selectedIdx[pos] = i;
-                findAssignment(store, rule, selectedIdx, pos + 1);
+        ArrayDeque<Iterator<Constraint<?>>> iteratorStack = new ArrayDeque<>(biggestHeader);
+        int pointer = 0;    // index of the constraint in the header that is currently matched
 
-                if(noDuplicatesIn(selectedIdx)){
-                    List<Constraint<?>> constraints = new ArrayList<>();
-                    for (int j : selectedIdx) {
-                        constraints.add(store.get(j));
+        for(int hSize : headerSizes){
+            Constraint<?>[] matchingConstraints = new Constraint<?>[hSize];
+            Iterator<Constraint<?>> currentIter = store.lookup();
+
+            boolean allCombinationsTested = false;
+            while(!allCombinationsTested){
+
+                if(pointer < hSize-1 && currentIter.hasNext()){
+                    matchingConstraints[pointer] = currentIter.next();
+                    iteratorStack.add(currentIter);
+                    currentIter = store.lookup();
+                    pointer++;
+
+                } else if(currentIter.hasNext()) {
+                    matchingConstraints[pointer] = currentIter.next();
+
+                    for (Rule rule : ruleHash.get(hSize)) {
+                        if (rule.accepts(Arrays.asList(matchingConstraints))) {
+                            for(Constraint<?> constraint : matchingConstraints){
+                                store.remove(constraint.ID());
+                            }
+                            return new RuleAndMatch(rule, matchingConstraints);
+                        }
                     }
 
-                    if (rule.accepts(constraints)) {
-                        return selectedIdx;
-                    }
+                } else if(pointer > 0){
+                    pointer--;
+                    currentIter = iteratorStack.removeLast();
+
+                } else {
+                    allCombinationsTested = true;
                 }
+
             }
+
         }
 
-        return selectedIdx;
-    }
-
-    /**
-     * Executes cleanup and calls tracer.
-     * @return The content of the constraint store after execution.
-     */
-    protected List<Constraint<?>> terminate(){
-        if(tracingOn)
-            tracer.terminatedMessage(store);
-        List<Constraint<?>> result = store.toList();
-        store = null;
-        return result;
-    }
-
-    /**
-     * @param array The array to check.
-     * @return Return true if there are duplicates in the entry.
-     */
-    protected boolean noDuplicatesIn(int[] array){
-        for(int i : array){
-            int cnt = 0;
-            for(int j : array){
-                cnt += j == i ? 1 : 0;
-            }
-            if(cnt > 1)
-                return false;
-        }
-        return true;
+        // No match found:
+        return null;
     }
 
     /**
@@ -173,21 +175,15 @@ public class SimpleConstraintSolver implements ConstraintSolver {
     }
 
     /**
-     * Sorts the list with rules by head size.
+     * Stores a rule and a fitting match.
      */
-    private void sortRules(){
-        if(sorted)
-            return;
+    private static class RuleAndMatch {
+        final Rule rule;
+        final Constraint<?>[] match;
 
-        Collections.sort(rules, new Comparator<Rule>() {
-            @Override
-            public int compare(Rule lhs, Rule rhs) {
-                // -1 - less than, 1 - greater than, 0 - equal, all inversed for descending
-                return Integer.compare(lhs.headSize(), rhs.headSize());
-            }
-        });
-
-        sorted = true;
+        RuleAndMatch(Rule rule, Constraint<?>[] match){
+            this.rule = rule;
+            this.match = match;
+        }
     }
-
 }
