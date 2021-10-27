@@ -75,7 +75,7 @@ public class ConstraintStore {
      * @return An iterator with all elements of type constraintType.
      */
     public Iterator<Constraint<?>> lookup(Class<?> constraintType){
-        return store.stream().filter(x -> x.isOfType(constraintType)).iterator();
+        return store.stream().filter(x -> x.isOfType(constraintType) && x.isAlive()).iterator();
     }
 
     /**
