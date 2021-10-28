@@ -32,6 +32,7 @@ public abstract class Rule {
     }
 
     // TODO: Add header + mechanics for unification and matching based on value and equality
+    // TODO: How to implement the application history for Propagation??? History in Propagation or Store???
 
     /**
      * @return Number of constraints in the head.
