@@ -54,10 +54,10 @@ public abstract class Rule {
      * If there are wrong constraints in the ConstraintStore the method maybe throws an exception but maybe just executes the wrong way.
      * DOES NOT CHECK IF THE GIVEN CONSTRAINTS ARE ACCEPTED TO IMPROVE PERFORMANCE!
      *
-     * @param constraints A list of constraint on which the rule is applied.
+     * @param constraints A list of constraint on which the rule is applied or {@code null} if goes wrong.
      * @return true if the rule was successfully applied to the constraints of the list.
      */
-    public abstract boolean apply(List<Constraint<?>> constraints);
+    public abstract List<Constraint<?>> apply(List<Constraint<?>> constraints);
 
     /**
      * Takes the constraints of the list and tests if the guard of the rule accepts them. (By using the defined guard.)
