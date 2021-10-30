@@ -1,5 +1,7 @@
 package wibiral.tim.newjavachr.constraints;
 
+import wibiral.tim.newjavachr.rules.Rule;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -12,6 +14,7 @@ import java.util.List;
  */
 public class ConstraintStore {
     private final List<Constraint<?>> store = new ArrayList<>();
+    private final PropagationHistory history = new PropagationHistory();
 
     public ConstraintStore(List<Constraint<?>> constraints) {
         if (constraints != null)
@@ -84,6 +87,14 @@ public class ConstraintStore {
      */
     public Iterator<Constraint<?>> lookup(Class<?> constraintType){
         return store.stream().filter(x -> x.isOfType(constraintType) && x.isAlive()).iterator();
+    }
+
+    /**
+     * Adds the rule and the constraints to the {@link PropagationHistory}.
+     * @see PropagationHistory
+     */
+    public void addToHistory(Rule rule, Constraint<?>[] constraints){
+        history.addEntry(rule, constraints);
     }
 
     /**
