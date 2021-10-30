@@ -1,6 +1,6 @@
 package wibiral.tim.newjavachr.examples;
 
-import wibiral.tim.newjavachr.Constraint;
+import wibiral.tim.newjavachr.constraints.Constraint;
 import wibiral.tim.newjavachr.ConstraintSolver;
 import wibiral.tim.newjavachr.SimpleConstraintSolver;
 import wibiral.tim.newjavachr.rules.Propagation;

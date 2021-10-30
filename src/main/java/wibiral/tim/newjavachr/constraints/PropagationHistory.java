@@ -26,6 +26,20 @@ public class PropagationHistory {
         history.get(rule.ID()).add(new HistoryEntry(rule, constraints));
     }
 
+    public boolean isInHistory(Rule rule, Constraint<?>[] constraints){
+        long ruleID = rule.ID();
+        if(!history.containsKey(ruleID))
+            return false;
+
+        ArrayList<HistoryEntry> ruleHistory = history.get(rule.ID());
+        for(HistoryEntry entry : ruleHistory){
+            if(entry.nrConstraints == constraints.length && entry.contains(constraints))
+                return true;
+        }
+
+        return false;
+    }
+
     /**
      * This class is used to store a single entry in the Propagation History and contains the ID of a rule and the
      * IDs of the constraints that were applied to the rule.
@@ -43,6 +57,15 @@ public class PropagationHistory {
             for (int i = 0; i < nrConstraints; i++) {
                 constraintIDs[i] = constraints[i].ID();
             }
+        }
+
+        boolean contains(Constraint<?>[] constraints){
+            for (int i = 0; i < constraints.length; i++) {
+                if (constraints[i].ID() != constraintIDs[i])
+                    return false;
+            }
+
+            return true;
         }
     }
 }

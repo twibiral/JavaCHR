@@ -90,14 +90,6 @@ public class ConstraintStore {
     }
 
     /**
-     * Adds the rule and the constraints to the {@link PropagationHistory}.
-     * @see PropagationHistory
-     */
-    public void addToHistory(Rule rule, Constraint<?>[] constraints){
-        history.addEntry(rule, constraints);
-    }
-
-    /**
      * Set all constraints to dead and remove them from the internal data structure.
      */
     public void clear(){

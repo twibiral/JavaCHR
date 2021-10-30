@@ -2,6 +2,7 @@ package wibiral.tim.newjavachr;
 
 import wibiral.tim.newjavachr.constraints.Constraint;
 import wibiral.tim.newjavachr.constraints.ConstraintStore;
+import wibiral.tim.newjavachr.constraints.PropagationHistory;
 import wibiral.tim.newjavachr.rules.Rule;
 import wibiral.tim.newjavachr.tracing.Tracer;
 
@@ -24,9 +25,14 @@ public class SimpleConstraintSolver implements ConstraintSolver {
     protected final List<Integer> headerSizes = new LinkedList<>();
     protected final List<Rule> rules = new ArrayList<>();
 
+    /**
+     * Constains a history that stores which rules were applied to which constraints.
+     */
+    protected PropagationHistory history;
     protected Tracer tracer;
     protected boolean tracingOn = false;
     protected ConstraintStore store;
+
 
     public SimpleConstraintSolver(Rule... rules) {
         this.rules.addAll(Arrays.asList(rules));
@@ -57,6 +63,7 @@ public class SimpleConstraintSolver implements ConstraintSolver {
     @Override
     public List<Constraint<?>> solve(List<Constraint<?>> constraints) {
         store = new ConstraintStore(constraints);
+        history = new PropagationHistory();
 
         if(tracingOn)
             tracer.initMessage(store);
@@ -71,7 +78,7 @@ public class SimpleConstraintSolver implements ConstraintSolver {
             } else {
                 List<Constraint<?>> constraintList = new ArrayList<>(Arrays.asList(ruleAndMatch.match));
                 if(ruleAndMatch.rule.saveHistory()){
-                    store.addToHistory(ruleAndMatch.rule, ruleAndMatch.match);
+                    history.addEntry(ruleAndMatch.rule, ruleAndMatch.match);
                 }
 
                 // Store directly in the old variable to save memory and time.
@@ -143,10 +150,16 @@ public class SimpleConstraintSolver implements ConstraintSolver {
                     matchingConstraints[pointer] = currentIter.next();
 
                     for (Rule rule : ruleHash.get(hSize)) {
-                        if (noDuplicatesIn(matchingConstraints) && rule.accepts(Arrays.asList(matchingConstraints))) {
+
+                        // if all constraints different AND rule+constraints not in history AND fits header+guard
+                        if (noDuplicatesIn(matchingConstraints)
+                                && !history.isInHistory(rule, matchingConstraints)
+                                && rule.accepts(Arrays.asList(matchingConstraints))) {
+
                             for(Constraint<?> constraint : matchingConstraints){
                                 store.remove(constraint.ID());
                             }
+
                             return new RuleAndMatch(rule, matchingConstraints);
                         }
                     }
