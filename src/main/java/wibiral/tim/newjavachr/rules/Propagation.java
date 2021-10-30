@@ -87,4 +87,11 @@ public class Propagation extends Rule {
 
         return this;
     }
+
+    /**
+     * The propagation history of a rule is saved if this method returns true.
+     */
+    public boolean saveHistory(){
+        return true;
+    }
 }

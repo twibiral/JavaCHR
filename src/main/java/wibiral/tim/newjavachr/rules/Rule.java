@@ -8,6 +8,9 @@ import java.util.concurrent.atomic.AtomicLong;
 public abstract class Rule {
     private static final AtomicLong ID_COUNTER = new AtomicLong(0);
 
+    /**
+     * The rule uniquely identified by the id
+     */
     protected final long ID;
     protected final int nrConstraintsInHead;
     protected final String name;
@@ -85,6 +88,14 @@ public abstract class Rule {
      */
     public long ID(){
         return ID;
+    }
+
+    /**
+     * The propagation history of a rule is saved if this this method returns true.
+     * (True for the {@link Propagation} rule.
+     */
+    public boolean saveHistory(){
+        return false;
     }
 
     /**
