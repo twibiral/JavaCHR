@@ -2,11 +2,9 @@ package wibiral.tim.newjavachr.examples;
 
 import wibiral.tim.newjavachr.ConstraintSolver;
 import wibiral.tim.newjavachr.SimpleConstraintSolver;
-import wibiral.tim.newjavachr.Constraint;
+import wibiral.tim.newjavachr.constraints.Constraint;
 import wibiral.tim.newjavachr.rules.Rule;
-import wibiral.tim.newjavachr.rules.Simpagation;
 import wibiral.tim.newjavachr.rules.Simplification;
-import wibiral.tim.newjavachr.tracing.CommandLineTracer;
 
 import java.util.List;
 

@@ -1,8 +1,8 @@
 package wibiral.tim.newjavachr.tracing;
 
-import wibiral.tim.newjavachr.Constraint;
+import wibiral.tim.newjavachr.constraints.Constraint;
 import wibiral.tim.newjavachr.ConstraintSolver;
-import wibiral.tim.newjavachr.ConstraintStore;
+import wibiral.tim.newjavachr.constraints.ConstraintStore;
 import wibiral.tim.newjavachr.rules.Rule;
 
 /**

@@ -1,6 +1,6 @@
 package wibiral.tim.newjavachr.rules;
 
-import wibiral.tim.newjavachr.Constraint;
+import wibiral.tim.newjavachr.constraints.Constraint;
 import wibiral.tim.newjavachr.exceptions.AlreadyDefinedException;
 
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package wibiral.tim.newjavachr;
+package wibiral.tim.newjavachr.constraints;
 
 import java.util.ArrayList;
 import java.util.Arrays;

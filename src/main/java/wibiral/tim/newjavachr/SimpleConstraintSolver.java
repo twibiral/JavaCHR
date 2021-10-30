@@ -1,5 +1,7 @@
 package wibiral.tim.newjavachr;
 
+import wibiral.tim.newjavachr.constraints.Constraint;
+import wibiral.tim.newjavachr.constraints.ConstraintStore;
 import wibiral.tim.newjavachr.rules.Rule;
 import wibiral.tim.newjavachr.tracing.Tracer;
 

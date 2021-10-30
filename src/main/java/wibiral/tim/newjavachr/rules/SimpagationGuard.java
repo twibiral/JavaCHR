@@ -1,6 +1,6 @@
 package wibiral.tim.newjavachr.rules;
 
-import wibiral.tim.newjavachr.Constraint;
+import wibiral.tim.newjavachr.constraints.Constraint;
 
 /**
  * Represents the lambda expression of the guard for Simpagation which uses two heads.

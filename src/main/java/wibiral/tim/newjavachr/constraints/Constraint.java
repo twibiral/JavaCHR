@@ -1,4 +1,6 @@
-package wibiral.tim.newjavachr;
+package wibiral.tim.newjavachr.constraints;
+
+import wibiral.tim.newjavachr.ConstraintSolver;
 
 import java.util.concurrent.atomic.AtomicLong;
 

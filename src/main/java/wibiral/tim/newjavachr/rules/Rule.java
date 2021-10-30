@@ -1,10 +1,14 @@
 package wibiral.tim.newjavachr.rules;
 
-import wibiral.tim.newjavachr.Constraint;
+import wibiral.tim.newjavachr.constraints.Constraint;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 public abstract class Rule {
+    private static final AtomicLong ID_COUNTER = new AtomicLong(0);
+
+    protected final long ID;
     protected final int nrConstraintsInHead;
     protected final String name;
     protected final boolean headTypesSpecified;
@@ -15,6 +19,9 @@ public abstract class Rule {
         name = null;
         headTypesSpecified = false;
         this.headTypes = null;
+
+        // give this rule an ID
+        ID = ID_COUNTER.getAndIncrement();
     }
 
     protected Rule(String name, int nrConstraintsInHead){
@@ -22,6 +29,9 @@ public abstract class Rule {
         this.name = name;
         headTypesSpecified = false;
         this.headTypes = null;
+
+        // give this rule an ID
+        ID = ID_COUNTER.getAndIncrement();
     }
 
     protected Rule(String name, Class<?>... headTypes){
@@ -29,6 +39,9 @@ public abstract class Rule {
         this.name = name;
         headTypesSpecified = true;
         this.headTypes = headTypes;
+
+        // give this rule an ID
+        ID = ID_COUNTER.getAndIncrement();
     }
 
     // TODO: Add header + mechanics for unification and matching based on value and equality
@@ -65,6 +78,13 @@ public abstract class Rule {
      * @return True if the guard of the Rule accepts the given {@link Constraint}s.
      */
     public abstract boolean accepts(List<Constraint<?>> constraints);
+
+    /**
+     * Returns the distinct ID of this rule.
+     */
+    public long ID(){
+        return ID;
+    }
 
     /**
      * Tests if the types of the constraints fit the types defined in the rule heads.
