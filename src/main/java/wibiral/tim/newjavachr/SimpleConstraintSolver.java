@@ -77,6 +77,9 @@ public class SimpleConstraintSolver implements ConstraintSolver {
 
             } else {
                 List<Constraint<?>> constraintList = new ArrayList<>(Arrays.asList(ruleAndMatch.match));
+                if(tracingOn)
+                    tracer.step(ruleAndMatch.rule, ruleAndMatch.match, constraintList.toArray(new Constraint<?>[0]));
+
                 if(ruleAndMatch.rule.saveHistory()){
                     history.addEntry(ruleAndMatch.rule, ruleAndMatch.match);
                 }
@@ -85,8 +88,6 @@ public class SimpleConstraintSolver implements ConstraintSolver {
                 constraintList = ruleAndMatch.rule.apply(constraintList);
                 store.addAll(constraintList);
 
-                if(tracingOn)
-                    tracer.step(ruleAndMatch.rule, ruleAndMatch.match, constraintList.toArray(new Constraint<?>[0]));
             }
 
         }

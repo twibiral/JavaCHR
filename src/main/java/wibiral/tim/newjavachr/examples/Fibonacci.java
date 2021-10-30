@@ -33,7 +33,7 @@ public class Fibonacci {
 
     public static void main(String[] args) {
         ConstraintSolver fibHandler = new SimpleConstraintSolver(getRules());
-        fibHandler.setTracer(new CommandLineTracer(true));
+//        fibHandler.setTracer(new CommandLineTracer(true));
 
         System.out.println("Fibonacci 42:");
         long start = System.currentTimeMillis();
