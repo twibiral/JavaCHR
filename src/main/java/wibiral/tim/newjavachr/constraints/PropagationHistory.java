@@ -4,7 +4,6 @@ import wibiral.tim.newjavachr.rules.Rule;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * The propagation is used to store which constraints were applied to which constraints. This is used to prevent
