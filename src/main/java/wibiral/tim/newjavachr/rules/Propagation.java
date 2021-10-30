@@ -30,9 +30,9 @@ public class Propagation extends Rule {
     public Propagation(String name, Class<?>... headTypes){super(name, headTypes);}
 
     @Override
-    public boolean apply(List<Constraint<?>> constraints) {
+    public List<Constraint<?>> apply(List<Constraint<?>> constraints) {
         if(constraints.size() != headSize())
-            return false;
+            return null;
 
         ArrayList<Constraint<?>> newConstraints = new ArrayList<>(); // All new constraints get added to this list by the body
         body.execute(constraints.toArray(new Constraint<?>[0]), newConstraints);
@@ -40,7 +40,7 @@ public class Propagation extends Rule {
         // new constraints are added to the constraints list to add them to the constraint store after rule execution.
         constraints.addAll(newConstraints);
 
-        return true;
+        return constraints;
     }
 
     @Override

@@ -28,17 +28,16 @@ public class Simplification extends Rule {
     }
 
     @Override
-    public boolean apply(List<Constraint<?>> constraints) {
+    public List<Constraint<?>> apply(List<Constraint<?>> constraints) {
         if(constraints.size() != headSize())
-            return false;
+            return null;
 
         ArrayList<Constraint<?>> newConstraints = new ArrayList<>();
         body.execute(constraints.toArray(new Constraint<?>[0]), newConstraints);
 
         constraints.clear();                // Simplification removes all old constraints
         constraints.addAll(newConstraints); // and just adds new ones
-
-        return true;
+        return constraints;                 // return the new constraints
     }
 
     @Override

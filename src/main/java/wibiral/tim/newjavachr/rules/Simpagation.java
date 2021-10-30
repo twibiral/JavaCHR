@@ -4,6 +4,7 @@ import wibiral.tim.newjavachr.constraints.Constraint;
 import wibiral.tim.newjavachr.exceptions.AlreadyDefinedException;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -39,9 +40,9 @@ public class Simpagation extends Rule {
     // TODO: Implement missing constuctor with head types
 
     @Override
-    public boolean apply(List<Constraint<?>> constraints) {
+    public List<Constraint<?>> apply(List<Constraint<?>> constraints) {
         if(constraints.size() != headSize())
-            return false;
+            return null;
 
         Constraint<?>[] constraintsHead1 = new Constraint<?>[nrConstraintsHead1];
         Constraint<?>[] constraintsHead2 = new Constraint<?>[nrConstraintsHead2];
@@ -54,17 +55,12 @@ public class Simpagation extends Rule {
             constraintsHead2[i] = constraints.get(i + nrConstraintsHead1);
         }
 
-        // Remove all the constraints of the second head.
-        // TODO: Extensive tests; this part is very problematic!
-        if (nrConstraintsHead2 > 0) {
-            constraints.subList(nrConstraintsHead1, nrConstraintsHead1 + nrConstraintsHead2 - 1).clear();
-        }
-
         ArrayList<Constraint<?>> newConstraints = new ArrayList<>();
         body.execute(constraintsHead1, constraintsHead2, newConstraints);
-        constraints.addAll(newConstraints);
+        // Combine the constraints of the first head and the newly generated constraints:
+        newConstraints.addAll(Arrays.asList(constraintsHead1));
 
-        return true;
+        return newConstraints;
     }
 
     @Override

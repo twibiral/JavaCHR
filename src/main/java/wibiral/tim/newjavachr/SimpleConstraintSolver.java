@@ -70,7 +70,8 @@ public class SimpleConstraintSolver implements ConstraintSolver {
 
             } else {
                 List<Constraint<?>> constraintList = new ArrayList<>(Arrays.asList(ruleAndMatch.match));
-                ruleAndMatch.rule.apply(constraintList);
+                // Store directly in the old variable to save memory and time.
+                constraintList = ruleAndMatch.rule.apply(constraintList);
                 store.addAll(constraintList);
 
                 if(tracingOn)
