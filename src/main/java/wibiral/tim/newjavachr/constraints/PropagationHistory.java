@@ -31,9 +31,14 @@ public class PropagationHistory {
         if(!history.containsKey(ruleID))
             return false;
 
+        long[] constraintIDs = new long[constraints.length];
+        for (int i = 0; i < constraints.length; i++) {
+            constraintIDs[i] = constraints[i].ID();
+        }
+
         ArrayList<HistoryEntry> ruleHistory = history.get(rule.ID());
         for(HistoryEntry entry : ruleHistory){
-            if(entry.nrConstraints == constraints.length && entry.contains(constraints))
+            if(entry.contains(constraintIDs))
                 return true;
         }
 
@@ -59,9 +64,11 @@ public class PropagationHistory {
             }
         }
 
-        boolean contains(Constraint<?>[] constraints){
-            for (int i = 0; i < constraints.length; i++) {
-                if (constraints[i].ID() != constraintIDs[i])
+        boolean contains(long[] constraintsIDs){
+            if(this.nrConstraints == constraintsIDs.length)
+                return false;
+            for (int i = 0; i < constraintsIDs.length; i++) {
+                if (constraintsIDs[i] != this.constraintIDs[i])
                     return false;
             }
 
