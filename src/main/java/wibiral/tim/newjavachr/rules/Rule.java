@@ -99,6 +99,20 @@ public abstract class Rule {
     }
 
     /**
+     * @return true if types for the head constraints were defined in teh constructor.
+     */
+    public boolean headTypesSpecified(){
+        return headTypesSpecified;
+    }
+
+    /**
+     * @return An array that contains the classes to which the constraints in the header must match.
+     */
+    public Class<?>[] getHeadTypes(){
+        return headTypes;
+    }
+
+    /**
      * Tests if the types of the constraints fit the types defined in the rule heads.
      * This method isn't very efficient and uses the isAssignableFrom method instead of instanceof.
      * @param constraints List of constraints to match with head types.
