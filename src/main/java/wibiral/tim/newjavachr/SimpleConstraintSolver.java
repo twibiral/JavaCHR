@@ -44,10 +44,6 @@ public class SimpleConstraintSolver implements ConstraintSolver {
         ruleHash = instantiateRuleHash(this.rules);
     }
 
-    public SimpleConstraintSolver() {
-        ruleHash = instantiateRuleHash(rules);
-    }
-
     @Override
     public void setTracer(Tracer tracer) {
         tracingOn = tracer != null;
@@ -134,50 +130,48 @@ public class SimpleConstraintSolver implements ConstraintSolver {
         ArrayDeque<Iterator<Constraint<?>>> iteratorStack = new ArrayDeque<>(biggestHeader);
         int pointer = 0;    // index of the constraint in the header that is currently matched
 
-        for(int hSize : headerSizes){
-            Constraint<?>[] matchingConstraints = new Constraint<?>[hSize];
+        for(Rule rule: rules){
+            int headerSize = rule.headSize();
+            Constraint<?>[] matchingConstraints = new Constraint<?>[headerSize];
             Iterator<Constraint<?>> currentIter = store.lookup();
 
             boolean allCombinationsTested = false;
             while(!allCombinationsTested){
 
-                if(pointer < hSize-1 && currentIter.hasNext()){
+                if(pointer < headerSize-1 && currentIter.hasNext()){
                     matchingConstraints[pointer] = currentIter.next();
                     iteratorStack.add(currentIter);
                     currentIter = store.lookup();
                     pointer++;
 
                 } else if(currentIter.hasNext()) {
+                    // Filling last element in array and try to match
                     matchingConstraints[pointer] = currentIter.next();
 
-                    for (Rule rule : ruleHash.get(hSize)) {
+                    if(rule.saveHistory()){ // Rules that want to be saved in the propagation history -> Propagation
+                        // if all constraints different AND rule+constraints not in history AND fits header+guard
+                        if (noDuplicatesIn(matchingConstraints)
+                                && !history.isInHistory(rule, matchingConstraints)
+                                && rule.accepts(Arrays.asList(matchingConstraints))) {
 
-                        if(rule.saveHistory()){ // Rules that want to be saved in the propagation history -> Propagation
-                            // if all constraints different AND rule+constraints not in history AND fits header+guard
-                            if (noDuplicatesIn(matchingConstraints)
-                                    && rule.accepts(Arrays.asList(matchingConstraints))) {
-
-                                for(Constraint<?> constraint : matchingConstraints){
-                                    store.remove(constraint.ID());
-                                }
-
-                                return new RuleAndMatch(rule, matchingConstraints);
+                            for(Constraint<?> constraint : matchingConstraints){
+                                store.remove(constraint.ID());
                             }
 
-                        } else { // Rules that allow to be executed on the same constraints multiple times
-                            // if all constraints different AND fits header+guard
-                            if (noDuplicatesIn(matchingConstraints)
-                                    && !history.isInHistory(rule, matchingConstraints)
-                                    && rule.accepts(Arrays.asList(matchingConstraints))) {
-
-                                for(Constraint<?> constraint : matchingConstraints){
-                                    store.remove(constraint.ID());
-                                }
-
-                                return new RuleAndMatch(rule, matchingConstraints);
-                            }
+                            return new RuleAndMatch(rule, matchingConstraints);
                         }
 
+                    } else { // Rules that allow to be executed on the same constraints multiple times
+                        // if all constraints different AND fits header+guard
+                        if (noDuplicatesIn(matchingConstraints)
+                                && rule.accepts(Arrays.asList(matchingConstraints))) {
+
+                            for(Constraint<?> constraint : matchingConstraints){
+                                store.remove(constraint.ID());
+                            }
+
+                            return new RuleAndMatch(rule, matchingConstraints);
+                        }
                     }
 
                 } else if(pointer > 0){
@@ -187,7 +181,6 @@ public class SimpleConstraintSolver implements ConstraintSolver {
                 } else {
                     allCombinationsTested = true;
                 }
-
             }
 
         }

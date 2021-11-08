@@ -33,7 +33,7 @@ public class Fibonacci {
 
     public static void main(String[] args) {
         ConstraintSolver fibHandler = new SimpleConstraintSolver(getRules());
-//        fibHandler.setTracer(new CommandLineTracer(true));
+        fibHandler.setTracer(new CommandLineTracer(true));
 
         System.out.println("Fibonacci 42:");
         long start = System.currentTimeMillis();
@@ -43,14 +43,14 @@ public class Fibonacci {
     }
 
     static Rule[] getRules(){
-        Rule r1 = new Propagation(1)  // MAX => fib(0, 1), fib(1, 1).
+        Rule r1 = new Propagation("MAX => fib(0, 1), fib(1, 1).", 1)  // MAX => fib(0, 1), fib(1, 1).
                 .guard(x -> x[0].value() instanceof Integer)
                 .body((oldC, newC) -> {
                     newC.add(new Constraint<>(new fib(0, 0)));
                     newC.add(new Constraint<>(new fib(1, 1)));
                 });
 
-        Rule r2 = new Propagation(3)
+        Rule r2 = new Propagation("MAX, fib(N1, M1), fib(N2, M2) =>  N1 == N2 - 1 | fib(N2 + 1, M1 + M2).", 3)
                 // MAX, fib(N1, M1), fib(N2, M2) =>  N1 == N2 - 1 | fib(N2 + 1, M1 + M2).
                 .guard(x -> x[0].value() instanceof Integer && x[1].value() instanceof fib && x[2].value() instanceof fib
                         && ((fib) x[1].value()).a == ((fib) x[2].value()).a - 1

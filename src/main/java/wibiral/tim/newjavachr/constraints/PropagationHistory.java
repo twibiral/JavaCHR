@@ -64,11 +64,12 @@ public class PropagationHistory {
             }
         }
 
-        boolean contains(long[] constraintsIDs){
-            if(this.nrConstraints == constraintsIDs.length)
+        boolean contains(long[] otherConstraintsIDs){
+            if(this.nrConstraints != otherConstraintsIDs.length)
                 return false;
-            for (int i = 0; i < constraintsIDs.length; i++) {
-                if (constraintsIDs[i] != this.constraintIDs[i])
+
+            for (int i = 0; i < otherConstraintsIDs.length; i++) {
+                if (otherConstraintsIDs[i] != this.constraintIDs[i])
                     return false;
             }
 
