@@ -152,17 +152,32 @@ public class SimpleConstraintSolver implements ConstraintSolver {
 
                     for (Rule rule : ruleHash.get(hSize)) {
 
-                        // if all constraints different AND rule+constraints not in history AND fits header+guard
-                        if (noDuplicatesIn(matchingConstraints)
-                                && !history.isInHistory(rule, matchingConstraints)
-                                && rule.accepts(Arrays.asList(matchingConstraints))) {
+                        if(rule.saveHistory()){ // Rules that want to be saved in the propagation history -> Propagation
+                            // if all constraints different AND rule+constraints not in history AND fits header+guard
+                            if (noDuplicatesIn(matchingConstraints)
+                                    && rule.accepts(Arrays.asList(matchingConstraints))) {
 
-                            for(Constraint<?> constraint : matchingConstraints){
-                                store.remove(constraint.ID());
+                                for(Constraint<?> constraint : matchingConstraints){
+                                    store.remove(constraint.ID());
+                                }
+
+                                return new RuleAndMatch(rule, matchingConstraints);
                             }
 
-                            return new RuleAndMatch(rule, matchingConstraints);
+                        } else { // Rules that allow to be executed on the same constraints multiple times
+                            // if all constraints different AND fits header+guard
+                            if (noDuplicatesIn(matchingConstraints)
+                                    && !history.isInHistory(rule, matchingConstraints)
+                                    && rule.accepts(Arrays.asList(matchingConstraints))) {
+
+                                for(Constraint<?> constraint : matchingConstraints){
+                                    store.remove(constraint.ID());
+                                }
+
+                                return new RuleAndMatch(rule, matchingConstraints);
+                            }
                         }
+
                     }
 
                 } else if(pointer > 0){
