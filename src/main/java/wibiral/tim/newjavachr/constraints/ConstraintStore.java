@@ -1,11 +1,10 @@
 package wibiral.tim.newjavachr.constraints;
 
-import wibiral.tim.newjavachr.rules.Rule;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+
 
 /**
  * Implementation of a Constraint Store, oriented toward the definition of the constraint store by
@@ -103,5 +102,15 @@ public class ConstraintStore {
 
     public List<Constraint<?>> toList(){
         return new ArrayList<>(store);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder str = new StringBuilder("ConstraintStore:");
+        for (Constraint<?> c : store) {
+            str.append("\n\t").append(c.toString());
+        }
+
+        return str.toString();
     }
 }
