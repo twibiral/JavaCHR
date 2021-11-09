@@ -136,12 +136,19 @@ public abstract class Rule {
     }
 
     /**
+     * @return An Array that contains a head object for every Constraint in the header. The head object contains infos about the definition of the head constraint.
+     */
+    public Head[] getHeadDefinitions(){
+        return headDefinitions;
+    }
+
+    /**
      * Tests if the types of the constraints fit the types defined in the rule heads.
      * This method isn't very efficient and uses the isAssignableFrom method instead of instanceof.
      * @param constraints List of constraints to match with head types.
      * @return True if the constraints in the list match the head type, otherwise false.
      */
-    protected boolean fitsHeadTypes(List<Constraint<?>> constraints) {
+    public boolean fitsHeadTypes(List<Constraint<?>> constraints) {
         try{
             for (int i = 0; i < this.headSize(); i++) {
                 if(!( headTypes[i].isAssignableFrom(constraints.get(i).getClass()) ))
