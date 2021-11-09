@@ -14,34 +14,49 @@ public abstract class Rule {
     protected final long ID;
     protected final int nrConstraintsInHead;
     protected final String name;
-    protected final boolean headTypesSpecified;
     protected final Class<?>[] headTypes;
+    protected final Head[] headDefinitions;
+    protected final HEAD_DEFINITION_TYPE head_definition_type;
 
     protected Rule(int nrConstraintsInHead){
+        this.head_definition_type = HEAD_DEFINITION_TYPE.SIZE_SPECIFIED;
         this.nrConstraintsInHead = nrConstraintsInHead;
-        name = null;
-        headTypesSpecified = false;
+        this.name = null;
         this.headTypes = null;
+        this.headDefinitions = null;
 
         // give this rule an ID
         ID = ID_COUNTER.getAndIncrement();
     }
 
     protected Rule(String name, int nrConstraintsInHead){
+        this.head_definition_type = HEAD_DEFINITION_TYPE.SIZE_SPECIFIED;
         this.nrConstraintsInHead = nrConstraintsInHead;
         this.name = name;
-        headTypesSpecified = false;
         this.headTypes = null;
+        this.headDefinitions = null;
 
         // give this rule an ID
         ID = ID_COUNTER.getAndIncrement();
     }
 
     protected Rule(String name, Class<?>... headTypes){
+        this.head_definition_type = HEAD_DEFINITION_TYPE.TYPES_SPECIFIED;
         this.nrConstraintsInHead = headTypes.length;
         this.name = name;
-        headTypesSpecified = true;
         this.headTypes = headTypes;
+        this.headDefinitions = null;
+
+        // give this rule an ID
+        ID = ID_COUNTER.getAndIncrement();
+    }
+
+    protected Rule(Head... headDefinitions){
+        this.head_definition_type = HEAD_DEFINITION_TYPE.COMPLEX_DEFINITION;
+        this.headDefinitions = headDefinitions;
+        this.nrConstraintsInHead = headDefinitions.length;
+        this.name = null;
+        this.headTypes = null;
 
         // give this rule an ID
         ID = ID_COUNTER.getAndIncrement();
@@ -99,10 +114,18 @@ public abstract class Rule {
     }
 
     /**
+     * TODO: Remove when removing is safe
      * @return true if types for the head constraints were defined in teh constructor.
      */
     public boolean headTypesSpecified(){
-        return headTypesSpecified;
+        return false;
+    }
+
+    /**
+     * @return Enum element that specifies how the head of this rule was definied.
+     */
+    public HEAD_DEFINITION_TYPE getHeadDefinitionType(){
+        return this.head_definition_type;
     }
 
     /**
