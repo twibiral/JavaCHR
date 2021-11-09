@@ -22,7 +22,7 @@ public class SimpleConstraintSolver implements ConstraintSolver {
     /**
      * Constains a history that stores which rules were applied to which constraints.
      */
-    protected PropagationHistory history;
+    protected PropagationHistory history = new PropagationHistory();
     protected Tracer tracer;
     protected boolean tracingOn = false;
     protected ConstraintStore store;
@@ -62,7 +62,7 @@ public class SimpleConstraintSolver implements ConstraintSolver {
         boolean ruleApplied = true;
         while(ruleApplied){
 
-            RuleAndMatch ruleAndMatch = findMatch();
+            RuleAndMatch ruleAndMatch = findMatch(store);
             if(ruleAndMatch == null){
                 ruleApplied = false;
 
@@ -94,7 +94,11 @@ public class SimpleConstraintSolver implements ConstraintSolver {
 
     @Override
     public List<Constraint<?>> solve(Constraint<?>... constraints) {
-        return solve(Collections.addAll(new ArrayList<Constraint<?>>(), constraints));
+        List<Constraint<?>> list = new ArrayList<>();
+        for (Constraint<?> c : constraints)
+            list.add(c);
+
+        return solve(list);
     }
 
     @SafeVarargs
@@ -109,7 +113,7 @@ public class SimpleConstraintSolver implements ConstraintSolver {
     /**
      * @return Array with constraints that match header
      */
-    protected RuleAndMatch findMatch(){
+    protected RuleAndMatch findMatch(ConstraintStore store){
         ArrayDeque<Iterator<Constraint<?>>> iteratorStack = new ArrayDeque<>(biggestHeader);
         int pointer = 0;    // index of the constraint in the header that is currently matched
 
@@ -191,7 +195,7 @@ public class SimpleConstraintSolver implements ConstraintSolver {
     /**
      * Stores a rule and a fitting match.
      */
-    private static class RuleAndMatch {
+    protected static class RuleAndMatch {
         final Rule rule;
         final Constraint<?>[] match;
 
