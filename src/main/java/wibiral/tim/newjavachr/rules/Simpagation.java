@@ -37,6 +37,10 @@ public class Simpagation extends Rule {
         this.nrConstraintsHead2 = nrConstraintsHead2;
     }
 
+    public Simpagation(int sizeHead1, Head... head){
+
+    }
+
     // TODO: Implement missing constuctor with head types
 
     @Override

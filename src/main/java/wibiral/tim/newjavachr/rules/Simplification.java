@@ -27,6 +27,10 @@ public class Simplification extends Rule {
         super(name, nrConstraintsInHead);
     }
 
+    public Simplification(Head... headDefinitions){
+        super(headDefinitions);
+    }
+
     @Override
     public List<Constraint<?>> apply(List<Constraint<?>> constraints) {
         if(constraints.size() != headSize())

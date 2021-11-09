@@ -29,6 +29,10 @@ public class Propagation extends Rule {
 
     public Propagation(String name, Class<?>... headTypes){super(name, headTypes);}
 
+    public Propagation(Head... headDefinitions){
+        super(headDefinitions);
+    }
+
     @Override
     public List<Constraint<?>> apply(List<Constraint<?>> constraints) {
         if(constraints.size() != headSize())
@@ -48,8 +52,9 @@ public class Propagation extends Rule {
         if(constraints.size() != headSize())
             return false;
 
-        if(headTypesSpecified && !fitsHeadTypes(constraints))
-            return false;
+        // Assume that the solver checks this:
+//        if(head_definition_type == HEAD_DEFINITION_TYPE.TYPES_SPECIFIED && !fitsHeadTypes(constraints))
+//            return false;
 
         return guard.check(constraints.toArray(new Constraint<?>[0]));
     }
@@ -91,6 +96,7 @@ public class Propagation extends Rule {
     /**
      * The propagation history of a rule is saved if this method returns true.
      */
+    @Override
     public boolean saveHistory(){
         return true;
     }
