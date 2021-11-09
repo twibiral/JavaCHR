@@ -17,12 +17,6 @@ import java.util.*;
  * can't be matched separately but must be matched together.
  */
 public class SimpleConstraintSolver implements ConstraintSolver {
-    /**
-     * Contains for all header the rules have a List with all rules with that specific header size.
-     * (The header sizes are the key)
-     */
-    protected final HashMap<Integer, List<Rule>> ruleHash;
-    protected final List<Integer> headerSizes = new LinkedList<>();
     protected final List<Rule> rules = new ArrayList<>();
 
     /**
@@ -33,15 +27,17 @@ public class SimpleConstraintSolver implements ConstraintSolver {
     protected boolean tracingOn = false;
     protected ConstraintStore store;
 
+    private int biggestHeader = 0;
+
 
     public SimpleConstraintSolver(Rule... rules) {
         this.rules.addAll(Arrays.asList(rules));
-        ruleHash = instantiateRuleHash(this.rules);
-    }
+        if(rules.length > 2){
+            biggestHeader = this.rules.stream().max(Comparator.comparingInt(Rule::headSize)).get().headSize();
 
-    public SimpleConstraintSolver(Rule rule) {
-        this.rules.add(rule);
-        ruleHash = instantiateRuleHash(this.rules);
+        } else if(rules.length == 1) {
+            biggestHeader = rules[0].headSize();
+        }
     }
 
     @Override
@@ -52,7 +48,6 @@ public class SimpleConstraintSolver implements ConstraintSolver {
 
     @Override
     public void addRule(Rule rule) {
-        hashRule(rule, ruleHash);
         rules.add(rule);
     }
 
@@ -102,31 +97,19 @@ public class SimpleConstraintSolver implements ConstraintSolver {
         return solve(Collections.addAll(new ArrayList<Constraint<?>>(), constraints));
     }
 
+    @SafeVarargs
     @Override
-    public <T> List<Constraint<?>> solve(T... values) {
+    public final <T> List<Constraint<?>> solve(T... values) {
         ArrayList<Constraint<?>> constraints = new ArrayList<>();
         for(T val : values)
             constraints.add(new Constraint<>(val));
         return solve(constraints);
     }
 
-    private HashMap<Integer, List<Rule>> instantiateRuleHash(List<Rule> rules){
-        final HashMap<Integer, List<Rule>> temp = new HashMap<>(3 * rules.size());
-
-        for (Rule rule : rules) {
-            hashRule(rule, temp);
-        }
-
-        return temp;
-    }
-
     /**
      * @return Array with constraints that match header
      */
     protected RuleAndMatch findMatch(){
-        headerSizes.sort(Integer::compare); // sort list that contains all different header sizes.
-        int biggestHeader = headerSizes.get(headerSizes.size() - 1);
-
         ArrayDeque<Iterator<Constraint<?>>> iteratorStack = new ArrayDeque<>(biggestHeader);
         int pointer = 0;    // index of the constraint in the header that is currently matched
 
@@ -203,22 +186,6 @@ public class SimpleConstraintSolver implements ConstraintSolver {
                 return false;
         }
         return true;
-    }
-
-    /**
-     * Add rule to the hash.
-     */
-    private void hashRule(Rule rule, HashMap<Integer, List<Rule>> ruleHash) {
-        int headerSize = rule.headSize();
-        if (ruleHash.containsKey(headerSize)) {
-            ruleHash.get(headerSize).add(rule);
-
-        } else {
-            List<Rule> ruleList = new ArrayList<>();
-            ruleList.add(rule);
-            ruleHash.put(headerSize, ruleList);
-            headerSizes.add(headerSize);
-        }
     }
 
     /**
