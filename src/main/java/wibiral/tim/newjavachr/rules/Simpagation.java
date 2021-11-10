@@ -38,7 +38,9 @@ public class Simpagation extends Rule {
     }
 
     public Simpagation(int sizeHead1, Head... head){
-
+        super(head);
+        nrConstraintsHead1 = sizeHead1;
+        nrConstraintsHead2 = head.length - sizeHead1;
     }
 
     // TODO: Implement missing constuctor with head types
