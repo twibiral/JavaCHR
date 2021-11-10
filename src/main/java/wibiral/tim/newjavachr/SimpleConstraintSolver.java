@@ -53,7 +53,7 @@ public class SimpleConstraintSolver implements ConstraintSolver {
 
     @Override
     public List<Constraint<?>> solve(List<Constraint<?>> constraints) {
-        store = new ConstraintStore(constraints);
+        store = new ConstraintStore(constraints);   // TODO: Nicht global in Klasse speichern!
         history = new PropagationHistory();
 
         if(tracingOn)
@@ -109,6 +109,47 @@ public class SimpleConstraintSolver implements ConstraintSolver {
             constraints.add(new Constraint<>(val));
         return solve(constraints);
     }
+
+    public List<Constraint<?>> solve2(List<Constraint<?>> constraints) {
+        store = new ConstraintStore(constraints);
+        history = new PropagationHistory();
+
+        if(tracingOn)
+            tracer.initMessage(store);
+
+        boolean ruleApplied = true;
+        while(ruleApplied){
+
+            RuleAndMatch ruleAndMatch = findMatch(store);
+            if(ruleAndMatch == null){
+                ruleApplied = false;
+
+            } else {
+                List<Constraint<?>> constraintList = new ArrayList<>(Arrays.asList(ruleAndMatch.match));
+                if(tracingOn)
+                    tracer.step(ruleAndMatch.rule, ruleAndMatch.match, constraintList.toArray(new Constraint<?>[0]));
+
+                if(ruleAndMatch.rule.saveHistory()){
+                    history.addEntry(ruleAndMatch.rule, ruleAndMatch.match);
+                }
+
+                // Store directly in the old variable to save memory and time.
+                constraintList = ruleAndMatch.rule.apply(constraintList);
+                store.addAll(constraintList);
+
+            }
+
+        }
+
+        if(tracingOn)
+            tracer.terminatedMessage(store);
+
+        List<Constraint<?>> result = store.toList();
+        store = null;
+
+        return result;
+    }
+
 
     /**
      * @return Array with constraints that match header
