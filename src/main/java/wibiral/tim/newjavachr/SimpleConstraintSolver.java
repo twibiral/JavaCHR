@@ -311,15 +311,15 @@ public class SimpleConstraintSolver implements ConstraintSolver {
         Head[] headDef = rule.getHeadDefinitions();
 
         int headerSize = rule.headSize();
-        System.err.println(headerSize);
         Constraint<?>[] matchingConstraints = new Constraint<?>[headerSize];
         Iterator<Constraint<?>> currentIter = headDef[0].getContainerType() == HEAD_CONTAINS.TYPE ?
-                                                store.lookup(headDef[0].getClass()) : store.lookup();
+                                                store.lookup(headDef[0].getType()) : store.lookup();
+
         System.out.println(currentIter.hasNext() ? currentIter.next() : "no elem");
-        System.out.println(headDef[0].getType().getName());
+        System.out.println(headDef[0].getType().getCanonicalName());
         System.out.println(store);
-        Iterator<Constraint<?>> iter = store.lookup(Integer.class);
-        System.out.println(iter.hasNext() ? iter.next() : "no elem2");
+        Iterator<Constraint<?>> iter = store.lookup(headDef[0].getType());
+        System.out.println(iter.hasNext() ? "Elem2:" + iter.next() : "no elem2");
 
         boolean allCombinationsTested = false;
         while(!allCombinationsTested){
@@ -328,7 +328,7 @@ public class SimpleConstraintSolver implements ConstraintSolver {
                 matchingConstraints[pointer] = currentIter.next();
                 iteratorStack.add(currentIter);
                 currentIter = headDef[pointer].getContainerType() == HEAD_CONTAINS.TYPE ?
-                                store.lookup(headDef[pointer].getClass()) : store.lookup();
+                                store.lookup(headDef[pointer].getType()) : store.lookup();
                 pointer++;
 
             } else if(currentIter.hasNext()) {
