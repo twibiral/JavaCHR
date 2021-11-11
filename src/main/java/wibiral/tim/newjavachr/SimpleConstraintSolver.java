@@ -3,6 +3,9 @@ package wibiral.tim.newjavachr;
 import wibiral.tim.newjavachr.constraints.Constraint;
 import wibiral.tim.newjavachr.constraints.ConstraintStore;
 import wibiral.tim.newjavachr.constraints.PropagationHistory;
+import wibiral.tim.newjavachr.rules.HEAD_CONTAINS;
+import wibiral.tim.newjavachr.rules.HEAD_DEFINITION_TYPE;
+import wibiral.tim.newjavachr.rules.Head;
 import wibiral.tim.newjavachr.rules.Rule;
 import wibiral.tim.newjavachr.tracing.Tracer;
 
@@ -105,7 +108,7 @@ public class SimpleConstraintSolver implements ConstraintSolver {
         ArrayList<Constraint<?>> constraints = new ArrayList<>();
         for(T val : values)
             constraints.add(new Constraint<>(val));
-        return solve(constraints);
+        return solve2(constraints);
     }
 
     // ===================== Experimental ================================
@@ -154,38 +157,26 @@ public class SimpleConstraintSolver implements ConstraintSolver {
 
     protected RuleAndMatch findMatch2(ConstraintStore store){
         Constraint<?>[] matchingConstraints = null;
+        ArrayDeque<Iterator<Constraint<?>>> iteratorStack = new ArrayDeque<>(biggestHeader);
 
         for(Rule rule: rules){
             // Handle every rule according to their header:
             switch(rule.getHeadDefinitionType()){
                 case SIZE_SPECIFIED:
-                    matchingConstraints = matchSizeSpecified(rule, store);
-                    if(matchingConstraints != null)
-                        return new RuleAndMatch(rule, matchingConstraints);
-
-                    // else:
+                    matchingConstraints = matchSizeSpecified(rule, store, iteratorStack);
                     break;
 
                 case TYPES_SPECIFIED:
-                    System.out.println("TYPES SPECIFIED!");
-                    matchingConstraints = matchTypesSpecified(rule, store);
-
-                    if(matchingConstraints != null)
-                        return new RuleAndMatch(rule, matchingConstraints);
-
-                    // else:
+                    matchingConstraints = matchTypesSpecified(rule, store, iteratorStack);
                     break;
 
                 case COMPLEX_DEFINITION:
-
-                    if(matchingConstraints != null)
-                        return new RuleAndMatch(rule, matchingConstraints);
-
-                    // else:
+                    matchingConstraints = matchComplexHeadDefinition(rule, store, iteratorStack);
                     break;
             }
 
-
+            if(matchingConstraints != null) // match found
+                return new RuleAndMatch(rule, matchingConstraints);
 
         }
 
@@ -193,8 +184,7 @@ public class SimpleConstraintSolver implements ConstraintSolver {
         return null;
     }
 
-    protected Constraint<?>[] matchSizeSpecified(Rule rule, ConstraintStore store){
-        ArrayDeque<Iterator<Constraint<?>>> iteratorStack = new ArrayDeque<>(biggestHeader);
+    protected Constraint<?>[] matchSizeSpecified(Rule rule, ConstraintStore store, ArrayDeque<Iterator<Constraint<?>>> iteratorStack){
         int pointer = 0;    // index of the constraint in the header that is currently matched
 
         int headerSize = rule.headSize();
@@ -254,8 +244,7 @@ public class SimpleConstraintSolver implements ConstraintSolver {
     }
 
 
-    protected Constraint<?>[] matchTypesSpecified(Rule rule, ConstraintStore store){
-        ArrayDeque<Iterator<Constraint<?>>> iteratorStack = new ArrayDeque<>(biggestHeader);
+    protected Constraint<?>[] matchTypesSpecified(Rule rule, ConstraintStore store, ArrayDeque<Iterator<Constraint<?>>> iteratorStack){
         int pointer = 0;    // index of the constraint in the header that is currently matched
 
         Class<?>[] headTypes = rule.getHeadTypes();
@@ -315,6 +304,78 @@ public class SimpleConstraintSolver implements ConstraintSolver {
         // NO matching constraints found
         return null;
     }
+
+    protected Constraint<?>[] matchComplexHeadDefinition(Rule rule, ConstraintStore store, ArrayDeque<Iterator<Constraint<?>>> iteratorStack){
+        int pointer = 0;    // index of the constraint in the header that is currently matched
+
+        Head[] headDef = rule.getHeadDefinitions();
+
+        int headerSize = rule.headSize();
+        System.err.println(headerSize);
+        Constraint<?>[] matchingConstraints = new Constraint<?>[headerSize];
+        Iterator<Constraint<?>> currentIter = headDef[0].getContainerType() == HEAD_CONTAINS.TYPE ?
+                                                store.lookup(headDef[0].getClass()) : store.lookup();
+        System.out.println(currentIter.hasNext() ? currentIter.next() : "no elem");
+        System.out.println(headDef[0].getType().getName());
+        System.out.println(store);
+        Iterator<Constraint<?>> iter = store.lookup(Integer.class);
+        System.out.println(iter.hasNext() ? iter.next() : "no elem2");
+
+        boolean allCombinationsTested = false;
+        while(!allCombinationsTested){
+
+            if(pointer < headerSize-1 && currentIter.hasNext()){
+                matchingConstraints[pointer] = currentIter.next();
+                iteratorStack.add(currentIter);
+                currentIter = headDef[pointer].getContainerType() == HEAD_CONTAINS.TYPE ?
+                                store.lookup(headDef[pointer].getClass()) : store.lookup();
+                pointer++;
+
+            } else if(currentIter.hasNext()) {
+                // Filling last element in array and try to match
+                matchingConstraints[pointer] = currentIter.next();
+                System.out.println("Test matching");
+
+                if(rule.saveHistory()){ // Rules that want to be saved in the propagation history -> Propagation
+                    // if all constraints different AND rule+constraints not in history AND fits header+guard
+                    if (noDuplicatesIn(matchingConstraints)
+                            && !history.isInHistory(rule, matchingConstraints)
+                            && rule.accepts(Arrays.asList(matchingConstraints))) {
+
+                        for(Constraint<?> constraint : matchingConstraints){
+                            store.remove(constraint.ID());
+                        }
+
+                        return matchingConstraints;
+                    }
+
+                } else { // Rules that allow to be executed on the same constraints multiple times
+                    // if all constraints different AND fits header+guard
+                    if (noDuplicatesIn(matchingConstraints)
+                            && rule.accepts(Arrays.asList(matchingConstraints))) {
+
+                        for(Constraint<?> constraint : matchingConstraints){
+                            store.remove(constraint.ID());
+                        }
+
+                        return matchingConstraints;
+                    }
+                }
+
+            } else if(pointer > 0){
+                pointer--;
+                currentIter = iteratorStack.removeLast();
+
+            } else {
+                allCombinationsTested = true;
+            }
+        }
+
+        // NO matching constraints found
+        return null;
+    }
+
+
 
     // ===================================================================
 

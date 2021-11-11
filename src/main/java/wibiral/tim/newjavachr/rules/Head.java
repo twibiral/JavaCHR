@@ -45,27 +45,39 @@ public class Head {
      */
     VAR var = VAR.NONE;
 
-    final CONTAINS containerType;
+    private final HEAD_CONTAINS containerType;
 
     private Head(){
-        containerType = CONTAINS.ANY;
+        containerType = HEAD_CONTAINS.ANY;
     }
 
     private Head(Class<?> type){
-        containerType = CONTAINS.TYPE;
+        containerType = HEAD_CONTAINS.TYPE;
         this.type = type;
     }
 
     private Head(Object value){
-        containerType = CONTAINS.VALUE;
+        containerType = HEAD_CONTAINS.VALUE;
         this.value = value;
     }
 
     public void bindTo(VAR variable){
         var = variable;
     }
-}
 
-enum CONTAINS {
-    ANY, TYPE, VALUE
+    public VAR isBoundTo(){
+        return var;
+    }
+
+    public Class<?> getType() {
+        return type;
+    }
+
+    public Object getValue() {
+        return value;
+    }
+
+    public HEAD_CONTAINS getContainerType() {
+        return containerType;
+    }
 }
