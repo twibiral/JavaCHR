@@ -167,6 +167,7 @@ public class SimpleConstraintSolver implements ConstraintSolver {
                     break;
 
                 case TYPES_SPECIFIED:
+                    System.out.println("TYPES SPECIFIED!");
                     matchingConstraints = matchTypesSpecified(rule, store);
 
                     if(matchingConstraints != null)
