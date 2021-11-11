@@ -11,8 +11,6 @@ import java.util.List;
  * Type of rule that removes a part of the head after execution (head1 stays, head2 gets removed).
  * Original syntax:
  * {@code Head1 / Head2 <=> Guard | Body.}
- *
- * TODO: Doesnt work
  */
 public class Simpagation extends Rule {
     private final int nrConstraintsHead1;
@@ -38,7 +36,9 @@ public class Simpagation extends Rule {
     }
 
     public Simpagation(int sizeHead1, Head... head){
-
+        super(head);
+        nrConstraintsHead1 = sizeHead1;
+        nrConstraintsHead2 = head.length - sizeHead1;
     }
 
     // TODO: Implement missing constuctor with head types

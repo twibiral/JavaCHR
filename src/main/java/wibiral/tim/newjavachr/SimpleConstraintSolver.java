@@ -53,7 +53,7 @@ public class SimpleConstraintSolver implements ConstraintSolver {
 
     @Override
     public List<Constraint<?>> solve(List<Constraint<?>> constraints) {
-        store = new ConstraintStore(constraints);   // TODO: Nicht global in Klasse speichern!
+        store = new ConstraintStore(constraints);
         history = new PropagationHistory();
 
         if(tracingOn)
@@ -94,9 +94,7 @@ public class SimpleConstraintSolver implements ConstraintSolver {
 
     @Override
     public List<Constraint<?>> solve(Constraint<?>... constraints) {
-        List<Constraint<?>> list = new ArrayList<>();
-        for (Constraint<?> c : constraints)
-            list.add(c);
+        List<Constraint<?>> list = new ArrayList<>(Arrays.asList(constraints));
 
         return solve(list);
     }
@@ -110,7 +108,9 @@ public class SimpleConstraintSolver implements ConstraintSolver {
         return solve(constraints);
     }
 
+    // ===================== Experimental ================================
     public List<Constraint<?>> solve2(List<Constraint<?>> constraints) {
+        // TODO: make store and history local variables for better concurrency safety
         store = new ConstraintStore(constraints);
         history = new PropagationHistory();
 
@@ -120,7 +120,8 @@ public class SimpleConstraintSolver implements ConstraintSolver {
         boolean ruleApplied = true;
         while(ruleApplied){
 
-            RuleAndMatch ruleAndMatch = findMatch(store);
+            RuleAndMatch ruleAndMatch = findMatch2(store);
+
             if(ruleAndMatch == null){
                 ruleApplied = false;
 
@@ -149,6 +150,173 @@ public class SimpleConstraintSolver implements ConstraintSolver {
 
         return result;
     }
+
+
+    protected RuleAndMatch findMatch2(ConstraintStore store){
+        Constraint<?>[] matchingConstraints = null;
+
+        for(Rule rule: rules){
+            // Handle every rule according to their header:
+            switch(rule.getHeadDefinitionType()){
+                case SIZE_SPECIFIED:
+                    matchingConstraints = matchSizeSpecified(rule, store);
+                    if(matchingConstraints != null)
+                        return new RuleAndMatch(rule, matchingConstraints);
+
+                    // else:
+                    break;
+
+                case TYPES_SPECIFIED:
+                    System.out.println("TYPES SPECIFIED!");
+                    matchingConstraints = matchTypesSpecified(rule, store);
+
+                    if(matchingConstraints != null)
+                        return new RuleAndMatch(rule, matchingConstraints);
+
+                    // else:
+                    break;
+
+                case COMPLEX_DEFINITION:
+
+                    if(matchingConstraints != null)
+                        return new RuleAndMatch(rule, matchingConstraints);
+
+                    // else:
+                    break;
+            }
+
+
+
+        }
+
+        // No match found:
+        return null;
+    }
+
+    protected Constraint<?>[] matchSizeSpecified(Rule rule, ConstraintStore store){
+        ArrayDeque<Iterator<Constraint<?>>> iteratorStack = new ArrayDeque<>(biggestHeader);
+        int pointer = 0;    // index of the constraint in the header that is currently matched
+
+        int headerSize = rule.headSize();
+        Constraint<?>[] matchingConstraints = new Constraint<?>[headerSize];
+        Iterator<Constraint<?>> currentIter = store.lookup();
+
+        boolean allCombinationsTested = false;
+        while(!allCombinationsTested){
+
+            if(pointer < headerSize-1 && currentIter.hasNext()){
+                matchingConstraints[pointer] = currentIter.next();
+                iteratorStack.add(currentIter);
+                currentIter = store.lookup();
+                pointer++;
+
+            } else if(currentIter.hasNext()) {
+                // Filling last element in array and try to match
+                matchingConstraints[pointer] = currentIter.next();
+
+                if(rule.saveHistory()){ // Rules that want to be saved in the propagation history -> Propagation
+                    // if all constraints different AND rule+constraints not in history AND fits header+guard
+                    if (noDuplicatesIn(matchingConstraints)
+                            && !history.isInHistory(rule, matchingConstraints)
+                            && rule.accepts(Arrays.asList(matchingConstraints))) {
+
+                        for(Constraint<?> constraint : matchingConstraints){
+                            store.remove(constraint.ID());
+                        }
+
+                        return matchingConstraints;
+                    }
+
+                } else { // Rules that allow to be executed on the same constraints multiple times
+                    // if all constraints different AND fits header+guard
+                    if (noDuplicatesIn(matchingConstraints)
+                            && rule.accepts(Arrays.asList(matchingConstraints))) {
+
+                        for(Constraint<?> constraint : matchingConstraints){
+                            store.remove(constraint.ID());
+                        }
+
+                        return matchingConstraints;
+                    }
+                }
+
+            } else if(pointer > 0){
+                pointer--;
+                currentIter = iteratorStack.removeLast();
+
+            } else {
+                allCombinationsTested = true;
+            }
+        }
+
+        // NO matching constraints found
+        return null;
+    }
+
+
+    protected Constraint<?>[] matchTypesSpecified(Rule rule, ConstraintStore store){
+        ArrayDeque<Iterator<Constraint<?>>> iteratorStack = new ArrayDeque<>(biggestHeader);
+        int pointer = 0;    // index of the constraint in the header that is currently matched
+
+        Class<?>[] headTypes = rule.getHeadTypes();
+
+        int headerSize = rule.headSize();
+        Constraint<?>[] matchingConstraints = new Constraint<?>[headerSize];
+        Iterator<Constraint<?>> currentIter = store.lookup(headTypes[0]);
+
+        boolean allCombinationsTested = false;
+        while(!allCombinationsTested){
+
+            if(pointer < headerSize-1 && currentIter.hasNext()){
+                matchingConstraints[pointer] = currentIter.next();
+                iteratorStack.add(currentIter);
+                currentIter = store.lookup(headTypes[pointer]);
+                pointer++;
+
+            } else if(currentIter.hasNext()) {
+                // Filling last element in array and try to match
+                matchingConstraints[pointer] = currentIter.next();
+
+                if(rule.saveHistory()){ // Rules that want to be saved in the propagation history -> Propagation
+                    // if all constraints different AND rule+constraints not in history AND fits header+guard
+                    if (noDuplicatesIn(matchingConstraints)
+                            && !history.isInHistory(rule, matchingConstraints)
+                            && rule.accepts(Arrays.asList(matchingConstraints))) {
+
+                        for(Constraint<?> constraint : matchingConstraints){
+                            store.remove(constraint.ID());
+                        }
+
+                        return matchingConstraints;
+                    }
+
+                } else { // Rules that allow to be executed on the same constraints multiple times
+                    // if all constraints different AND fits header+guard
+                    if (noDuplicatesIn(matchingConstraints)
+                            && rule.accepts(Arrays.asList(matchingConstraints))) {
+
+                        for(Constraint<?> constraint : matchingConstraints){
+                            store.remove(constraint.ID());
+                        }
+
+                        return matchingConstraints;
+                    }
+                }
+
+            } else if(pointer > 0){
+                pointer--;
+                currentIter = iteratorStack.removeLast();
+
+            } else {
+                allCombinationsTested = true;
+            }
+        }
+
+        // NO matching constraints found
+        return null;
+    }
+
+    // ===================================================================
 
 
     /**

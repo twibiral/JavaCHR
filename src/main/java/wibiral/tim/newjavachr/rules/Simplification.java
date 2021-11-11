@@ -27,6 +27,8 @@ public class Simplification extends Rule {
         super(name, nrConstraintsInHead);
     }
 
+    public Simplification(String name, Class<?>... headTypes){super(name, headTypes);}
+
     public Simplification(Head... headDefinitions){
         super(headDefinitions);
     }
