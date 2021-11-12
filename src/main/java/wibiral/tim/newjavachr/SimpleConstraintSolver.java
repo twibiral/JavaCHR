@@ -315,12 +315,6 @@ public class SimpleConstraintSolver implements ConstraintSolver {
         Iterator<Constraint<?>> currentIter = headDef[0].getContainerType() == HEAD_CONTAINS.TYPE ?
                                                 store.lookup(headDef[0].getType()) : store.lookup();
 
-        System.out.println(currentIter.hasNext() ? currentIter.next() : "no elem");
-        System.out.println(headDef[0].getType().getCanonicalName());
-        System.out.println(store);
-        Iterator<Constraint<?>> iter = store.lookup(headDef[0].getType());
-        System.out.println(iter.hasNext() ? "Elem2:" + iter.next() : "no elem2");
-
         boolean allCombinationsTested = false;
         while(!allCombinationsTested){
 
@@ -334,7 +328,6 @@ public class SimpleConstraintSolver implements ConstraintSolver {
             } else if(currentIter.hasNext()) {
                 // Filling last element in array and try to match
                 matchingConstraints[pointer] = currentIter.next();
-                System.out.println("Test matching");
 
                 if(rule.saveHistory()){ // Rules that want to be saved in the propagation history -> Propagation
                     // if all constraints different AND rule+constraints not in history AND fits header+guard
