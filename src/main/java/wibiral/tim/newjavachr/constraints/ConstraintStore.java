@@ -12,23 +12,30 @@ import java.util.List;
  * Stores {@link Constraint}-objects and a rule application history (which rules where applied to which constraints)
  */
 public class ConstraintStore {
+    // TODO: Exchange list with Set to automatically remove duplicates?
     private final List<Constraint<?>> store = new ArrayList<>();
     private final PropagationHistory history = new PropagationHistory();
 
     public ConstraintStore(List<Constraint<?>> constraints) {
         if (constraints != null)
             store.addAll(constraints);
+
+        store.forEach(Constraint::setAlive);
     }
 
     public ConstraintStore(Constraint<?>... constraints) {
         if (constraints.length > 0)
             store.addAll(Arrays.asList(constraints));
+
+        store.forEach(Constraint::setAlive);
     }
 
     @SafeVarargs
     public <T> ConstraintStore(T... values) {
         for (T value : values)
             store.add(new Constraint<>(value));
+
+        store.forEach(Constraint::setAlive);
     }
 
     /**
@@ -40,6 +47,8 @@ public class ConstraintStore {
             return;
 
         store.add(constraint);
+        // All rules in the store must be alive if they aren't in use:
+        constraint.setAlive();
     }
 
     /**
@@ -48,6 +57,8 @@ public class ConstraintStore {
      */
     public void addAll(List<Constraint<?>> constraints){
         store.addAll(constraints);
+        // All rules in the store must be alive if they aren't in use:
+        constraints.forEach(Constraint::setAlive);
     }
 
     /**
