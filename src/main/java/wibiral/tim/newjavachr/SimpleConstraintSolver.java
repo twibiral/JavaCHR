@@ -36,6 +36,7 @@ public class SimpleConstraintSolver implements ConstraintSolver {
     public SimpleConstraintSolver(Rule... rules) {
         this.rules.addAll(Arrays.asList(rules));
         if(rules.length > 2){
+            // Find rule with the largest header and set the variable to it.
             biggestHeader = this.rules.stream().max(Comparator.comparingInt(Rule::headSize)).get().headSize();
 
         } else if(rules.length == 1) {
@@ -154,7 +155,6 @@ public class SimpleConstraintSolver implements ConstraintSolver {
         return result;
     }
 
-
     protected RuleAndMatch findMatch2(ConstraintStore store){
         Constraint<?>[] matchingConstraints = null;
         ArrayDeque<Iterator<Constraint<?>>> iteratorStack = new ArrayDeque<>(biggestHeader);
@@ -243,7 +243,6 @@ public class SimpleConstraintSolver implements ConstraintSolver {
         return null;
     }
 
-
     protected Constraint<?>[] matchTypesSpecified(Rule rule, ConstraintStore store, ArrayDeque<Iterator<Constraint<?>>> iteratorStack){
         int pointer = 0;    // index of the constraint in the header that is currently matched
 
@@ -265,6 +264,8 @@ public class SimpleConstraintSolver implements ConstraintSolver {
             } else if(currentIter.hasNext()) {
                 // Filling last element in array and try to match
                 matchingConstraints[pointer] = currentIter.next();
+
+                System.out.println("Test combination: " + Arrays.asList(matchingConstraints));
 
                 if(rule.saveHistory()){ // Rules that want to be saved in the propagation history -> Propagation
                     // if all constraints different AND rule+constraints not in history AND fits header+guard
@@ -329,13 +330,15 @@ public class SimpleConstraintSolver implements ConstraintSolver {
                 // Filling last element in array and try to match
                 matchingConstraints[pointer] = currentIter.next();
 
-                if(rule.saveHistory()){ // Rules that want to be saved in the propagation history -> Propagation
+                System.out.println("Test combination: " + Arrays.asList(matchingConstraints));
+
+                if(rule.saveHistory()) { // Rules that want to be saved in the propagation history -> Propagation
                     // if all constraints different AND rule+constraints not in history AND fits header+guard
                     if (noDuplicatesIn(matchingConstraints)
                             && !history.isInHistory(rule, matchingConstraints)
                             && rule.accepts(Arrays.asList(matchingConstraints))) {
 
-                        for(Constraint<?> constraint : matchingConstraints){
+                        for (Constraint<?> constraint : matchingConstraints) {
                             store.remove(constraint.ID());
                         }
 
@@ -355,7 +358,7 @@ public class SimpleConstraintSolver implements ConstraintSolver {
                     }
                 }
 
-            } else if(pointer > 0){
+            } else if(pointer > 0) {
                 pointer--;
                 currentIter = iteratorStack.removeLast();
 
@@ -364,7 +367,7 @@ public class SimpleConstraintSolver implements ConstraintSolver {
             }
         }
 
-        // NO matching constraints found
+        // No matching constraints found
         return null;
     }
 
