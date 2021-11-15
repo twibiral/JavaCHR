@@ -9,29 +9,30 @@ import java.util.*;
  * Stores {@link Constraint}-objects and a rule application history (which rules where applied to which constraints)
  */
 public class ConstraintStore {
-    private final Set<Constraint<?>> store = new HashSet<>();
-    // Faster than list and doesn't allow duplicates
+    private final List<Constraint<?>> store = new ArrayList<>();
 
-    public ConstraintStore(List<Constraint<?>> constraints) {
-        if (constraints != null)
-            store.addAll(constraints);
+    public ConstraintStore(Collection<Constraint<?>> constraints) {
+        if(constraints == null)
+            return;
 
+        List<Constraint<?>> withoutDuplicates = new ArrayList<>(new HashSet<>(constraints));
+        store.addAll(withoutDuplicates);
         store.forEach(Constraint::setAlive);
     }
 
     public ConstraintStore(Constraint<?>... constraints) {
-        if (constraints.length > 0)
-            store.addAll(Arrays.asList(constraints));
+        if (constraints.length <= 0)
+            return;
 
+        List<Constraint<?>> withoutDuplicates = new ArrayList<>(new HashSet<>(Arrays.asList(constraints)));
+        store.addAll(withoutDuplicates);
         store.forEach(Constraint::setAlive);
     }
 
     @SafeVarargs
     public <T> ConstraintStore(T... values) {
         for (T value : values)
-            store.add(new Constraint<>(value));
-
-        store.forEach(Constraint::setAlive);
+            this.add(new Constraint<>(value));
     }
 
     /**
@@ -47,10 +48,11 @@ public class ConstraintStore {
      * Adds all the constraints of the list to the constraint store.
      * @param constraints Constraints that get added to the store.
      */
-    public void addAll(List<Constraint<?>> constraints){
-        store.addAll(constraints);
+    public void addAll(Collection<Constraint<?>> constraints){
+        List<Constraint<?>> withoutDuplicates = new ArrayList<>(new HashSet<>(constraints));
+        store.addAll(withoutDuplicates);
         // All rules in the store must be alive if they aren't in use:
-        constraints.forEach(Constraint::setAlive);
+        withoutDuplicates.forEach(Constraint::setAlive);
     }
 
     /**
