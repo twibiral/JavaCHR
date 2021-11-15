@@ -76,13 +76,14 @@ public class Fibonacci {
                     newC.add(new Constraint<>(new fib(1, 1)));
                 });
 //
-        Rule r2 = new Propagation(OF_TYPE(Integer.class), OF_TYPE(fib.class), OF_TYPE(fib.class))
+        Rule r2 = new Propagation("name", Integer.class, fib.class, fib.class) //OF_TYPE(Integer.class), OF_TYPE(fib.class), OF_TYPE(fib.class))
                 // MAX, fib(N1, M1), fib(N2, M2) =>  N1 == N2 - 1 | fib(N2 + 1, M1 + M2).
                 .guard(x ->{
                             System.out.println("Guard: " + x[0] + "  " + x[1] + "  " + x[2]);
-//                        x[0].value() instanceof Integer && x[1].value() instanceof fib && x[2].value() instanceof fib &&
-                                return ((fib) x[1].value()).a == ((fib) x[2].value()).a - 1
-                                && ((fib) x[2].value()).a < (int) x[0].value();
+                    return
+                            x[0].value() instanceof Integer && x[1].value() instanceof fib && x[2].value() instanceof fib &&
+                            ((fib) x[1].value()).a == ((fib) x[2].value()).a - 1
+                            && ((fib) x[2].value()).a < (int) x[0].value();
                         }
                 ).body((oldC, newC) -> {
                     int N2 = ((fib) oldC[2].value()).a;

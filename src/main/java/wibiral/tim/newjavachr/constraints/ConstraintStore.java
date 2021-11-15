@@ -15,17 +15,23 @@ public class ConstraintStore {
     public ConstraintStore(List<Constraint<?>> constraints) {
         if (constraints != null)
             store.addAll(constraints);
+
+        store.forEach(Constraint::setAlive);
     }
 
     public ConstraintStore(Constraint<?>... constraints) {
         if (constraints.length > 0)
             store.addAll(Arrays.asList(constraints));
+
+        store.forEach(Constraint::setAlive);
     }
 
     @SafeVarargs
     public <T> ConstraintStore(T... values) {
         for (T value : values)
             store.add(new Constraint<>(value));
+
+        store.forEach(Constraint::setAlive);
     }
 
     /**
@@ -33,6 +39,8 @@ public class ConstraintStore {
      */
     public void add(Constraint<?> constraint){
         store.add(constraint);
+        // All rules in the store must be alive if they aren't in use:
+        constraint.setAlive();
     }
 
     /**
@@ -41,6 +49,8 @@ public class ConstraintStore {
      */
     public void addAll(List<Constraint<?>> constraints){
         store.addAll(constraints);
+        // All rules in the store must be alive if they aren't in use:
+        constraints.forEach(Constraint::setAlive);
     }
 
     /**
