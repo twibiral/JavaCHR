@@ -8,7 +8,7 @@ public class Constraint<T> {
     private static final AtomicLong ID_COUNTER = new AtomicLong(0);
 
     private final long ID;
-    private T value;
+    private final T value;
     private boolean alive;
 
     public Constraint(T value){
