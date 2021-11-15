@@ -1,9 +1,6 @@
 package wibiral.tim.newjavachr.constraints;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 
 /**
@@ -12,8 +9,8 @@ import java.util.List;
  * Stores {@link Constraint}-objects and a rule application history (which rules where applied to which constraints)
  */
 public class ConstraintStore {
-    private final List<Constraint<?>> store = new ArrayList<>();
-    private final PropagationHistory history = new PropagationHistory();
+    private final Set<Constraint<?>> store = new HashSet<>();
+    // Faster than list and doesn't allow duplicates
 
     public ConstraintStore(List<Constraint<?>> constraints) {
         if (constraints != null)
@@ -35,10 +32,6 @@ public class ConstraintStore {
      * Add the given constraint to the store.
      */
     public void add(Constraint<?> constraint){
-        // Check if the constraint is already in the store.
-        if(store.stream().anyMatch(x -> x.ID() == constraint.ID()))
-            return;
-
         store.add(constraint);
     }
 
