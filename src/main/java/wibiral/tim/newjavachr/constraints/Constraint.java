@@ -2,6 +2,7 @@ package wibiral.tim.newjavachr.constraints;
 
 import wibiral.tim.newjavachr.ConstraintSolver;
 
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class Constraint<T> {
@@ -9,10 +10,13 @@ public class Constraint<T> {
 
     private final long ID;
     private final T value;
+    private final Class<?> type;
+
     private boolean alive;
 
     public Constraint(T value){
         this.value = value;
+        this.type = value.getClass();
         this.alive = true;
 
         // gives this constraint a new id and increments the id counter for the next constraint.
@@ -23,7 +27,7 @@ public class Constraint<T> {
      * @return The Class of the value in this constraint.
      */
     public Class<?> type(){
-        return value.getClass();
+        return type;
     }
 
     /**
@@ -44,6 +48,9 @@ public class Constraint<T> {
         return value.equals(obj);
     }
 
+    /**
+     * @return The ID of the Constraint
+     */
     public long ID(){
         return ID;
     }
@@ -54,7 +61,7 @@ public class Constraint<T> {
      * @return True if the value of this constraint is assignable to the given type.
      */
     public boolean isOfType(Class<?> type){
-        return type.isAssignableFrom(this.type());
+        return type.isAssignableFrom(this.type);
     }
 
     /**
@@ -80,18 +87,6 @@ public class Constraint<T> {
         this.alive = true;
     }
 
-//    /**
-//     * PROBLEM: Maybe during concurrent there are problems with inconsistency.
-//     *
-//     * Instead of deleting an old constraint and creating a new one this method allows you to update an existing constraint.
-//     * This way is more efficient.
-//     * @param newValue The new value that is assigned to the constraint.
-//     */
-//    public void update(T newValue){
-//        value = newValue;
-//        id = ID_COUNTER.getAndIncrement();
-//    }
-
     /**
      * Compares the IDs of two constraints. Returns false if obj is not of type {@link Constraint}.
      * @param obj any object.
@@ -110,8 +105,13 @@ public class Constraint<T> {
     }
 
     @Override
+    public int hashCode() {
+        return Objects.hash(ID);
+    }
+
+    @Override
     public String toString() {
-        return  "Constraint<" + value.getClass().getSimpleName() + ">: " + value;
+        return  "Constraint<" + type.getSimpleName() + ">: " + value;
     }
 }
 
