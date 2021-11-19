@@ -61,8 +61,12 @@ public class CommandLineTracer implements Tracer {
 
     @Override
     public void initMessage(ConstraintStore store) {
+        String constraintsString = store.size() > 15 ?
+                constraintsToString(store.toList().subList(0, 15).toArray(new Constraint<?>[0])) + ", ..."
+                : constraintsToString(store.toList().toArray(new Constraint<?>[0]));
+
         print("\n=== Executing handler ===");
-        print("Constraints: " + constraintsToString(store.toList().toArray(new Constraint<?>[0])) + "\n");
+        print("Constraints: " + constraintsString + "\n");
     }
 
     @Override
@@ -98,11 +102,14 @@ public class CommandLineTracer implements Tracer {
 
         StringBuilder str = new StringBuilder();
         for (int i = 0; i < constraints.length - 1; i++) {
-            str.append(constraints[i].type().getSimpleName()).append(": ")
+            str.append(constraints[i].type().getSimpleName()).append("[").append(constraints[i].ID()).append("]")
+                    .append(": ")
                     .append(constraints[i].value()).append(", ");
         }
 
-        str.append(constraints[constraints.length-1].type().getSimpleName()).append(": ")
+        str.append(constraints[constraints.length-1].type().getSimpleName())
+                .append("[").append(constraints[constraints.length-1].ID()).append("]")
+                .append(": ")
                 .append(constraints[constraints.length-1].value());
 
         return str.toString();
