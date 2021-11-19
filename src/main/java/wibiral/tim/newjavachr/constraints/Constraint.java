@@ -34,6 +34,16 @@ public class Constraint<T> {
         return value;
     }
 
+    /**
+     * Checks if the given obj equals the object that is stored in this container.
+     * (Simply calls the equals() method of the stored object as parameter)
+     * @param obj The object that is compared to the intern object of this Constraint.
+     * @return True if the equals() method of the stored object returns true.
+     */
+    public boolean contains(Object obj){
+        return value.equals(obj);
+    }
+
     public long ID(){
         return ID;
     }
