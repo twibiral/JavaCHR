@@ -131,8 +131,11 @@ public class SimpleConstraintSolver implements ConstraintSolver {
 
             } else {
                 List<Constraint<?>> constraintList = new ArrayList<>(Arrays.asList(ruleAndMatch.match));
-                if(tracingOn)
-                    tracer.step(ruleAndMatch.rule, ruleAndMatch.match, constraintList.toArray(new Constraint<?>[0]));
+                if(tracingOn){
+                    List<Constraint<?>> temp = new ArrayList<>(constraintList);
+                    temp.removeAll(new ArrayList<>(Arrays.asList(ruleAndMatch.match)));
+                    tracer.step(ruleAndMatch.rule, ruleAndMatch.match, temp.toArray(new Constraint<?>[0]));
+                }
 
                 if(ruleAndMatch.rule.saveHistory()){
                     history.addEntry(ruleAndMatch.rule, ruleAndMatch.match);
