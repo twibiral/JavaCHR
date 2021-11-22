@@ -84,7 +84,7 @@ public class SimpleConstraintSolver implements ConstraintSolver {
         boolean ruleApplied = true;
         while(ruleApplied){
 
-            RuleAndMatch ruleAndMatch = findMatch2(store);
+            RuleAndMatch ruleAndMatch = findMatch(store);
 
             if(ruleAndMatch == null){
                 ruleApplied = false;
@@ -115,7 +115,7 @@ public class SimpleConstraintSolver implements ConstraintSolver {
         return store.toList();
     }
 
-    protected RuleAndMatch findMatch2(ConstraintStore store){
+    protected RuleAndMatch findMatch(ConstraintStore store){
         Constraint<?>[] matchingConstraints = null;
         ArrayDeque<Iterator<Constraint<?>>> iteratorStack = new ArrayDeque<>(biggestHeader);
 
@@ -357,76 +357,7 @@ public class SimpleConstraintSolver implements ConstraintSolver {
         return null;
     }
 
-
-
     // ===================================================================
-
-
-    /**
-     * @return Array with constraints that match header
-     */
-    protected RuleAndMatch findMatch(ConstraintStore store){
-        ArrayDeque<Iterator<Constraint<?>>> iteratorStack = new ArrayDeque<>(biggestHeader);
-        int pointer = 0;    // index of the constraint in the header that is currently matched
-
-        for(Rule rule: rules){
-            int headerSize = rule.headSize();
-            Constraint<?>[] matchingConstraints = new Constraint<?>[headerSize];
-            Iterator<Constraint<?>> currentIter = store.lookup();
-
-            boolean allCombinationsTested = false;
-            while(!allCombinationsTested){
-
-                if(pointer < headerSize-1 && currentIter.hasNext()){
-                    matchingConstraints[pointer] = currentIter.next();
-                    iteratorStack.add(currentIter);
-                    currentIter = store.lookup();
-                    pointer++;
-
-                } else if(currentIter.hasNext()) {
-                    // Filling last element in array and try to match
-                    matchingConstraints[pointer] = currentIter.next();
-
-                    if(rule.saveHistory()){ // Rules that want to be saved in the propagation history -> Propagation
-                        // if all constraints different AND rule+constraints not in history AND fits header+guard
-                        if (noDuplicatesIn(matchingConstraints)
-                                && !history.isInHistory(rule, matchingConstraints)
-                                && rule.accepts(Arrays.asList(matchingConstraints))) {
-
-                            for(Constraint<?> constraint : matchingConstraints){
-                                store.remove(constraint.ID());
-                            }
-
-                            return new RuleAndMatch(rule, matchingConstraints);
-                        }
-
-                    } else { // Rules that allow to be executed on the same constraints multiple times
-                        // if all constraints different AND fits header+guard
-                        if (noDuplicatesIn(matchingConstraints)
-                                && rule.accepts(Arrays.asList(matchingConstraints))) {
-
-                            for(Constraint<?> constraint : matchingConstraints){
-                                store.remove(constraint.ID());
-                            }
-
-                            return new RuleAndMatch(rule, matchingConstraints);
-                        }
-                    }
-
-                } else if(pointer > 0){
-                    pointer--;
-                    currentIter = iteratorStack.removeLast();
-
-                } else {
-                    allCombinationsTested = true;
-                }
-            }
-
-        }
-
-        // No match found:
-        return null;
-    }
 
     /**
      * @param array The array to check.
