@@ -3,14 +3,14 @@ package wibiral.tim.newjavachr;
 import wibiral.tim.newjavachr.constraints.Constraint;
 import wibiral.tim.newjavachr.constraints.ConstraintStore;
 import wibiral.tim.newjavachr.constraints.PropagationHistory;
-import wibiral.tim.newjavachr.rules.head.HEAD_CONTAINS;
-import wibiral.tim.newjavachr.rules.head.Head;
 import wibiral.tim.newjavachr.rules.Rule;
+import wibiral.tim.newjavachr.rules.head.Head;
 import wibiral.tim.newjavachr.tracing.Tracer;
 
 import java.util.*;
 
 /**
+ * TODO: Complete refactoring!
  * This constraint solver implements constraint-first matching.
  * This means it takes a combination of constraints and tries to match it with the heads of the rules. The first
  * matching rule is executed. If the constraints fit no rule, the next combination is tried.
