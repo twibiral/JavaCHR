@@ -228,8 +228,6 @@ public class SimpleConstraintSolver implements ConstraintSolver {
                 // Filling last element in array and try to match
                 matchingConstraints[pointer] = currentIter.next();
 
-                System.out.println("Match with: " + Arrays.asList(matchingConstraints));
-
                 if(rule.saveHistory()){ // Rules that want to be saved in the propagation history -> Propagation
                     // if all constraints different AND rule+constraints not in history AND fits header+guard
                     if (noDuplicatesIn(matchingConstraints)
