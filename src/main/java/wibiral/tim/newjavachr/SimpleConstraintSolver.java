@@ -216,14 +216,19 @@ public class SimpleConstraintSolver implements ConstraintSolver {
         while(!allCombinationsTested){
 
             if(pointer < headerSize-1 && currentIter.hasNext()){
+                // Take constraint from iter and add iter to stack
                 matchingConstraints[pointer] = currentIter.next();
                 iteratorStack.add(currentIter);
-                currentIter = store.lookup(headTypes[pointer]);
+
+                // Find constraint for next position of array
                 pointer++;
+                currentIter = store.lookup(headTypes[pointer]);
 
             } else if(currentIter.hasNext()) {
                 // Filling last element in array and try to match
                 matchingConstraints[pointer] = currentIter.next();
+
+                System.out.println("Match with: " + Arrays.asList(matchingConstraints));
 
                 if(rule.saveHistory()){ // Rules that want to be saved in the propagation history -> Propagation
                     // if all constraints different AND rule+constraints not in history AND fits header+guard
@@ -293,6 +298,7 @@ public class SimpleConstraintSolver implements ConstraintSolver {
             if(pointer < headerSize-1 && currentIter.hasNext()){
                 matchingConstraints[pointer] = currentIter.next();
                 iteratorStack.add(currentIter);
+                pointer++;
 
                 // Decide which lookup to use, depending on how the header constraint is defined in the rule.
                 switch(headDef[pointer].getContainerType()){
@@ -309,7 +315,6 @@ public class SimpleConstraintSolver implements ConstraintSolver {
                         break;
                 }
 
-                pointer++;
 
             } else if(currentIter.hasNext()) {
                 // Filling last element in array and try to match

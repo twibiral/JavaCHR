@@ -34,12 +34,12 @@ public class Fibonacci {
     }
 
     public static void main(String[] args) {
-        ConstraintSolver fibHandler = new SimpleConstraintSolver(getRules2());
+        ConstraintSolver fibHandler = new SimpleConstraintSolver(getRules());
         fibHandler.setTracer(new CommandLineTracer());
 
         System.out.println("Fibonacci 42:");
         long start = System.currentTimeMillis();
-        List<Constraint<?>> result = fibHandler.solve(10);
+        List<Constraint<?>> result = fibHandler.solve(42);
         long end = System.currentTimeMillis();
         System.out.println(result + "\nDuration: " + (end - start) + "ms");
     }
