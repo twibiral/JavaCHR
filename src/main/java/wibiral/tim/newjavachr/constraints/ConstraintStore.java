@@ -61,6 +61,17 @@ public class ConstraintStore {
     }
 
     /**
+     * Adds all the constraints of the list to the constraint store.
+     * @param constraints Constraints that get added to the store.
+     */
+    public void addAll(Constraint<?>... constraints){
+        List<Constraint<?>> withoutDuplicates = new ArrayList<>(new HashSet<>(Arrays.asList(constraints)));
+        store.addAll(withoutDuplicates);
+        // All rules in the store must be alive if they aren't in use:
+        withoutDuplicates.forEach(Constraint::setAlive);
+    }
+
+    /**
      * Create a new constraint and add it to the store.
      * @param object the new object to add.
      * @param <T> Type of the given object and the created constraint.
