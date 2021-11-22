@@ -4,10 +4,10 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class ConstraintStoreTest {
 
@@ -64,11 +64,20 @@ public class ConstraintStoreTest {
 
     @Test
     public void addAll() {
-        ConstraintStore store = new ConstraintStore();
         Constraint<?> a = new Constraint<>("Hello World!");
         Constraint<?> b = new Constraint<>(42);
         Constraint<?> c = new Constraint<>(3.141);
+
+        ConstraintStore store = new ConstraintStore();
         store.addAll(Arrays.asList(a, b, c));
+
+        assertEquals(3, store.size());
+        assertTrue(store.toList().contains(a));
+        assertTrue(store.toList().contains(b));
+        assertTrue(store.toList().contains(c));
+
+        store = new ConstraintStore();
+        store.addAll(a, b, c);
 
         assertEquals(3, store.size());
         assertTrue(store.toList().contains(a));
@@ -93,23 +102,75 @@ public class ConstraintStoreTest {
     public void lookup() {
         Constraint<?> a = new Constraint<>("Hello World!");
         Constraint<?> b = new Constraint<>(42);
-        Constraint<?> c = new Constraint<>(3.14159);
+        Constraint<?> c = new Constraint<>(3.141);
+        Constraint<?> d = new Constraint<>("42");
 
         ConstraintStore store = new ConstraintStore();
-        store.addAll(Arrays.asList(a, b, c));
+        store.addAll(Arrays.asList(a, b, c, d));
 
+        Iterator<Constraint<?>> iter = store.lookup();
+        List<Constraint<?>> list = new ArrayList<Constraint<?>>();
+        iter.forEachRemaining(list::add);
+        assertTrue(list.contains(a));
+        assertTrue(list.contains(b));
+        assertTrue(list.contains(c));
+        assertTrue(list.contains(d));
+        assertEquals(4, list.size());
 
+        iter = store.lookup(Integer.class);
+        list.clear();
+        iter.forEachRemaining(list::add);
+        assertTrue(list.contains(b));
+        assertEquals(1, list.size());
 
+        iter = store.lookup(String.class);
+        list.clear();
+        iter.forEachRemaining(list::add);
+        assertTrue(list.contains(a));
+        assertTrue(list.contains(d));
+        assertEquals(2, list.size());
+
+        // Dont use float! Java uses double by default!
+        iter = store.lookup(Double.class);
+        list.clear();
+        iter.forEachRemaining(list::add);
+        assertTrue(list.contains(c));
+        assertEquals(1, list.size());
+
+        iter = store.lookup("Hello World!");
+        list.clear();
+        iter.forEachRemaining(list::add);
+        assertTrue(list.contains(a));
+        assertEquals(1, list.size());
+
+        iter = store.lookup(42);
+        list.clear();
+        iter.forEachRemaining(list::add);
+        assertTrue(list.contains(b));
+        assertEquals(1, list.size());
+
+        iter = store.lookup(3.141);
+        list.clear();
+        iter.forEachRemaining(list::add);
+        assertTrue(list.contains(c));
+        assertEquals(1, list.size());
+
+        iter = store.lookup("42");
+        list.clear();
+        iter.forEachRemaining(list::add);
+        assertTrue(list.contains(d));
+        assertEquals(1, list.size());
     }
 
     @Test
     public void size() {
-    }
+        ConstraintStore store = new ConstraintStore();
+        addTestConstraints(store);
+        assertEquals(3, store.size());
 
-    @Test
-    public void testToString1() {
+        store.createAndAdd("42");
+        assertEquals(4, store.size());
     }
-
 
     /**
      * Add some test constraints to the store and return an array with their constraints
