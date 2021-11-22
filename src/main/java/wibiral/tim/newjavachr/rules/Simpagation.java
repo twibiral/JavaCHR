@@ -2,6 +2,7 @@ package wibiral.tim.newjavachr.rules;
 
 import wibiral.tim.newjavachr.constraints.Constraint;
 import wibiral.tim.newjavachr.exceptions.AlreadyDefinedException;
+import wibiral.tim.newjavachr.exceptions.RuleDefinitionFailed;
 import wibiral.tim.newjavachr.rules.body.SimpagationBody;
 import wibiral.tim.newjavachr.rules.guard.SimpagationGuard;
 import wibiral.tim.newjavachr.rules.head.Head;
@@ -38,8 +39,35 @@ public class Simpagation extends Rule {
         this.nrConstraintsHead2 = nrConstraintsHead2;
     }
 
+    public Simpagation(int sizeHead1, Class<?>... headTypes){
+        super(headTypes);
+
+        if(headTypes.length < sizeHead1) {
+            throw new RuleDefinitionFailed("Size of head 1 cannot be bigger than the number of head constraints!");
+        }
+
+        nrConstraintsHead1 = sizeHead1;
+        nrConstraintsHead2 = headTypes.length - sizeHead1;
+    }
+
+    public Simpagation(String name, int sizeHead1, Class<?>... headTypes){
+        super(name, headTypes);
+
+        if(headTypes.length < sizeHead1) {
+            throw new RuleDefinitionFailed("Size of head 1 cannot be bigger than the number of head constraints!");
+        }
+
+        nrConstraintsHead1 = sizeHead1;
+        nrConstraintsHead2 = headTypes.length - sizeHead1;
+    }
+
     public Simpagation(int sizeHead1, Head... head){
         super(head);
+
+        if(head.length < sizeHead1) {
+            throw new RuleDefinitionFailed("Size of head 1 cannot be bigger than the number of head constraints!");
+        }
+
         nrConstraintsHead1 = sizeHead1;
         nrConstraintsHead2 = head.length - sizeHead1;
     }
@@ -48,7 +76,7 @@ public class Simpagation extends Rule {
         super(name, head);
 
         if(head.length < sizeHead1) {
-            throw new RuntimeException("Size of head 1 cannot be bigger than the number of head constraints!");
+            throw new RuleDefinitionFailed("Size of head 1 cannot be bigger than the number of head constraints!");
         }
 
         nrConstraintsHead1 = sizeHead1;
