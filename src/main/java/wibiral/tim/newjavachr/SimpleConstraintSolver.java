@@ -36,10 +36,14 @@ public class SimpleConstraintSolver implements ConstraintSolver {
         this.rules.addAll(Arrays.asList(rules));
         if(rules.length > 2){
             // Find rule with the largest header and set the variable to it.
+            // Must be present because the array contains at least 2 rules.
             biggestHeader = this.rules.stream().max(Comparator.comparingInt(Rule::headSize)).get().headSize();
 
         } else if(rules.length == 1) {
             biggestHeader = rules[0].headSize();
+
+        } else if (rules.length < 1) {
+            System.err.println("No rules given!");
         }
     }
 
@@ -315,8 +319,21 @@ public class SimpleConstraintSolver implements ConstraintSolver {
 
         int headerSize = rule.headSize();
         Constraint<?>[] matchingConstraints = new Constraint<?>[headerSize];
-        Iterator<Constraint<?>> currentIter = headDef[0].getContainerType() == HEAD_CONTAINS.TYPE ?
-                                                store.lookup(headDef[0].getType()) : store.lookup();
+        Iterator<Constraint<?>> currentIter = null;
+        // Decide which lookup to use, depending on how the header constraint is defined in the rule.
+        switch(headDef[pointer].getContainerType()){
+            case ANY:
+                currentIter = store.lookup();
+                break;
+
+            case TYPE:
+                currentIter = store.lookup(headDef[pointer].getType());
+                break;
+
+            case VALUE:
+                currentIter = store.lookup(headDef[pointer].getValue());
+                break;
+        }
 
         boolean allCombinationsTested = false;
         while(!allCombinationsTested){
@@ -324,8 +341,22 @@ public class SimpleConstraintSolver implements ConstraintSolver {
             if(pointer < headerSize-1 && currentIter.hasNext()){
                 matchingConstraints[pointer] = currentIter.next();
                 iteratorStack.add(currentIter);
-                currentIter = headDef[pointer].getContainerType() == HEAD_CONTAINS.TYPE ?
-                                store.lookup(headDef[pointer].getType()) : store.lookup();
+
+                // Decide which lookup to use, depending on how the header constraint is defined in the rule.
+                switch(headDef[pointer].getContainerType()){
+                    case ANY:
+                        currentIter = store.lookup();
+                        break;
+
+                    case TYPE:
+                        currentIter = store.lookup(headDef[pointer].getType());
+                        break;
+
+                    case VALUE:
+                        currentIter = store.lookup(headDef[pointer].getValue());
+                        break;
+                }
+
                 pointer++;
 
             } else if(currentIter.hasNext()) {
