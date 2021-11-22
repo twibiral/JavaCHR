@@ -27,7 +27,6 @@ public class SimpleConstraintSolver implements ConstraintSolver {
     protected PropagationHistory history = new PropagationHistory();
     protected Tracer tracer;
     protected boolean tracingOn = false;
-    protected ConstraintStore store;
 
     private int biggestHeader = 0;
 
@@ -60,65 +59,23 @@ public class SimpleConstraintSolver implements ConstraintSolver {
 
     @Override
     public List<Constraint<?>> solve(List<Constraint<?>> constraints) {
-        store = new ConstraintStore(constraints);
-        history = new PropagationHistory();
-
-        if(tracingOn)
-            tracer.initMessage(store);
-
-        boolean ruleApplied = true;
-        while(ruleApplied){
-
-            RuleAndMatch ruleAndMatch = findMatch(store);
-            if(ruleAndMatch == null){
-                ruleApplied = false;
-
-            } else {
-                List<Constraint<?>> constraintList = new ArrayList<>(Arrays.asList(ruleAndMatch.match));
-                if(tracingOn)
-                    tracer.step(ruleAndMatch.rule, ruleAndMatch.match, constraintList.toArray(new Constraint<?>[0]));
-
-                if(ruleAndMatch.rule.saveHistory()){
-                    history.addEntry(ruleAndMatch.rule, ruleAndMatch.match);
-                }
-
-                // Store directly in the old variable to save memory and time.
-                constraintList = ruleAndMatch.rule.apply(constraintList);
-                store.addAll(constraintList);
-
-            }
-
-        }
-
-        if(tracingOn)
-            tracer.terminatedMessage(store);
-
-        List<Constraint<?>> result = store.toList();
-        store = null;
-
-        return result;
+        return solve(new ConstraintStore(constraints));
     }
 
     @Override
     public List<Constraint<?>> solve(Constraint<?>... constraints) {
-        List<Constraint<?>> list = new ArrayList<>(Arrays.asList(constraints));
-
-        return solve(list);
+        return solve(new ConstraintStore(Arrays.asList(constraints)));
     }
 
     @SafeVarargs
     @Override
     public final <T> List<Constraint<?>> solve(T... values) {
-        ArrayList<Constraint<?>> constraints = new ArrayList<>();
-        for(T val : values)
-            constraints.add(new Constraint<>(val));
-        return solve2(constraints);
+        return solve(new ConstraintStore(values));
     }
 
     // ===================== Experimental ================================
-    public List<Constraint<?>> solve2(List<Constraint<?>> constraints) {
+    public List<Constraint<?>> solve(ConstraintStore store) {
         // TODO: make store and history local variables for better concurrency safety
-        store = new ConstraintStore(constraints);
         history = new PropagationHistory();
 
         if(tracingOn)
@@ -155,10 +112,7 @@ public class SimpleConstraintSolver implements ConstraintSolver {
         if(tracingOn)
             tracer.terminatedMessage(store);
 
-        List<Constraint<?>> result = store.toList();
-        store = null;
-
-        return result;
+        return store.toList();
     }
 
     protected RuleAndMatch findMatch2(ConstraintStore store){
