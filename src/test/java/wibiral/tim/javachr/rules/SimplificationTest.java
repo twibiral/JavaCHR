@@ -3,72 +3,69 @@ package wibiral.tim.javachr.rules;
 import org.junit.Before;
 import org.junit.Test;
 import wibiral.tim.javachr.constraints.Constraint;
-import wibiral.tim.javachr.constraints.ConstraintStore;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class SimplificationTest {
-    Simplification rule1;
+    Simplification rule;
 
     @Before
     public void setUp() {
-        rule1 = new Simplification(1);
-        rule1.guard(x -> {
+        rule = new Simplification(1);
+        rule.guard(x -> {
             int i = (int) x[0].value();
             return i > 2 && i < 21;
         });
-        rule1.body((oldC, newC) -> newC.add(new Constraint<>((int) oldC[0].value() - 1)));
+        rule.body((head, newConstraints) -> newConstraints.add(new Constraint<>((int) head[0].value() - 1)));
     }
 
     @Test
     public void apply() {
-        assertTrue(rule1.apply(new ConstraintStore(3)));
-        ConstraintStore store = new ConstraintStore(15);
-        assertTrue(rule1.apply(store));
-        assertTrue(store.contains(new Constraint<>(14)));
-        assertFalse(store.contains(new Constraint<>(15)));
-        assertTrue(store.contains(14));
-        assertFalse(store.contains(15));
+        List<Constraint<?>> result = rule.apply(createConstraintList(3));
+        assertTrue(result.stream().anyMatch(c -> c.value().equals(2)));
+        assertEquals(1, result.size());
+
+        result = rule.apply(createConstraintList(15));
+        assertTrue(result.stream().anyMatch(c -> c.value().equals(14)));
+        assertFalse(result.stream().anyMatch(c -> c.value().equals(15)));
+        assertEquals(1, result.size());
     }
 
     @Test
     public void accepts() {
-        assertTrue(rule1.accepts(new ConstraintStore(3)));
-        assertTrue(rule1.accepts(new ConstraintStore(15)));
+        assertTrue(rule.accepts(createConstraintList(3)));
+        assertTrue(rule.accepts(createConstraintList(15)));
 
-        assertFalse("Too many constraints, must be false!", rule1.accepts(new ConstraintStore(12, 7)));
-        assertFalse("Too few constraints, must be false!", rule1.accepts(new ConstraintStore()));
+        assertFalse("Too many constraints, must be false!", rule.accepts(createConstraintList(12, 7)));
+        assertFalse("Too few constraints, must be false!", rule.accepts(createConstraintList()));
 
-        assertFalse("Constraints don't fulfill the conditions, must be false!", rule1.accepts(new ConstraintStore(42)));
-        assertFalse("Constraints don't fulfill the conditions, must be false!", rule1.accepts(new ConstraintStore(-12)));
-
-
-        assertTrue(rule1.accepts(Arrays.asList(new Constraint<?>[]{new Constraint<>(3)})));
-        assertTrue(rule1.accepts(Arrays.asList(new Constraint<?>[]{new Constraint<>(15)})));
-
-        assertFalse("Too many constraints, must be false!", rule1.accepts(
-                Arrays.asList(new Constraint<?>[]{new Constraint<>(12), new Constraint<>(7)})));
-        assertFalse("Too few constraints, must be false!", rule1.accepts(new ArrayList<>()));
-
-        assertFalse("Constraints don't fulfill the conditions, must be false!", rule1.accepts(Arrays.asList(new Constraint<?>[]{new Constraint<>(42)})));
-        assertFalse("Constraints don't fulfill the conditions, must be false!", rule1.accepts(Arrays.asList(new Constraint<?>[]{new Constraint<>(-12)})));
+        assertFalse("Constraints don't fulfill the conditions, must be false!", rule.accepts(createConstraintList(42)));
+        assertFalse("Constraints don't fulfill the conditions, must be false!", rule.accepts(createConstraintList(-12)));
     }
 
     @Test
     public void guard() {
-        Propagation rule = new Propagation(1).guard(x -> x[0].value().equals(2));
-        assertTrue(rule.accepts(new ConstraintStore(2)));
+        Simplification rule = new Simplification(1).guard(x -> x[0].value().equals(2));
+        assertTrue(rule.accepts(createConstraintList(2)));
     }
 
     @Test
     public void body() {
-        Propagation rule = new Propagation(1).body((oldC, newC) -> newC.add(new Constraint<>((int) oldC[0].value() + 2)));
-        ConstraintStore s = new ConstraintStore(2);
-        assertTrue(rule.apply(s));
-        assertTrue(s.contains(new Constraint<>(4)));
+        Simplification rule = new Simplification(1)
+                .body((oldC, newC) -> newC.add(new Constraint<>(5)));
+        List<Constraint<?>> result = rule.apply(createConstraintList(3));
+        assertTrue(result.stream().anyMatch(c -> c.value().equals(5)));
+        assertEquals(1, result.size());
+    }
+
+    private List<Constraint<?>> createConstraintList(int... values) {
+        List<Constraint<?>> constraints = new ArrayList<>();
+        for (int i : values) {
+            constraints.add(new Constraint<>(i));
+        }
+        return constraints;
     }
 }
