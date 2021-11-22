@@ -54,7 +54,7 @@ public class Fibonacci {
                 });
 
         // MAX, fib(N1, M1), fib(N2, M2) =>  N1 == N2 - 1 | fib(N2 + 1, M1 + M2).
-        Rule r2 = new Propagation(OF_TYPE(Integer.class), OF_TYPE(Fib.class), OF_TYPE(Fib.class)) //OF_TYPE(Integer.class), OF_TYPE(fib.class), OF_TYPE(fib.class))
+        Rule r2 = new Propagation(OF_TYPE(Integer.class), OF_TYPE(Fib.class), OF_TYPE(Fib.class))
                 .guard(head ->
                             ((Fib) head[1].value()).a == ((Fib) head[2].value()).a - 1
                             && ((Fib) head[2].value()).a < (int) head[0].value()
@@ -75,9 +75,9 @@ public class Fibonacci {
         // MAX => fib(0, 1), fib(1, 1).
         Rule r1 = new Propagation(Integer.class)
 //                .guard(head -> {})    // Not necessary
-                .body((oldC, newC) -> {
-                    newC.add(new Constraint<>(new Fib(0, 0)));
-                    newC.add(new Constraint<>(new Fib(1, 1)));
+                .body((head, newConstraints) -> {
+                    newConstraints.add(new Constraint<>(new Fib(0, 0)));
+                    newConstraints.add(new Constraint<>(new Fib(1, 1)));
                 });
 
         // MAX, fib(N1, M1), fib(N2, M2) =>  N1 == N2 - 1 | fib(N2 + 1, M1 + M2).
@@ -105,12 +105,12 @@ public class Fibonacci {
     public static Rule[] getRules3(){
         // MAX => fib(0, 1), fib(1, 1).
         Rule r1 = new Propagation(1)
-                .guard(x ->
-                        x[0].value() instanceof Integer
+                .guard(head ->
+                        head[0].value() instanceof Integer
                 )
-                .body((oldC, newC) -> {
-                    newC.add(new Constraint<>(new Fib(0, 0)));
-                    newC.add(new Constraint<>(new Fib(1, 1)));
+                .body((head, newConstraints) -> {
+                    newConstraints.add(new Constraint<>(new Fib(0, 0)));
+                    newConstraints.add(new Constraint<>(new Fib(1, 1)));
                 });
 
         // MAX, fib(N1, M1), fib(N2, M2) =>  N1 == N2 - 1 | fib(N2 + 1, M1 + M2).
