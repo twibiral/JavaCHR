@@ -16,10 +16,10 @@ public abstract class Rule {
     protected final String name;
     protected final Class<?>[] headTypes;
     protected final Head[] headDefinitions;
-    protected final HEAD_DEFINITION_TYPE head_definition_type;
+    protected final HEAD_DEFINITION_TYPE headDefinitionType;
 
     protected Rule(int nrConstraintsInHead){
-        this.head_definition_type = HEAD_DEFINITION_TYPE.SIZE_SPECIFIED;
+        this.headDefinitionType = HEAD_DEFINITION_TYPE.SIZE_SPECIFIED;
         this.nrConstraintsInHead = nrConstraintsInHead;
         this.name = null;
         this.headTypes = null;
@@ -30,7 +30,7 @@ public abstract class Rule {
     }
 
     protected Rule(String name, int nrConstraintsInHead){
-        this.head_definition_type = HEAD_DEFINITION_TYPE.SIZE_SPECIFIED;
+        this.headDefinitionType = HEAD_DEFINITION_TYPE.SIZE_SPECIFIED;
         this.nrConstraintsInHead = nrConstraintsInHead;
         this.name = name;
         this.headTypes = null;
@@ -40,8 +40,19 @@ public abstract class Rule {
         ID = ID_COUNTER.getAndIncrement();
     }
 
+    protected Rule(Class<?>... headTypes){
+        this.headDefinitionType = HEAD_DEFINITION_TYPE.TYPES_SPECIFIED;
+        this.nrConstraintsInHead = headTypes.length;
+        this.name = null;
+        this.headTypes = headTypes;
+        this.headDefinitions = null;
+
+        // give this rule an ID
+        ID = ID_COUNTER.getAndIncrement();
+    }
+
     protected Rule(String name, Class<?>... headTypes){
-        this.head_definition_type = HEAD_DEFINITION_TYPE.TYPES_SPECIFIED;
+        this.headDefinitionType = HEAD_DEFINITION_TYPE.TYPES_SPECIFIED;
         this.nrConstraintsInHead = headTypes.length;
         this.name = name;
         this.headTypes = headTypes;
@@ -52,7 +63,7 @@ public abstract class Rule {
     }
 
     protected Rule(Head... headDefinitions){
-        this.head_definition_type = HEAD_DEFINITION_TYPE.COMPLEX_DEFINITION;
+        this.headDefinitionType = HEAD_DEFINITION_TYPE.COMPLEX_DEFINITION;
         this.headDefinitions = headDefinitions;
         this.nrConstraintsInHead = headDefinitions.length;
         this.name = null;
@@ -62,8 +73,16 @@ public abstract class Rule {
         ID = ID_COUNTER.getAndIncrement();
     }
 
-    // TODO: Add header + mechanics for unification and matching based on value and equality
-    // TODO: How to implement the application history for Propagation??? History in Propagation or Store???
+    protected Rule(String name, Head... headDefinitions){
+        this.headDefinitionType = HEAD_DEFINITION_TYPE.COMPLEX_DEFINITION;
+        this.headDefinitions = headDefinitions;
+        this.nrConstraintsInHead = headDefinitions.length;
+        this.name = name;
+        this.headTypes = null;
+
+        // give this rule an ID
+        ID = ID_COUNTER.getAndIncrement();
+    }
 
     /**
      * @return Number of constraints in the head.
@@ -125,7 +144,7 @@ public abstract class Rule {
      * @return Enum element that specifies how the head of this rule was definied.
      */
     public HEAD_DEFINITION_TYPE getHeadDefinitionType(){
-        return this.head_definition_type;
+        return this.headDefinitionType;
     }
 
     /**

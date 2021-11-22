@@ -27,10 +27,16 @@ public class Simplification extends Rule {
         super(name, nrConstraintsInHead);
     }
 
+    public Simplification(Class<?>... headTypes){super(headTypes);}
+
     public Simplification(String name, Class<?>... headTypes){super(name, headTypes);}
 
     public Simplification(Head... headDefinitions){
         super(headDefinitions);
+    }
+
+    public Simplification(String name, Head... headDefinitions){
+        super(name, headDefinitions);
     }
 
     @Override

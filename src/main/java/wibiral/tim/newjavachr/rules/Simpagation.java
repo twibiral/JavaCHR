@@ -41,7 +41,16 @@ public class Simpagation extends Rule {
         nrConstraintsHead2 = head.length - sizeHead1;
     }
 
-    // TODO: Implement missing constuctor with head types
+    public Simpagation(String name, int sizeHead1, Head... head){
+        super(name, head);
+
+        if(head.length < sizeHead1) {
+            throw new RuntimeException("Size of head 1 cannot be bigger than the number of head constraints!");
+        }
+
+        nrConstraintsHead1 = sizeHead1;
+        nrConstraintsHead2 = head.length - sizeHead1;
+    }
 
     @Override
     public List<Constraint<?>> apply(List<Constraint<?>> constraints) {

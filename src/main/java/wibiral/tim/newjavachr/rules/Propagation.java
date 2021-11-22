@@ -27,9 +27,15 @@ public class Propagation extends Rule {
         super(name, nrOfConstraints);
     }
 
+    public Propagation(Class<?>... headTypes){super(headTypes);}
+
     public Propagation(String name, Class<?>... headTypes){super(name, headTypes);}
 
     public Propagation(Head... headDefinitions){
+        super(headDefinitions);
+    }
+
+    public Propagation(String name, Head... headDefinitions){
         super(headDefinitions);
     }
 
