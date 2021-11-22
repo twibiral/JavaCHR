@@ -1,6 +1,8 @@
 package wibiral.tim.newjavachr.rules;
 
 import wibiral.tim.newjavachr.constraints.Constraint;
+import wibiral.tim.newjavachr.rules.head.HEAD_DEFINITION_TYPE;
+import wibiral.tim.newjavachr.rules.head.Head;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;

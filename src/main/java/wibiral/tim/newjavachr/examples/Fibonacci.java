@@ -3,7 +3,6 @@ package wibiral.tim.newjavachr.examples;
 import wibiral.tim.newjavachr.constraints.Constraint;
 import wibiral.tim.newjavachr.ConstraintSolver;
 import wibiral.tim.newjavachr.SimpleConstraintSolver;
-import wibiral.tim.newjavachr.rules.Head;
 import wibiral.tim.newjavachr.rules.Propagation;
 import wibiral.tim.newjavachr.rules.Rule;
 import wibiral.tim.newjavachr.rules.Simpagation;
@@ -11,7 +10,7 @@ import wibiral.tim.newjavachr.tracing.CommandLineTracer;
 
 import java.util.List;
 
-import static wibiral.tim.newjavachr.rules.Head.OF_TYPE;
+import static wibiral.tim.newjavachr.rules.head.Head.OF_TYPE;
 
 public class Fibonacci {
     public static class fib {

@@ -1,5 +1,6 @@
 package wibiral.tim.newjavachr.examples;
 
+import wibiral.tim.newjavachr.rules.head.Head;
 import wibiral.tim.newjavachr.rules.Simpagation;
 import wibiral.tim.newjavachr.ConstraintSolver;
 import wibiral.tim.newjavachr.SimpleConstraintSolver;
@@ -55,7 +56,7 @@ public class GreatestCommonDivisor {
 
     static Rule[] getRules(){
         // X1 / X2 <=> X1>0, X1=<X2 | int(X2-X1).
-        Rule r1 = new Simpagation(1, 1)
+        Rule r1 = new Simpagation(1, Head.OF_TYPE(Integer.class), Head.OF_TYPE(Integer.class))
                 .guard(
                         (h1, h2) ->
                                 // h1[0].value() instanceof Integer && h2[0].value() instanceof Integer &&
@@ -83,7 +84,7 @@ public class GreatestCommonDivisor {
 //                );
 
         // X <=> X=0 | true.
-        Rule r2 = new Simplification("X <=> X=0 | true.", Integer.class)
+        Rule r2 = new Simplification("X <=> X=0 | true.", Head.OF_TYPE(Integer.class))
                 .guard(
                         x ->{
                             // The solver guarantees the type of the constraint to be integer

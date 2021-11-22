@@ -3,9 +3,8 @@ package wibiral.tim.newjavachr;
 import wibiral.tim.newjavachr.constraints.Constraint;
 import wibiral.tim.newjavachr.constraints.ConstraintStore;
 import wibiral.tim.newjavachr.constraints.PropagationHistory;
-import wibiral.tim.newjavachr.rules.HEAD_CONTAINS;
-import wibiral.tim.newjavachr.rules.HEAD_DEFINITION_TYPE;
-import wibiral.tim.newjavachr.rules.Head;
+import wibiral.tim.newjavachr.rules.head.HEAD_CONTAINS;
+import wibiral.tim.newjavachr.rules.head.Head;
 import wibiral.tim.newjavachr.rules.Rule;
 import wibiral.tim.newjavachr.tracing.Tracer;
 

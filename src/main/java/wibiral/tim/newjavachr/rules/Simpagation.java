@@ -2,6 +2,9 @@ package wibiral.tim.newjavachr.rules;
 
 import wibiral.tim.newjavachr.constraints.Constraint;
 import wibiral.tim.newjavachr.exceptions.AlreadyDefinedException;
+import wibiral.tim.newjavachr.rules.body.SimpagationBody;
+import wibiral.tim.newjavachr.rules.guard.SimpagationGuard;
+import wibiral.tim.newjavachr.rules.head.Head;
 
 import java.util.ArrayList;
 import java.util.Arrays;

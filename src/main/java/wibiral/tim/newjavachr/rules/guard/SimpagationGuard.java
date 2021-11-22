@@ -1,4 +1,4 @@
-package wibiral.tim.newjavachr.rules;
+package wibiral.tim.newjavachr.rules.guard;
 
 import wibiral.tim.newjavachr.constraints.Constraint;
 

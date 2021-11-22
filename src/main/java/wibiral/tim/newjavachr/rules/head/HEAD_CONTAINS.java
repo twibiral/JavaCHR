@@ -1,4 +1,4 @@
-package wibiral.tim.newjavachr.rules;
+package wibiral.tim.newjavachr.rules.head;
 
 // TODO: Write docu
 public enum HEAD_CONTAINS {

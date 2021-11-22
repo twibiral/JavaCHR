@@ -1,4 +1,4 @@
-package wibiral.tim.newjavachr.rules;
+package wibiral.tim.newjavachr.rules.head;
 
 /**
  * Head is used for complex head definitions. This way a header can be defined
