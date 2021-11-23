@@ -61,8 +61,9 @@ public class Head {
         this.value = value;
     }
 
-    public void bindTo(VAR variable){
+    public Head bindTo(VAR variable){
         var = variable;
+        return this;
     }
 
     public VAR isBoundTo(){
