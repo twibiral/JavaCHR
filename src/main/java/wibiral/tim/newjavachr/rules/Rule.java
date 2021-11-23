@@ -82,6 +82,8 @@ public abstract class Rule {
         this.name = name;
         this.headTypes = null;
 
+
+
         // give this rule an ID
         ID = ID_COUNTER.getAndIncrement();
     }
@@ -131,14 +133,6 @@ public abstract class Rule {
      * (True for the {@link Propagation} rule.
      */
     public boolean saveHistory(){
-        return false;
-    }
-
-    /**
-     * TODO: Remove when removing is safe
-     * @return true if types for the head constraints were defined in teh constructor.
-     */
-    public boolean headTypesSpecified(){
         return false;
     }
 
