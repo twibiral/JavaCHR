@@ -4,9 +4,13 @@ import wibiral.tim.newjavachr.ConstraintSolver;
 import wibiral.tim.newjavachr.SimpleConstraintSolver;
 
 
+/**
+ * Use this class to get {@link SimpleConstraintSolver} instances. They were instantiated with some
+ * example rules. Try passing some Constraints to the {@link SimpleConstraintSolver#solve(Object[])} method.
+ */
 public class ExampleFactory {
     public enum EXAMPLE {
-        COLOR_MIXING, FIBONACCI, FIB_FAST, GREATEST_COMMON_DIVISOR, GCD_FAST, MAX;
+        COLOR_MIXING, FIBONACCI, FIB_FAST, GREATEST_COMMON_DIVISOR, GCD_FAST, MAX, REMOVE_DUPLICATES
     }
 
     public static ConstraintSolver get(EXAMPLE name){
@@ -28,6 +32,9 @@ public class ExampleFactory {
 
             case MAX:
                 return new SimpleConstraintSolver(Maximum.getRules());
+
+            case REMOVE_DUPLICATES:
+                return new SimpleConstraintSolver(RemoveDuplicates.getRules());
         }
 
         return null;
