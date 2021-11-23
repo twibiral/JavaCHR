@@ -2,6 +2,9 @@ package wibiral.tim.newjavachr.rules;
 
 import wibiral.tim.newjavachr.constraints.Constraint;
 import wibiral.tim.newjavachr.exceptions.AlreadyDefinedException;
+import wibiral.tim.newjavachr.rules.body.Body;
+import wibiral.tim.newjavachr.rules.guard.Guard;
+import wibiral.tim.newjavachr.rules.head.Head;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,9 +30,15 @@ public class Propagation extends Rule {
         super(name, nrOfConstraints);
     }
 
+    public Propagation(Class<?>... headTypes){super(headTypes);}
+
     public Propagation(String name, Class<?>... headTypes){super(name, headTypes);}
 
     public Propagation(Head... headDefinitions){
+        super(headDefinitions);
+    }
+
+    public Propagation(String name, Head... headDefinitions){
         super(headDefinitions);
     }
 

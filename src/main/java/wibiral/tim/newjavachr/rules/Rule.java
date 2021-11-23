@@ -1,7 +1,12 @@
 package wibiral.tim.newjavachr.rules;
 
 import wibiral.tim.newjavachr.constraints.Constraint;
+import wibiral.tim.newjavachr.rules.head.HEAD_DEFINITION_TYPE;
+import wibiral.tim.newjavachr.rules.head.Head;
+import wibiral.tim.newjavachr.rules.head.VAR;
 
+import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -16,10 +21,12 @@ public abstract class Rule {
     protected final String name;
     protected final Class<?>[] headTypes;
     protected final Head[] headDefinitions;
-    protected final HEAD_DEFINITION_TYPE head_definition_type;
+    protected final HEAD_DEFINITION_TYPE headDefinitionType;
+    protected final EnumMap<VAR, ArrayList<Integer>> variableBindings = new EnumMap<>(VAR.class);
+
 
     protected Rule(int nrConstraintsInHead){
-        this.head_definition_type = HEAD_DEFINITION_TYPE.SIZE_SPECIFIED;
+        this.headDefinitionType = HEAD_DEFINITION_TYPE.SIZE_SPECIFIED;
         this.nrConstraintsInHead = nrConstraintsInHead;
         this.name = null;
         this.headTypes = null;
@@ -30,7 +37,7 @@ public abstract class Rule {
     }
 
     protected Rule(String name, int nrConstraintsInHead){
-        this.head_definition_type = HEAD_DEFINITION_TYPE.SIZE_SPECIFIED;
+        this.headDefinitionType = HEAD_DEFINITION_TYPE.SIZE_SPECIFIED;
         this.nrConstraintsInHead = nrConstraintsInHead;
         this.name = name;
         this.headTypes = null;
@@ -40,8 +47,19 @@ public abstract class Rule {
         ID = ID_COUNTER.getAndIncrement();
     }
 
+    protected Rule(Class<?>... headTypes){
+        this.headDefinitionType = HEAD_DEFINITION_TYPE.TYPES_SPECIFIED;
+        this.nrConstraintsInHead = headTypes.length;
+        this.name = null;
+        this.headTypes = headTypes;
+        this.headDefinitions = null;
+
+        // give this rule an ID
+        ID = ID_COUNTER.getAndIncrement();
+    }
+
     protected Rule(String name, Class<?>... headTypes){
-        this.head_definition_type = HEAD_DEFINITION_TYPE.TYPES_SPECIFIED;
+        this.headDefinitionType = HEAD_DEFINITION_TYPE.TYPES_SPECIFIED;
         this.nrConstraintsInHead = headTypes.length;
         this.name = name;
         this.headTypes = headTypes;
@@ -52,18 +70,50 @@ public abstract class Rule {
     }
 
     protected Rule(Head... headDefinitions){
-        this.head_definition_type = HEAD_DEFINITION_TYPE.COMPLEX_DEFINITION;
+        this.headDefinitionType = HEAD_DEFINITION_TYPE.COMPLEX_DEFINITION;
         this.headDefinitions = headDefinitions;
         this.nrConstraintsInHead = headDefinitions.length;
         this.name = null;
         this.headTypes = null;
 
+        for (int i = 0; i < nrConstraintsInHead; i++) {
+            Head headDef = headDefinitions[i];
+
+            if(headDef.isBoundTo() != null){
+                if (!variableBindings.containsKey(headDef.isBoundTo())){
+                    variableBindings.put(headDef.isBoundTo(), new ArrayList<>());
+                }
+
+                variableBindings.get(headDef.isBoundTo()).add(i);
+            }
+        }
+
         // give this rule an ID
         ID = ID_COUNTER.getAndIncrement();
     }
 
-    // TODO: Add header + mechanics for unification and matching based on value and equality
-    // TODO: How to implement the application history for Propagation??? History in Propagation or Store???
+    protected Rule(String name, Head... headDefinitions){
+        this.headDefinitionType = HEAD_DEFINITION_TYPE.COMPLEX_DEFINITION;
+        this.headDefinitions = headDefinitions;
+        this.nrConstraintsInHead = headDefinitions.length;
+        this.name = name;
+        this.headTypes = null;
+
+        for (int i = 0; i < nrConstraintsInHead; i++) {
+            Head headDef = headDefinitions[i];
+
+            if(headDef.isBoundTo() != null){
+                if (!variableBindings.containsKey(headDef.isBoundTo())){
+                    variableBindings.put(headDef.isBoundTo(), new ArrayList<>());
+                }
+
+                variableBindings.get(headDef.isBoundTo()).add(i);
+            }
+        }
+
+        // give this rule an ID
+        ID = ID_COUNTER.getAndIncrement();
+    }
 
     /**
      * @return Number of constraints in the head.
@@ -114,18 +164,10 @@ public abstract class Rule {
     }
 
     /**
-     * TODO: Remove when removing is safe
-     * @return true if types for the head constraints were defined in teh constructor.
-     */
-    public boolean headTypesSpecified(){
-        return false;
-    }
-
-    /**
      * @return Enum element that specifies how the head of this rule was definied.
      */
     public HEAD_DEFINITION_TYPE getHeadDefinitionType(){
-        return this.head_definition_type;
+        return this.headDefinitionType;
     }
 
     /**
@@ -140,6 +182,16 @@ public abstract class Rule {
      */
     public Head[] getHeadDefinitions(){
         return headDefinitions;
+    }
+
+    /**
+     * When the rule is defined with a complex header definition it is possible to bind head constraints to variable.
+     * Head constraints bound to the same variable are then matched to constraints with equal internal object.
+     * @return An enum map that contains lists of integers, which are indices. The indices of a list tell the position
+     * of constraints in the header that must be equal.
+     */
+    public EnumMap<VAR, ArrayList<Integer>> getVariableBindings(){
+        return variableBindings;
     }
 
     /**

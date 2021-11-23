@@ -6,6 +6,7 @@ import wibiral.tim.newjavachr.constraints.Constraint;
 import wibiral.tim.newjavachr.rules.Rule;
 import wibiral.tim.newjavachr.rules.Simpagation;
 import wibiral.tim.newjavachr.rules.Simplification;
+import wibiral.tim.newjavachr.rules.head.Head;
 import wibiral.tim.newjavachr.tracing.CommandLineTracer;
 
 import java.util.ArrayList;
@@ -22,8 +23,8 @@ public class ColorMixing {
     }
 
     public static void main(String[] args) {
-        ConstraintSolver colorHandler = new SimpleConstraintSolver(getRules());
-        colorHandler.setTracer(new CommandLineTracer()); // Use to see the process of the rule application
+        ConstraintSolver colorHandler = new SimpleConstraintSolver(getRules2());
+//        colorHandler.setTracer(new CommandLineTracer()); // Use to see the process of the rule application
 
         COLOR redAndBlue = (COLOR) colorHandler.solve(COLOR.RED, COLOR.BLUE).get(0).value();
         System.out.println(colorHandler.solve(COLOR.RED, COLOR.BLUE).size());
@@ -39,54 +40,101 @@ public class ColorMixing {
         System.out.println("orange and brown is " + orangeAndBrown.toString());
     }
 
-    static Rule[] getRules(){
+    public static Rule[] getRules(){
         List<Rule> rules = new ArrayList<>();
-        rules.add(new Simplification(2)
-                .guard(x -> x[0].value().equals(COLOR.RED) && x[1].value().equals(COLOR.BLUE))
-                .body((oldC, newC) -> newC.add(new Constraint<>(COLOR.PURPLE))));
+        rules.add(new Simplification(Head.OF_VALUE(COLOR.RED), Head.OF_VALUE(COLOR.BLUE))
+                .body((head, newConstraints) -> newConstraints.add(new Constraint<>(COLOR.PURPLE))));
 
-        rules.add(new Simplification(2)
-                .guard(x -> x[0].value().equals(COLOR.BLUE) && x[1].value().equals(COLOR.YELLOW))
-                .body((oldC, newC) -> newC.add(new Constraint<>(COLOR.GREEN))));
+        rules.add(new Simplification(Head.OF_VALUE(COLOR.BLUE), Head.OF_VALUE(COLOR.YELLOW))
+                .body((head, newConstraints) -> newConstraints.add(new Constraint<>(COLOR.GREEN))));
 
-        rules.add(new Simplification(2)
-                .guard(x -> x[0].value().equals(COLOR.YELLOW) && x[1].value().equals(COLOR.RED))
-                .body((oldC, newC) -> newC.add(new Constraint<>(COLOR.ORANGE))));
+        rules.add(new Simplification(Head.OF_VALUE(COLOR.YELLOW), Head.OF_VALUE(COLOR.RED))
+                .body((head, newConstraints) -> newConstraints.add(new Constraint<>(COLOR.ORANGE))));
 
+        // Version 1: Simplification; every color defined
+//        rules.add(new Simplification(Head.OF_VALUE(COLOR.BROWN), Head.OF_VALUE(COLOR.BLUE))
+//                .body((head, newConstraints) -> newConstraints.add(new Constraint<>(COLOR.BROWN))));
+//        rules.add(new Simplification(Head.OF_VALUE(COLOR.BROWN), Head.OF_VALUE(COLOR.RED))
+//                .body((head, newConstraints) -> newConstraints.add(new Constraint<>(COLOR.BROWN))));
+//        rules.add(new Simplification(Head.OF_VALUE(COLOR.BROWN), Head.OF_VALUE(COLOR.YELLOW))
+//                .body((head, newConstraints) -> newConstraints.add(new Constraint<>(COLOR.BROWN))));
+//        rules.add(new Simplification(Head.OF_VALUE(COLOR.BROWN), Head.OF_VALUE(COLOR.PURPLE))
+//                .body((head, newConstraints) -> newConstraints.add(new Constraint<>(COLOR.BROWN))));
+//        rules.add(new Simplification(Head.OF_VALUE(COLOR.BROWN), Head.OF_VALUE(COLOR.GREEN))
+//                .body((head, newConstraints) -> newConstraints.add(new Constraint<>(COLOR.BROWN))));
+//        rules.add(new Simplification(Head.OF_VALUE(COLOR.BROWN), Head.OF_VALUE(COLOR.ORANGE))
+//                .body((head, newConstraints) -> newConstraints.add(new Constraint<>(COLOR.BROWN))));
+//        rules.add(new Simplification(Head.OF_VALUE(COLOR.BROWN), Head.OF_VALUE(COLOR.BROWN))
+//                .body((head, newConstraints) -> newConstraints.add(new Constraint<>(COLOR.BROWN))));
 
-        // Version 1: Just Simplification
-        rules.add(new Simplification(2)
-                .guard(x -> x[0].value().equals(COLOR.BROWN) && x[1].value().equals(COLOR.BLUE))
-                .body((oldC, newC) -> newC.add(new Constraint<>(COLOR.BROWN))));
-        rules.add(new Simplification(2)
-                .guard(x -> x[0].value().equals(COLOR.BROWN) && x[1].value().equals(COLOR.RED))
-                .body((oldC, newC) -> newC.add(new Constraint<>(COLOR.BROWN))));
-        rules.add(new Simplification(2)
-                .guard(x -> x[0].value().equals(COLOR.BROWN) && x[1].value().equals(COLOR.YELLOW))
-                .body((oldC, newC) -> newC.add(new Constraint<>(COLOR.BROWN))));
-        rules.add(new Simplification(2)
-                .guard(x -> x[0].value().equals(COLOR.BROWN) && x[1].value().equals(COLOR.PURPLE))
-                .body((oldC, newC) -> newC.add(new Constraint<>(COLOR.BROWN))));
-        rules.add(new Simplification(2)
-                .guard(x -> x[0].value().equals(COLOR.BROWN) && x[1].value().equals(COLOR.GREEN))
-                .body((oldC, newC) -> newC.add(new Constraint<>(COLOR.BROWN))));
-        rules.add(new Simplification(2)
-                .guard(x -> x[0].value().equals(COLOR.BROWN) && x[1].value().equals(COLOR.ORANGE))
-                .body((oldC, newC) -> newC.add(new Constraint<>(COLOR.BROWN))));
-        rules.add(new Simplification(2)
-                .guard(x -> x[0].value().equals(COLOR.BROWN) && x[1].value().equals(COLOR.BROWN))
-                .body((oldC, newC) -> newC.add(new Constraint<>(COLOR.BROWN))));
+        // Version 2: Simplification; use of wildcard
+//        rules.add(new Simplification(Head.OF_VALUE(COLOR.BROWN), Head.ANY())
+//                .body((head, newConstraints) -> newConstraints.add(new Constraint<>(COLOR.BROWN))));
 
+        // Version 3: Simpagation instead of Simplification:
+        rules.add(new Simpagation(1, Head.OF_VALUE(COLOR.BROWN), Head.ANY())
+        // .guard((head1, head2) -> head1[0].value().equals(COLOR.BROWN))  // Not necessary
+        // .body((head1, head2, newConstraints) -> {  })   // Body is not necessary
+        );
 
-//        // Version 2: Simpagation instead of Simplification:
-//        rules.add(new Simpagation(1, 1).guard((head1, head2) -> head1[0].value().equals(color.brown))
-//        // .body((head1, head2, newC) -> {  })   // Body is not necessary
-//        );
-
-        // Additional:
         // remove duplicates:
-        rules.add(new Simpagation(1, 1).guard((head1, head2) -> head1[0].value().equals(head2[0])));
+        rules.add(new Simpagation("Remove duplicate", 1, Head.OF_TYPE(COLOR.class), Head.OF_TYPE(COLOR.class))
+                .guard((head1, head2) -> head1[0].value().equals(head2[0])));
 
         return rules.toArray(new Rule[0]);
     }
+
+    public static Rule[] getRules2(){
+        List<Rule> rules = new ArrayList<>();
+        rules.add(new Simplification(COLOR.class, COLOR.class)
+                .guard(head -> head[0].value().equals(COLOR.RED) && head[1].value().equals(COLOR.BLUE))
+                .body((head, newConstraints) -> newConstraints.add(new Constraint<>(COLOR.PURPLE))));
+
+        rules.add(new Simplification(COLOR.class, COLOR.class)
+                .guard(head -> head[0].value().equals(COLOR.BLUE) && head[1].value().equals(COLOR.YELLOW))
+                .body((head, newConstraints) -> newConstraints.add(new Constraint<>(COLOR.GREEN))));
+
+        rules.add(new Simplification(COLOR.class, COLOR.class)
+                .guard(head -> head[0].value().equals(COLOR.YELLOW) && head[1].value().equals(COLOR.RED))
+                .body((head, newConstraints) -> newConstraints.add(new Constraint<>(COLOR.ORANGE))));
+
+        // Mixing with brown results in brown:
+        rules.add(new Simpagation(1, COLOR.class, COLOR.class)
+                .guard((head1, head2) -> head1[0].value().equals(COLOR.BROWN))
+                // .body((head1, head2, newConstraints) -> {  })   // Body is not necessary
+        );
+
+        // remove duplicates:
+        rules.add(new Simpagation("Remove duplicate", 1, COLOR.class, COLOR.class)
+                .guard((head1, head2) -> head1[0].value().equals(head2[0])));
+
+        return rules.toArray(new Rule[0]);
+    }
+
+    public static Rule[] getRules3(){
+        List<Rule> rules = new ArrayList<>();
+        rules.add(new Simplification(2)
+                .guard(head -> head[0].value().equals(COLOR.RED) && head[1].value().equals(COLOR.BLUE))
+                .body((head, newConstraints) -> newConstraints.add(new Constraint<>(COLOR.PURPLE))));
+
+        rules.add(new Simplification(2)
+                .guard(head -> head[0].value().equals(COLOR.BLUE) && head[1].value().equals(COLOR.YELLOW))
+                .body((head, newConstraints) -> newConstraints.add(new Constraint<>(COLOR.GREEN))));
+
+        rules.add(new Simplification(2)
+                .guard(head -> head[0].value().equals(COLOR.YELLOW) && head[1].value().equals(COLOR.RED))
+                .body((head, newConstraints) -> newConstraints.add(new Constraint<>(COLOR.ORANGE))));
+
+        // Mixing with brown results in brown:
+        rules.add(new Simpagation(1, 1).guard((head1, head2) -> head1[0].value().equals(COLOR.BROWN))
+                // .body((head1, head2, newConstraints) -> {  })   // Body is not necessary
+        );
+
+        // remove duplicates:
+        rules.add(new Simpagation("Remove duplicate", 1, 1)
+                .guard((head1, head2) -> head1[0].value().equals(head2[0])));
+
+        return rules.toArray(new Rule[0]);
+    }
+
 }

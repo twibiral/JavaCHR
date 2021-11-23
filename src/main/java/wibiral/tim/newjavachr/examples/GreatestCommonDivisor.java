@@ -1,5 +1,6 @@
 package wibiral.tim.newjavachr.examples;
 
+import wibiral.tim.newjavachr.rules.head.Head;
 import wibiral.tim.newjavachr.rules.Simpagation;
 import wibiral.tim.newjavachr.ConstraintSolver;
 import wibiral.tim.newjavachr.SimpleConstraintSolver;
@@ -53,13 +54,67 @@ public class GreatestCommonDivisor {
 
     }
 
-    static Rule[] getRules(){
+    /**
+     * @return Rules defined by defining every Constraint in the head.
+     */
+    public static Rule[] getRules(){
+        // X1 / X2 <=> X1>0, X1=<X2 | int(X2-X1).
+        Rule r1 = new Simpagation(1, Head.OF_TYPE(Integer.class), Head.OF_TYPE(Integer.class))
+                .guard(
+                        (h1, h2) -> (int) h1[0].value() > 0 && (int) h1[0].value() <= (int) h2[0].value()
+                ).body(
+                        (h1, h2, newConstraints) -> {
+                            int n = (int) h1[0].value();
+                            int m = (int) h2[0].value();
+                            newConstraints.add(new Constraint<>(m - n));
+                        }
+                );
+
+        // X <=> X=0 | true.
+        Rule r2 = new Simplification("X <=> X=0 | true.", Head.OF_VALUE(0));
+//                  .guard(head ->{ })    // not necessary
+//                  .body( (head, newConstraints) -> {} );    // not necessary
+
+        return new Rule[]{r1, r2};
+    }
+
+    /**
+     * @return Rules defined by defining just the types of the constraints in the head.
+     */
+    public static Rule[] getRules2(){
+        // X1 / X2 <=> X1>0, X1=<X2 | int(X2-X1).
+        Rule r1 = new Simpagation(1, Integer.class, Integer.class)
+                .guard(
+                        (h1, h2) -> (int) h1[0].value() > 0 && (int) h1[0].value() <= (int) h2[0].value()
+                ).body(
+                        (h1, h2, newConstraints) -> {
+                            int n = (int) h1[0].value();
+                            int m = (int) h2[0].value();
+                            newConstraints.add(new Constraint<>(m - n));
+                        }
+                );
+
+        // X <=> X=0 | true.
+        Rule r2 = new Simplification("X <=> X=0 | true.", Integer.class)
+                .guard(head ->{
+                            // The solver guarantees the type of the constraint to be integer
+                            return (int) head[0].value() == 0;
+                        });
+//                  .body( (head, newConstraints) -> {} );    // not necessary
+
+        return new Rule[]{r1, r2};
+    }
+
+    /**
+     * @return Rule with just the size of head defined in the rule definition.
+     */
+    public static Rule[] getRules3(){
         // X1 / X2 <=> X1>0, X1=<X2 | int(X2-X1).
         Rule r1 = new Simpagation(1, 1)
                 .guard(
                         (h1, h2) ->
-                                // h1[0].value() instanceof Integer && h2[0].value() instanceof Integer &&
-                                // Not necessary if you can be sure that all Constraints are Integers.
+                                // Type check necessary if you can be sure that all Constraints are Integers.
+                                h1[0].value() instanceof Integer && h2[0].value() instanceof Integer &&
                                 (int) h1[0].value() > 0 && (int) h1[0].value() <= (int) h2[0].value()
                 ).body(
                         (x1, x2, newConstraints) -> {
@@ -69,27 +124,13 @@ public class GreatestCommonDivisor {
                         }
                 );
 
-        // X1, X2 <=> X1>0, X1=<X2 | int(X1), int(X2-X1)
-//        Rule r1 = new Simplification("X1, X2 <=> X1>0, X1=<X2 | int(X1), int(X2-X1)", Integer.class, Integer.class)
-//                .guard(
-//                        (head) -> (int) head[0].value() > 0 && (int) head[0].value() <= (int) head[1].value()
-//                ).body(
-//                        (head, newConstraints) -> {
-//                            int n = (int) head[0].value();
-//                            int m = (int) head[1].value();
-//                            newConstraints.add(new Constraint<>(n));
-//                            newConstraints.add(new Constraint<>(m - n));
-//                        }
-//                );
-
         // X <=> X=0 | true.
-        Rule r2 = new Simplification("X <=> X=0 | true.", Integer.class)
+        Rule r2 = new Simplification(1)
                 .guard(
-                        x ->{
-                            // The solver guarantees the type of the constraint to be integer
-                            return (int) x[0].value() == 0;
-                        }
-                ).body( (x, y) -> {} );
+                        head -> head[0].value() instanceof  Integer && (int) head[0].value() == 0
+                );
+//                  .body( (head, newConstraints) -> {} );    // not necessary
+
 
         return new Rule[]{r1, r2};
     }

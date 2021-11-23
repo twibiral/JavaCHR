@@ -1,4 +1,6 @@
-package wibiral.tim.newjavachr.rules;
+package wibiral.tim.newjavachr.rules.head;
+
+import wibiral.tim.newjavachr.rules.guard.Guard;
 
 /**
  * These types are used to store how the head of a rule was defined

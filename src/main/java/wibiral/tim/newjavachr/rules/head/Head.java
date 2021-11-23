@@ -1,4 +1,4 @@
-package wibiral.tim.newjavachr.rules;
+package wibiral.tim.newjavachr.rules.head;
 
 /**
  * Head is used for complex head definitions. This way a header can be defined
@@ -61,8 +61,9 @@ public class Head {
         this.value = value;
     }
 
-    public void bindTo(VAR variable){
+    public Head bindTo(VAR variable){
         var = variable;
+        return this;
     }
 
     public VAR isBoundTo(){

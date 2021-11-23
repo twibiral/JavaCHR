@@ -61,6 +61,17 @@ public class ConstraintStore {
     }
 
     /**
+     * Adds all the constraints of the list to the constraint store.
+     * @param constraints Constraints that get added to the store.
+     */
+    public void addAll(Constraint<?>... constraints){
+        List<Constraint<?>> withoutDuplicates = new ArrayList<>(new HashSet<>(Arrays.asList(constraints)));
+        store.addAll(withoutDuplicates);
+        // All rules in the store must be alive if they aren't in use:
+        withoutDuplicates.forEach(Constraint::setAlive);
+    }
+
+    /**
      * Create a new constraint and add it to the store.
      * @param object the new object to add.
      * @param <T> Type of the given object and the created constraint.
@@ -92,12 +103,19 @@ public class ConstraintStore {
     /**
      * Returns an Iterator which contains only the constraints with type constraintType.
      * @param constraintType The type you want the constraints to be.
-     * @return An iterator with all elements of type constraintType.
+     * @return An iterator with all elements of type {@param constraintType}.
      */
     public Iterator<Constraint<?>> lookup(Class<?> constraintType){
         return store.stream().filter(x -> x.isAlive() && x.isOfType(constraintType)).iterator();
     }
 
+    /**
+     * Returns an iterator which contains only the constraints that contain an object that is equal to {@param value}
+     * Equivalence is determined by the function by calling .equal() on the object in the constraint with the {@param value}
+     * as parameter.
+     * @param value The value that all constraints in the iterator should contain. (e.g. String "42")
+     * @return An iterator with constraints that contain objects equal to {@param value}.
+     */
     public Iterator<Constraint<?>> lookup(Object value){
         return store.stream().filter(x -> x.isAlive() && x.value().equals(value)).iterator();
     }

@@ -2,6 +2,9 @@ package wibiral.tim.newjavachr.rules;
 
 import wibiral.tim.newjavachr.constraints.Constraint;
 import wibiral.tim.newjavachr.exceptions.AlreadyDefinedException;
+import wibiral.tim.newjavachr.rules.body.Body;
+import wibiral.tim.newjavachr.rules.guard.Guard;
+import wibiral.tim.newjavachr.rules.head.Head;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,10 +30,16 @@ public class Simplification extends Rule {
         super(name, nrConstraintsInHead);
     }
 
+    public Simplification(Class<?>... headTypes){super(headTypes);}
+
     public Simplification(String name, Class<?>... headTypes){super(name, headTypes);}
 
     public Simplification(Head... headDefinitions){
         super(headDefinitions);
+    }
+
+    public Simplification(String name, Head... headDefinitions){
+        super(name, headDefinitions);
     }
 
     @Override

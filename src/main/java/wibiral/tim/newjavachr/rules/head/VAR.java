@@ -1,4 +1,4 @@
-package wibiral.tim.newjavachr.rules;
+package wibiral.tim.newjavachr.rules.head;
 
 /**
  * Used by {@link Head}. Call the {@link Head#bindTo(VAR)} method to bind the head constraint to a variable.
