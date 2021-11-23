@@ -5,6 +5,7 @@ import wibiral.tim.newjavachr.constraints.ConstraintStore;
 import wibiral.tim.newjavachr.constraints.PropagationHistory;
 import wibiral.tim.newjavachr.rules.Rule;
 import wibiral.tim.newjavachr.rules.head.Head;
+import wibiral.tim.newjavachr.rules.head.VAR;
 import wibiral.tim.newjavachr.tracing.Tracer;
 
 import java.util.*;
@@ -321,6 +322,7 @@ public class SimpleConstraintSolver implements ConstraintSolver {
                 if(rule.saveHistory()) { // Rules that want to be saved in the propagation history -> Propagation
                     // if all constraints different AND rule+constraints not in history AND fits header+guard
                     if (noDuplicatesIn(matchingConstraints)
+                            && checkBindings(rule.getVariableBindings(), matchingConstraints)
                             && !history.isInHistory(rule, matchingConstraints)
                             && rule.accepts(Arrays.asList(matchingConstraints))) {
 
@@ -334,6 +336,7 @@ public class SimpleConstraintSolver implements ConstraintSolver {
                 } else { // Rules that allow to be executed on the same constraints multiple times
                     // if all constraints different AND fits header+guard
                     if (noDuplicatesIn(matchingConstraints)
+                            && checkBindings(rule.getVariableBindings(), matchingConstraints)
                             && rule.accepts(Arrays.asList(matchingConstraints))) {
 
                         for(Constraint<?> constraint : matchingConstraints){
@@ -372,6 +375,25 @@ public class SimpleConstraintSolver implements ConstraintSolver {
             if(cnt > 1)
                 return false;
         }
+        return true;
+    }
+
+    /**
+     * @param bindings Contains which head constrains must be equal.
+     * @param array Array with potential head constraints.
+     * @return True, if all constraints that must be equal are equal. Otherwise, false.
+     */
+    protected boolean checkBindings(EnumMap<VAR, ArrayList<Integer>> bindings, Constraint<?>[] array){
+        for (ArrayList<Integer> bound : bindings.values()){
+            for (int i = 0; i < bound.size()-1; i++) {
+
+                // Check if the two constraints are equal
+
+                if(! array[bound.get(i+1)].value().equals(array[bound.get(i+1)].value()))
+                    return false;
+            }
+        }
+
         return true;
     }
 

@@ -3,7 +3,10 @@ package wibiral.tim.newjavachr.rules;
 import wibiral.tim.newjavachr.constraints.Constraint;
 import wibiral.tim.newjavachr.rules.head.HEAD_DEFINITION_TYPE;
 import wibiral.tim.newjavachr.rules.head.Head;
+import wibiral.tim.newjavachr.rules.head.VAR;
 
+import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -19,6 +22,8 @@ public abstract class Rule {
     protected final Class<?>[] headTypes;
     protected final Head[] headDefinitions;
     protected final HEAD_DEFINITION_TYPE headDefinitionType;
+    protected final EnumMap<VAR, ArrayList<Integer>> variableBindings = new EnumMap<>(VAR.class);
+
 
     protected Rule(int nrConstraintsInHead){
         this.headDefinitionType = HEAD_DEFINITION_TYPE.SIZE_SPECIFIED;
@@ -71,6 +76,18 @@ public abstract class Rule {
         this.name = null;
         this.headTypes = null;
 
+        for (int i = 0; i < nrConstraintsInHead; i++) {
+            Head headDef = headDefinitions[i];
+
+            if(headDef.isBoundTo() != null){
+                if (!variableBindings.containsKey(headDef.isBoundTo())){
+                    variableBindings.put(headDef.isBoundTo(), new ArrayList<>());
+                }
+
+                variableBindings.get(headDef.isBoundTo()).add(i);
+            }
+        }
+
         // give this rule an ID
         ID = ID_COUNTER.getAndIncrement();
     }
@@ -82,7 +99,17 @@ public abstract class Rule {
         this.name = name;
         this.headTypes = null;
 
+        for (int i = 0; i < nrConstraintsInHead; i++) {
+            Head headDef = headDefinitions[i];
 
+            if(headDef.isBoundTo() != null){
+                if (!variableBindings.containsKey(headDef.isBoundTo())){
+                    variableBindings.put(headDef.isBoundTo(), new ArrayList<>());
+                }
+
+                variableBindings.get(headDef.isBoundTo()).add(i);
+            }
+        }
 
         // give this rule an ID
         ID = ID_COUNTER.getAndIncrement();
@@ -155,6 +182,16 @@ public abstract class Rule {
      */
     public Head[] getHeadDefinitions(){
         return headDefinitions;
+    }
+
+    /**
+     * When the rule is defined with a complex header definition it is possible to bind head constraints to variable.
+     * Head constraints bound to the same variable are then matched to constraints with equal internal object.
+     * @return An enum map that contains lists of integers, which are indices. The indices of a list tell the position
+     * of constraints in the header that must be equal.
+     */
+    public EnumMap<VAR, ArrayList<Integer>> getVariableBindings(){
+        return variableBindings;
     }
 
     /**
