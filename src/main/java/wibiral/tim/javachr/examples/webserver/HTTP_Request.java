@@ -7,15 +7,14 @@ import java.util.Locale;
 public class HTTP_Request {
     private static final String RESOURCE_PREFIX = "http/";
 
-    private Socket sender;
-    private String method, resource, protocol;
-
+    private final Socket sender;
+    private final String method;
+    private String resource;
 
 
     public HTTP_Request(Socket sender, String method, String resource, String protocol){
         this.sender = sender;
         this.method = method.trim().toLowerCase(Locale.ROOT);
-        this.protocol = protocol;
 
         this.resource = resource.trim().equals("/") ? "index.html" : resource.trim().toLowerCase(Locale.ROOT); // map "/" to "index.html"
         if(this.resource.startsWith("/"))
