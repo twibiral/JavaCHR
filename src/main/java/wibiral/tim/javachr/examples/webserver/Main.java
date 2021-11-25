@@ -9,6 +9,7 @@ import wibiral.tim.javachr.rules.Simplification;
 import wibiral.tim.javachr.rules.head.Head;
 import wibiral.tim.javachr.tracing.CommandLineTracer;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -84,12 +85,9 @@ public class Main {
                     HTTP_Response response = (HTTP_Response) head[0].value();
                     assert !response.getSender().isClosed();
                     try (Socket client = response.getSender();
-                            BufferedWriter out = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()))) {
+                        BufferedOutputStream out = new BufferedOutputStream(client.getOutputStream())) {
 
-                        System.out.println(response.getResponse());
                         out.write(response.getResponse());
-                        out.flush();
-
                         LOG.info("Response sent successfully!");
 
                     } catch (IOException e) {
@@ -106,14 +104,12 @@ public class Main {
             ConstraintSolver solver = new SimpleConstraintSolver(acceptConnection,
                                                                  readFromConnection,
                                                                  parseRequest,
+                                                                 kickIncomplete,
                                                                  createResponse,
                                                                  sendResponse);
-            solver.setTracer(new CommandLineTracer());
+//            solver.setTracer(new CommandLineTracer());
             solver.solve(serverSocket);
 
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         }
     }
 }

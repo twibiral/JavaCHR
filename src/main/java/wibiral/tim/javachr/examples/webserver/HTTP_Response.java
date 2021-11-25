@@ -2,6 +2,7 @@ package wibiral.tim.javachr.examples.webserver;
 
 import java.io.*;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 
 public class HTTP_Response {
@@ -20,7 +21,7 @@ public class HTTP_Response {
                                             "</html>";
 
     private final Socket sender;
-    private final char[] response;
+    private final byte[] response;
 
     HTTP_Response(Socket sender, String method, String resource) {
         this.sender = sender;
@@ -37,7 +38,7 @@ public class HTTP_Response {
         return sender;
     }
 
-    public char[] getResponse(){
+    public byte[] getResponse(){
         return response;
     }
 
@@ -46,31 +47,31 @@ public class HTTP_Response {
         return new String(response).split("\n")[0];
     }
 
-    private char[] buildHeadResponse(String resource) {
+    private byte[] buildHeadResponse(String resource) {
         File f = new File(resource);
         if(!f.exists() || f.isDirectory())
-            return HEADER_404.toCharArray();
+            return HEADER_404.getBytes(StandardCharsets.UTF_8);
 
-        return createHeader(f.length(), f.getName()).toCharArray();
+        return createHeader(f.length(), f.getName()).getBytes(StandardCharsets.UTF_8);
     }
 
-    private char[] buildGetResponse(String resource) {
+    private byte[] buildGetResponse(String resource) {
         File f = new File(resource);
         if(!f.exists() || f.isDirectory())
-            return HEADER_404.toCharArray();
+            return HEADER_404.getBytes(StandardCharsets.UTF_8);
 
         int contentLength = (int) f.length();
-        String header = createHeader(contentLength, f.getName());
+        byte[] header = createHeader(contentLength, f.getName()).getBytes(StandardCharsets.UTF_8);
 
-        int responseLength = header.length() + contentLength;
-        char[] responseArray = new char[responseLength];
+        int responseLength = header.length + contentLength;
+        byte[] responseArray = new byte[responseLength];
 
-        for (int i = 0; i < header.length(); i++) {
-            responseArray[i] = header.charAt(i);
-        }
+        // copy header into the array
+        System.arraycopy(header, 0, responseArray, 0, header.length);
 
-        try(FileReader in = new FileReader(f)){
-            in.read(responseArray, header.length(), contentLength);
+        try(BufferedInputStream in = new BufferedInputStream(new FileInputStream(f))){
+            in.read(responseArray, header.length, contentLength);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -88,6 +89,8 @@ public class HTTP_Response {
             responseBuilder.append("Content-type: text/html\r\n");
 
         responseBuilder.append("\r\n"); // End header
+
+        System.out.println(responseBuilder);
 
         return responseBuilder.toString();
     }

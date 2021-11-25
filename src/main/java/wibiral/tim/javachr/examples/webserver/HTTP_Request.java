@@ -27,11 +27,7 @@ public class HTTP_Request {
     }
 
     public boolean isValid() {
-        boolean methodAccepted = method.equals("get") || method.equals("head");
-        File f = new File(resource);
-        boolean fileExists = f.exists() && !f.isDirectory();
-
-        return methodAccepted && fileExists;
+        return method.equals("get") || method.equals("head");
     }
 
     public HTTP_Response getResponse() {
