@@ -7,12 +7,9 @@ import wibiral.tim.javachr.rules.Propagation;
 import wibiral.tim.javachr.rules.Rule;
 import wibiral.tim.javachr.rules.Simplification;
 import wibiral.tim.javachr.rules.head.Head;
-import wibiral.tim.javachr.tracing.CommandLineTracer;
 
 import java.io.BufferedOutputStream;
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.logging.Logger;
@@ -23,7 +20,7 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         // Accept connection (ONLY ACCEPTS ONE!)
-        Rule acceptConnection = new Propagation("Accept Connection", Head.OF_TYPE(ServerSocket.class))
+        Rule acceptConnection = new Simplification("Accept Connection", Head.OF_TYPE(ServerSocket.class))
                 .body((head, newConstraints) -> {   // Add connection constraint if connection incoming.
                     try {
                         Socket conn = ((ServerSocket) head[0].value()).accept();
@@ -99,17 +96,15 @@ public class Main {
         LOG.info("Start server on port " + PORT + " ...");
 
         try (ServerSocket serverSocket = new ServerSocket(PORT)) {
-//            serverSocket.setSoTimeout(10);  // makes accept() block only 10ms
+            serverSocket.setSoTimeout(10);  // makes accept() block only 10ms
 
-            ConstraintSolver solver = new SimpleConstraintSolver(acceptConnection,
-                                                                 readFromConnection,
+            ConstraintSolver solver = new SimpleConstraintSolver(readFromConnection,
                                                                  parseRequest,
                                                                  kickIncomplete,
                                                                  createResponse,
-                                                                 sendResponse);
-//            solver.setTracer(new CommandLineTracer());
+                                                                 sendResponse,
+                                                                 acceptConnection);
             solver.solve(serverSocket);
-
         }
     }
 }

@@ -89,9 +89,6 @@ public class HTTP_Response {
             responseBuilder.append("Content-type: text/html\r\n");
 
         responseBuilder.append("\r\n"); // End header
-
-        System.out.println(responseBuilder);
-
         return responseBuilder.toString();
     }
 }

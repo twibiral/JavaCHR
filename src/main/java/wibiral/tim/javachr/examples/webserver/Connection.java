@@ -95,6 +95,11 @@ public class Connection {
     }
 
     private boolean appendLine(String line) {
+        if (line == null){
+            messageComplete = false;
+            return false;
+        }
+
         if(headerRead)
             return true;
 
