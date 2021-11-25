@@ -2,7 +2,6 @@ package wibiral.tim.javachr.examples.webserver;
 
 import java.io.*;
 import java.net.Socket;
-import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 
 public class HTTP_Response {
@@ -44,7 +43,7 @@ public class HTTP_Response {
 
     @Override
     public String toString() {
-        return new String(response);
+        return new String(response).split("\n")[0];
     }
 
     private char[] buildHeadResponse(String resource) {
@@ -60,10 +59,10 @@ public class HTTP_Response {
         if(!f.exists() || f.isDirectory())
             return HEADER_404.toCharArray();
 
-        long contentLength = f.length();
+        int contentLength = (int) f.length();
         String header = createHeader(contentLength, f.getName());
 
-        int responseLength = (int) (header.length() + contentLength);
+        int responseLength = header.length() + contentLength;
         char[] responseArray = new char[responseLength];
 
         for (int i = 0; i < header.length(); i++) {
@@ -71,7 +70,7 @@ public class HTTP_Response {
         }
 
         try(FileReader in = new FileReader(f)){
-            in.read(responseArray, header.length(), responseLength);
+            in.read(responseArray, header.length(), contentLength);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -81,12 +80,12 @@ public class HTTP_Response {
 
     private String createHeader(long contentLength, String fileName){
         StringBuilder responseBuilder = new StringBuilder(HEADER_OK);
-        responseBuilder.append("Content-length: ").append(contentLength);
+        responseBuilder.append("Content-length: ").append(contentLength).append("\r\n");
 
         if(fileName.endsWith(".jpg") || fileName.endsWith(".jpeg"))
-            responseBuilder.append("Content-type: image/jpg");
+            responseBuilder.append("Content-type: image/jpg\r\n");
         else
-            responseBuilder.append("Content-type: text/html");
+            responseBuilder.append("Content-type: text/html\r\n");
 
         responseBuilder.append("\r\n"); // End header
 

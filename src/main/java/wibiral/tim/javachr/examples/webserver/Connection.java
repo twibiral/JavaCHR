@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Map;
 
 public class Connection {
-    private Socket connectionSock;
-    private StringBuilder message = new StringBuilder();
+    private final Socket connectionSock;
+    private final StringBuilder message = new StringBuilder();
     private boolean messageComplete = false;
 
     // Information collected from the data read:
@@ -32,37 +32,46 @@ public class Connection {
     }
 
     public boolean hasReceivedBytes() {
-        try {
-            return connectionSock.getInputStream().available() > 0;
-
-        } catch (IOException e) {
-            return false;
-        }
+//        try {
+//            return connectionSock.getInputStream().available() > 0;
+//
+//        } catch (IOException e) {
+//            return false;
+//        }
+        return true;
     }
 
     public void readAll(){
         // Header complete; read into body
         if(headerRead) {
-            try (BufferedInputStream in = new BufferedInputStream(connectionSock.getInputStream())){
-                if (in.available() > 0){
-                    byte[] received = new byte[in.available()];
-                    in.read(received);
-                    body.append(received);
-                }
-
-                messageComplete = body.length() >= contentLength;
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+//            try (BufferedInputStream in = new BufferedInputStream(connectionSock.getInputStream())){
+//                if (in.available() > 0){
+//                    byte[] received = new byte[in.available()];
+//                    in.read(received);
+//                    body.append(received);
+//                }
+//
+//                messageComplete = body.length() >= contentLength;
+//
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+            return;
         }
 
         // read header
-        try (BufferedReader in = new BufferedReader(new InputStreamReader(connectionSock.getInputStream()))){
+        try {
+            BufferedReader in = new BufferedReader(new InputStreamReader(connectionSock.getInputStream()));
             String line = in.readLine();
-            if (line != null){
-                messageComplete = appendLine(line);
+            message.append(line);
+            messageComplete = appendLine(line);
+
+            while (line != null && !messageComplete){
+                line = in.readLine();
+                message.append(line);
+                messageComplete = appendLine(line) || line.equals("");
             }
+
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -74,7 +83,7 @@ public class Connection {
     }
 
     public HTTP_Request getRequest(){
-        return null;
+        return new HTTP_Request(connectionSock, method, resource, protocol);
     }
 
     public void close(){
@@ -85,11 +94,10 @@ public class Connection {
         }
     }
 
-    public boolean isValidRequest() {
-        return true;
-    }
-
     private boolean appendLine(String line) {
+        if(headerRead)
+            return true;
+
         headerLines.add(line);
         if(headerLines.size() == 1) {
             // first line
@@ -104,11 +112,13 @@ public class Connection {
 
         } else if(line.equals("\r\n") && contentLength == 0){ // && headerLines.size() > 1
             // End of header, request has no body
+            headerRead = true;
             return true;
 
         } else if(line.equals("\r\n") && contentLength > 0) {
             // End of header, request has body
             headerRead = true;
+            return true;
 
         } else if(line.contains(":")){
             // Attribute-Value-Pair

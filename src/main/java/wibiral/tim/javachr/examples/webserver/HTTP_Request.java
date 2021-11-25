@@ -5,7 +5,7 @@ import java.net.Socket;
 import java.util.Locale;
 
 public class HTTP_Request {
-    private static final String RESOURCE_PREFIX = "http/";
+    private static final String RESOURCE_PREFIX = "./html/";
 
     private final Socket sender;
     private final String method;
@@ -18,8 +18,8 @@ public class HTTP_Request {
 
         this.resource = resource.trim().equals("/") ? "index.html" : resource.trim().toLowerCase(Locale.ROOT); // map "/" to "index.html"
         if(this.resource.startsWith("/"))
-            this.resource = resource.substring(1); // Remove first "/"
-        this.resource = RESOURCE_PREFIX + resource;
+            this.resource = resource.substring(1, this.resource.length()); // Remove first "/"
+        this.resource = RESOURCE_PREFIX + this.resource;
     }
 
     public Socket getSender(){
@@ -28,7 +28,6 @@ public class HTTP_Request {
 
     public boolean isValid() {
         boolean methodAccepted = method.equals("get") || method.equals("head");
-
         File f = new File(resource);
         boolean fileExists = f.exists() && !f.isDirectory();
 
@@ -36,6 +35,15 @@ public class HTTP_Request {
     }
 
     public HTTP_Response getResponse() {
-        return null;
+        return new HTTP_Response(sender, method, resource);
+    }
+
+    @Override
+    public String toString() {
+        return "HTTP_Request{" +
+                "sender=" + sender +
+                ", method='" + method + '\'' +
+                ", resource='" + resource + '\'' +
+                '}';
     }
 }
