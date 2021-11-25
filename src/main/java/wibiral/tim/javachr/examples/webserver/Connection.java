@@ -2,7 +2,6 @@ package wibiral.tim.javachr.examples.webserver;
 
 import java.io.*;
 import java.net.Socket;
-import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,7 +31,7 @@ public class Connection {
         this.connectionSock = connectionSock;
     }
 
-    public boolean receivedBytes(){
+    public boolean hasReceivedBytes() {
         try {
             return connectionSock.getInputStream().available() > 0;
 

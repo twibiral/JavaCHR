@@ -29,10 +29,9 @@ public class Main {
                         e.printStackTrace();
                     }
                 });
-
         // Receive some bytes
         Rule readFromConnection = new Propagation("Read from connection", Head.OF_TYPE(Connection.class))
-                .guard(head -> ((Connection) head[0].value()).receivedBytes())
+                .guard(head -> ((Connection) head[0].value()).hasReceivedBytes())
                 .body(((head, newConstraints) -> ((Connection) head[0].value()).readAll()));
 
         // Parse request, kick it if invalid, otherwise create HTTP Request object
@@ -42,19 +41,17 @@ public class Main {
                     Connection connection = (Connection) head[0].value();
                     if (connection.isValidRequest()) {
                         newConstraints.add(new Constraint<>(connection.getRequest()));
+                    } else {
+                        System.err.println("Invalid request. Some error occurred!");
                     }
+                    connection.close(); // Close after the request was received
                 });
 
         // Create response object
         Rule createResponse = new Simplification("Create response", Head.OF_TYPE(HTTP_Request.class))
                 .body((head, newConstraints) -> {
-                 HTTP_Request request = (HTTP_Request) head[0].value();
-                 if (request.isValid()) {
-                     newConstraints.add(new Constraint<>(request.getResponse()));
-
-                 } else {
-                     System.err.println("Invalid request. Some error occurred!");
-                 }
+                    HTTP_Request request = (HTTP_Request) head[0].value();
+                    newConstraints.add(new Constraint<>(request.getResponse()));
                 });
 
         // Send response
@@ -62,17 +59,21 @@ public class Main {
                 .body((head, newConstraints) -> {
                     HTTP_Response response = (HTTP_Response) head[0].value();
                     try {
-                        OutputStreamWriter writer = new OutputStreamWriter(response.getSender().getOutputStream());
-                        writer.write(response.getResponse());
+                        OutputStreamWriter out = new OutputStreamWriter(response.getSender().getOutputStream());
+                        out.write(response.toString());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 });
 
         try (ServerSocket serverSocket = new ServerSocket(PORT)) {
-//            serverSocket.setSoTimeout(10);  // makes accept() block only 10ms
+            serverSocket.setSoTimeout(10);  // makes accept() block only 10ms
 
-            ConstraintSolver solver = new SimpleConstraintSolver(acceptConnection);
+            ConstraintSolver solver = new SimpleConstraintSolver(acceptConnection,
+                                                                 readFromConnection,
+                                                                 parseRequest,
+                                                                 createResponse,
+                                                                 sendResponse);
             solver.solve(serverSocket);
         }
     }
