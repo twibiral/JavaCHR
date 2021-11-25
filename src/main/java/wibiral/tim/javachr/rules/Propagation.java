@@ -39,7 +39,7 @@ public class Propagation extends Rule {
     }
 
     public Propagation(String name, Head... headDefinitions){
-        super(headDefinitions);
+        super(name, headDefinitions);
     }
 
     @Override
