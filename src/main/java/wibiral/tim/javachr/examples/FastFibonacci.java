@@ -3,7 +3,7 @@ package wibiral.tim.javachr.examples;
 import wibiral.tim.javachr.ConstraintSolver;
 import wibiral.tim.javachr.SimpleConstraintSolver;
 import wibiral.tim.javachr.constraints.Constraint;
-import wibiral.tim.javachr.examples.Fibonacci.fib;
+import wibiral.tim.javachr.examples.Fibonacci.Fib;
 import wibiral.tim.javachr.rules.Propagation;
 import wibiral.tim.javachr.rules.Rule;
 import wibiral.tim.javachr.rules.Simplification;
@@ -23,31 +23,31 @@ public class FastFibonacci {
     }
 
     static Rule[] getRules(){
-        Rule r1 = new Propagation(1)  // MAX => fib(0, 1), fib(1, 1).
+        Rule r1 = new Propagation(1)  // MAX => Fib(0, 1), Fib(1, 1).
                 .guard(x -> x[0].value() instanceof Integer)
-                .body((oldC, newC) -> {
-                    newC.add(new Constraint<>(new fib(0, 0)));
-                    newC.add(new Constraint<>(new fib(1, 1)));
+                .body((head, newConstraints) -> {
+                    newConstraints.add(new Constraint<>(new Fib(0, 0)));
+                    newConstraints.add(new Constraint<>(new Fib(1, 1)));
                 });
 
         Rule r2 = new Simplification(3)
                 .guard(x -> x[0].value() instanceof Integer
                             && !(x[1].value() instanceof Integer) //&& !(x[2].value() instanceof Integer)
-                            && ((fib) x[1].value()).a + 1 == ((fib) x[2].value()).a)
-                .body((oldC, newC) -> {
-                    // fib n and fib n+1:
-                    fib n1 = (fib) oldC[1].value();
-                    fib n2 = (fib) oldC[2].value();
-                    // Calculate fib n+2:
-                    Constraint<fib> newFib = new Constraint<>(new fib(n2.a + 1, n1.b + n2.b));
+                            && ((Fib) x[1].value()).a + 1 == ((Fib) x[2].value()).a)
+                .body((head, newConstraints) -> {
+                    // Fib n and Fib n+1:
+                    Fib n1 = (Fib) head[1].value();
+                    Fib n2 = (Fib) head[2].value();
+                    // Calculate Fib n+2:
+                    Constraint<Fib> newFib = new Constraint<>(new Fib(n2.a + 1, n1.b + n2.b));
 
-                    // Add fib n+1 and fib n+2
-                    newC.add(newFib);
+                    // Add Fib n+1 and Fib n+2
+                    newConstraints.add(newFib);
 
-                    if(n2.a + 1 < (int) oldC[0].value()) {
-                        // Add max and fib n+1 just when max not reached now
-                        newC.add(oldC[2]);
-                        newC.add(oldC[0]);
+                    if(n2.a + 1 < (int) head[0].value()) {
+                        // Add max and Fib n+1 just when max not reached now
+                        newConstraints.add(head[2]);
+                        newConstraints.add(head[0]);
                     }
                 });
 
