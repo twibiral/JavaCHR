@@ -37,7 +37,7 @@ public class Main {
 
         // Parse request, kick it if invalid, otherwise create HTTP Request object
         Rule parseRequest = new Simplification("Parse request", Head.OF_TYPE(Connection.class))
-                .guard(head -> ((Connection) head[0].value()).messageComplete())
+                .guard(head -> ((Connection) head[0].value()).isMessageComplete())
                 .body((head, newConstraints) -> {
                     Connection connection = (Connection) head[0].value();
                     if (connection.isValidRequest()) {

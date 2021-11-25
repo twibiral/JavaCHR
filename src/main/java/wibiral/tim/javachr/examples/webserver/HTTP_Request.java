@@ -6,9 +6,13 @@ public class HTTP_Request {
     private String request;
     private Socket sender;
 
+
+
     public HTTP_Request(String request, Socket sender){
         this.request = request;
         this.sender = sender;
+
+
     }
 
     public String getRequest(){
