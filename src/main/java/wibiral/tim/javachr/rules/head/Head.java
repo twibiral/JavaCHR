@@ -45,19 +45,19 @@ public class Head {
      */
     private VAR variableThisIsBoundTo = VAR.NONE;
 
-    private final HEAD_CONTAINS containerType;
+    private final HEAD_CONTAINS headContains;
 
     private Head(){
-        containerType = HEAD_CONTAINS.ANY;
+        headContains = HEAD_CONTAINS.ANY;
     }
 
     private Head(Class<?> type){
-        containerType = HEAD_CONTAINS.TYPE;
+        headContains = HEAD_CONTAINS.TYPE;
         this.type = type;
     }
 
     private Head(Object value){
-        containerType = HEAD_CONTAINS.VALUE;
+        headContains = HEAD_CONTAINS.VALUE;
         this.value = value;
     }
 
@@ -91,6 +91,6 @@ public class Head {
      * @return How this head constraint is defined.
      */
     public HEAD_CONTAINS getHeadConstraintDefType() {
-        return containerType;
+        return headContains;
     }
 }
