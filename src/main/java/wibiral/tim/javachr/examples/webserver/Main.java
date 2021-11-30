@@ -20,7 +20,7 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         // Accept connection (ONLY ACCEPTS ONE!)
-        Rule acceptConnection = new Simplification("Accept Connection", Head.OF_TYPE(ServerSocket.class))
+        Rule acceptConnection = new Simplification("Accept Connection", Head.ofType(ServerSocket.class))
                 .body((head, newConstraints) -> {   // Add connection constraint if connection incoming.
                     try {
                         Socket conn = ((ServerSocket) head[0].value()).accept();
@@ -37,7 +37,7 @@ public class Main {
                 });
 
         // Receive some bytes
-        Rule readFromConnection = new Propagation("Read from connection", Head.OF_TYPE(Connection.class))
+        Rule readFromConnection = new Propagation("Read from connection", Head.ofType(Connection.class))
                 .guard(head -> ((Connection) head[0].value()).hasReceivedBytes())
                 .body(((head, newConstraints) -> {
                     LOG.info("Read from connection");
@@ -46,11 +46,11 @@ public class Main {
                 }));
 
         // Kick incomplete corrupt messages
-        Rule kickIncomplete = new Simplification("Kick incomplete", Head.OF_TYPE(Connection.class))
+        Rule kickIncomplete = new Simplification("Kick incomplete", Head.ofType(Connection.class))
                 .guard(head -> !((Connection) head[0].value()).isMessageComplete());
 
         // Parse request, kick it if invalid, otherwise create HTTP Request object
-        Rule parseRequest = new Simplification("Parse request", Head.OF_TYPE(Connection.class))
+        Rule parseRequest = new Simplification("Parse request", Head.ofType(Connection.class))
                 .guard(head -> ((Connection) head[0].value()).isMessageComplete())
                 .body((head, newConstraints) -> {
                     Connection connection = (Connection) head[0].value();
@@ -67,7 +67,7 @@ public class Main {
                 });
 
         // Create response object
-        Rule createResponse = new Simplification("Create response", Head.OF_TYPE(HTTP_Request.class))
+        Rule createResponse = new Simplification("Create response", Head.ofType(HTTP_Request.class))
                 .body((head, newConstraints) -> {
                     HTTP_Request request = (HTTP_Request) head[0].value();
                     HTTP_Response response = request.getResponse();
@@ -77,7 +77,7 @@ public class Main {
                 });
 
         // Send response
-        Rule sendResponse = new Simplification("Send response", Head.OF_TYPE(HTTP_Response.class))
+        Rule sendResponse = new Simplification("Send response", Head.ofType(HTTP_Response.class))
                 .body((head, newConstraints) -> {
                     HTTP_Response response = (HTTP_Response) head[0].value();
                     assert !response.getSender().isClosed();

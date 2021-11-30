@@ -59,7 +59,7 @@ public class GreatestCommonDivisor {
      */
     public static Rule[] getRules(){
         // X1 / X2 <=> X1>0, X1=<X2 | int(X2-X1).
-        Rule r1 = new Simpagation(1, Head.OF_TYPE(Integer.class), Head.OF_TYPE(Integer.class))
+        Rule r1 = new Simpagation(1, Head.ofType(Integer.class), Head.ofType(Integer.class))
                 .guard(
                         (h1, h2) -> (int) h1[0].value() > 0 && (int) h1[0].value() <= (int) h2[0].value()
                 ).body(
@@ -71,7 +71,7 @@ public class GreatestCommonDivisor {
                 );
 
         // X <=> X=0 | true.
-        Rule r2 = new Simplification("X <=> X=0 | true.", Head.OF_VALUE(0));
+        Rule r2 = new Simplification("X <=> X=0 | true.", Head.ofValue(0));
 //                  .guard(head ->{ })    // not necessary
 //                  .body( (head, newConstraints) -> {} );    // not necessary
 

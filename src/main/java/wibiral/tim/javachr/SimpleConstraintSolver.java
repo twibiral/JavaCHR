@@ -277,7 +277,7 @@ public class SimpleConstraintSolver implements ConstraintSolver {
         Constraint<?>[] matchingConstraints = new Constraint<?>[headerSize];
         Iterator<Constraint<?>> currentIter = null;
         // Decide which lookup to use, depending on how the header constraint is defined in the rule.
-        switch(headDef[pointer].getContainerType()){
+        switch(headDef[pointer].getHeadConstraintDefType()){
             case ANY:
                 currentIter = store.lookup();
                 break;
@@ -300,7 +300,7 @@ public class SimpleConstraintSolver implements ConstraintSolver {
                 pointer++;
 
                 // Decide which lookup to use, depending on how the header constraint is defined in the rule.
-                switch(headDef[pointer].getContainerType()){
+                switch(headDef[pointer].getHeadConstraintDefType()){
                     case ANY:
                         currentIter = store.lookup();
                         break;

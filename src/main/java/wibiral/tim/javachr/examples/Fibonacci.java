@@ -10,7 +10,7 @@ import wibiral.tim.javachr.tracing.CommandLineTracer;
 
 import java.util.List;
 
-import static wibiral.tim.javachr.rules.head.Head.OF_TYPE;
+import static wibiral.tim.javachr.rules.head.Head.ofType;
 
 public class Fibonacci {
     public static class Fib {
@@ -46,7 +46,7 @@ public class Fibonacci {
 
     static Rule[] getRules(){
         // MAX => fib(0, 1), fib(1, 1).
-        Rule r1 = new Propagation(OF_TYPE(Integer.class))
+        Rule r1 = new Propagation(ofType(Integer.class))
 //                .guard(x -> {})   // Not necessary
                 .body((head, newConstraints) -> {
                     newConstraints.add(new Constraint<>(new Fib(0, 0)));
@@ -54,7 +54,7 @@ public class Fibonacci {
                 });
 
         // MAX, fib(N1, M1), fib(N2, M2) =>  N1 == N2 - 1 | fib(N2 + 1, M1 + M2).
-        Rule r2 = new Propagation(OF_TYPE(Integer.class), OF_TYPE(Fib.class), OF_TYPE(Fib.class))
+        Rule r2 = new Propagation(ofType(Integer.class), ofType(Fib.class), ofType(Fib.class))
                 .guard(head ->
                             ((Fib) head[1].value()).a == ((Fib) head[2].value()).a - 1
                             && ((Fib) head[2].value()).a < (int) head[0].value()
@@ -65,7 +65,7 @@ public class Fibonacci {
                     newConstraints.add(new Constraint<>(new Fib(N2+1, M1 + M2)));
                 });
 //
-        Rule r3 = new Simpagation(1, OF_TYPE(Fib.class), OF_TYPE(Integer.class))
+        Rule r3 = new Simpagation(1, ofType(Fib.class), ofType(Integer.class))
                 .guard((h1, h2) -> h2[0].value().equals(((Fib) h1[0].value()).a));
 
         return new Rule[]{r1, r2, r3};

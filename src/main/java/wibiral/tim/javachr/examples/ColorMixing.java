@@ -41,13 +41,13 @@ public class ColorMixing {
 
     public static Rule[] getRules(){
         List<Rule> rules = new ArrayList<>();
-        rules.add(new Simplification(Head.OF_VALUE(COLOR.RED), Head.OF_VALUE(COLOR.BLUE))
+        rules.add(new Simplification(Head.ofValue(COLOR.RED), Head.ofValue(COLOR.BLUE))
                 .body((head, newConstraints) -> newConstraints.add(new Constraint<>(COLOR.PURPLE))));
 
-        rules.add(new Simplification(Head.OF_VALUE(COLOR.BLUE), Head.OF_VALUE(COLOR.YELLOW))
+        rules.add(new Simplification(Head.ofValue(COLOR.BLUE), Head.ofValue(COLOR.YELLOW))
                 .body((head, newConstraints) -> newConstraints.add(new Constraint<>(COLOR.GREEN))));
 
-        rules.add(new Simplification(Head.OF_VALUE(COLOR.YELLOW), Head.OF_VALUE(COLOR.RED))
+        rules.add(new Simplification(Head.ofValue(COLOR.YELLOW), Head.ofValue(COLOR.RED))
                 .body((head, newConstraints) -> newConstraints.add(new Constraint<>(COLOR.ORANGE))));
 
         // Version 1: Simplification; every color defined
@@ -71,13 +71,13 @@ public class ColorMixing {
 //                .body((head, newConstraints) -> newConstraints.add(new Constraint<>(COLOR.BROWN))));
 
         // Version 3: Simpagation instead of Simplification:
-        rules.add(new Simpagation(1, Head.OF_VALUE(COLOR.BROWN), Head.ANY())
+        rules.add(new Simpagation(1, Head.ofValue(COLOR.BROWN), Head.any())
         // .guard((head1, head2) -> head1[0].value().equals(COLOR.BROWN))  // Not necessary
         // .body((head1, head2, newConstraints) -> {  })   // Body is not necessary
         );
 
         // remove duplicates:
-        rules.add(new Simpagation("Remove duplicate", 1, Head.OF_TYPE(COLOR.class), Head.OF_TYPE(COLOR.class))
+        rules.add(new Simpagation("Remove duplicate", 1, Head.ofType(COLOR.class), Head.ofType(COLOR.class))
                 .guard((head1, head2) -> head1[0].value().equals(head2[0])));
 
         return rules.toArray(new Rule[0]);

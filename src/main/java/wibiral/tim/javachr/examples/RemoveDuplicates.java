@@ -23,7 +23,7 @@ public class RemoveDuplicates {
     }
 
     public static Rule[] getRules(){
-        Rule r = new Simpagation("Remove duplicate", 1, Head.ANY().bindTo(VAR.X), Head.ANY().bindTo(VAR.X));
+        Rule r = new Simpagation("Remove duplicate", 1, Head.any().bindTo(VAR.X), Head.any().bindTo(VAR.X));
         return new Rule[]{r};
     }
 }
