@@ -31,10 +31,10 @@ public class Constraint<T> {
     }
 
     /**
-     * Return the value the constraint holds.
-     * @return value.
+     * Return the object the constraint holds.
+     * @return the stored object.
      */
-    public T value(){
+    public T get(){
         return value;
     }
 
