@@ -30,6 +30,9 @@ public class FastFibonacci {
                     newConstraints.add(new Constraint<>(new Fib(1, 1)));
                 });
 
+        // Combines:
+        // MAX, Fib(N+1, X) / Fib(N, Y) <=> Fib(N+2, X+Y).
+        // MAX, Fib(N+1, X) Fib(N, Y) <=> MAX == N+1 | Fib(N+1, X).
         Rule r2 = new Simplification(3)
                 .guard(x -> x[0].value() instanceof Integer
                             && !(x[1].value() instanceof Integer) //&& !(x[2].value() instanceof Integer)
