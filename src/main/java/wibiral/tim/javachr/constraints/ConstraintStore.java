@@ -117,7 +117,7 @@ public class ConstraintStore {
      * @return An iterator with constraints that contain objects equal to {@param value}.
      */
     public Iterator<Constraint<?>> lookup(Object value){
-        return store.stream().filter(x -> x.isAlive() && x.value().equals(value)).iterator();
+        return store.stream().filter(x -> x.isAlive() && x.get().equals(value)).iterator();
     }
 
     /**

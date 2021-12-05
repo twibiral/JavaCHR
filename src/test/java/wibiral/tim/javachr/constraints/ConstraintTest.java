@@ -9,8 +9,8 @@ public class ConstraintTest {
     public void value() {
         Double pi = 3.14159;
         Constraint<Double> c = new Constraint<>(pi);
-        assertNotNull(c.value());
-        Double d = c.value();
+        assertNotNull(c.get());
+        Double d = c.get();
         assertEquals(pi, d);
     }
 

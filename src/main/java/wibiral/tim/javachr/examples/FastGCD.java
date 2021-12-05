@@ -59,16 +59,16 @@ public class FastGCD {
                 (h1, h2) ->
                         // h1[0].value() instanceof Integer && h2[0].value() instanceof Integer &&
                         // Not necessary if you can be sure that all Constraints are Integers.
-                        (int) h1[0].value() > 0 && (int) h1[0].value() <= (int) h2[0].value()
+                        (int) h1[0].get() > 0 && (int) h1[0].get() <= (int) h2[0].get()
         ).body(
                 (x1, x2, newConstraints) -> {
-                    int n = (int) x1[0].value();
-                    int m = (int) x2[0].value();
+                    int n = (int) x1[0].get();
+                    int m = (int) x2[0].get();
                     newConstraints.add(new Constraint<>(m % n));
                 }
         );
         Rule r2  = new Simplification( "Delete zero", 1)
-                .guard(x -> (int) x[0].value() == 0);
+                .guard(x -> (int) x[0].get() == 0);
 
         return new Rule[]{r1, r2};
     }

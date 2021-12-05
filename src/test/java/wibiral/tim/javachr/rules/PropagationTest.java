@@ -3,10 +3,8 @@ package wibiral.tim.javachr.rules;
 import org.junit.Before;
 import org.junit.Test;
 import wibiral.tim.javachr.constraints.Constraint;
-import wibiral.tim.javachr.constraints.ConstraintStore;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -18,22 +16,22 @@ public class PropagationTest {
     public void setUp() {
         rule = new Propagation(1);
         rule.guard(x -> {
-            int i = (int) x[0].value();
+            int i = (int) x[0].get();
             return i > 2 && i < 21;
         });
-        rule.body((head, newConstraint) -> newConstraint.add(new Constraint<>((int) head[0].value() - 1)));
+        rule.body((head, newConstraint) -> newConstraint.add(new Constraint<>((int) head[0].get() - 1)));
    }
 
     @Test
     public void apply() {
         List<Constraint<?>> result = rule.apply(createConstraintList(3));
-        assertTrue(result.stream().anyMatch(c -> c.value().equals(3)));
-        assertTrue(result.stream().anyMatch(c -> c.value().equals(2)));
+        assertTrue(result.stream().anyMatch(c -> c.get().equals(3)));
+        assertTrue(result.stream().anyMatch(c -> c.get().equals(2)));
         assertEquals(2, result.size());
 
         result = rule.apply(createConstraintList(15));
-        assertTrue(result.stream().anyMatch(c -> c.value().equals(14)));
-        assertTrue(result.stream().anyMatch(c -> c.value().equals(15)));
+        assertTrue(result.stream().anyMatch(c -> c.get().equals(14)));
+        assertTrue(result.stream().anyMatch(c -> c.get().equals(15)));
         assertEquals(2, result.size());
     }
 
@@ -51,7 +49,7 @@ public class PropagationTest {
 
     @Test
     public void guard() {
-        Propagation rule = new Propagation(1).guard(x -> x[0].value().equals(2));
+        Propagation rule = new Propagation(1).guard(x -> x[0].get().equals(2));
         assertTrue(rule.accepts(createConstraintList(2)));
         assertFalse(rule.accepts(createConstraintList(3)));
     }
@@ -59,9 +57,9 @@ public class PropagationTest {
     @Test
     public void body() {
         Propagation rule = new Propagation(1)
-                .body((head, newConstraint) -> newConstraint.add(new Constraint<>((int) head[0].value() + 2)));
+                .body((head, newConstraint) -> newConstraint.add(new Constraint<>((int) head[0].get() + 2)));
         List<Constraint<?>> result = rule.apply(createConstraintList(2));
-        assertTrue(result.stream().anyMatch(c -> c.value().equals(4)));
+        assertTrue(result.stream().anyMatch(c -> c.get().equals(4)));
         assertEquals(2, result.size());
     }
 

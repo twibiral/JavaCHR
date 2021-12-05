@@ -21,13 +21,13 @@ public class SimpleConstraintSolverTest extends TestCase {
         List<Constraint<?>> result = gcd.solve(200, 1);
         assertEquals(1, result.size());
         assertTrue(result.get(0).isOfType(Integer.class));
-        assertEquals(1, (int) result.get(0).value());
+        assertEquals(1, (int) result.get(0).get());
 
         // GCD = 17
         result = gcd.solve(680, 34, 85);
         assertEquals(1, result.size());
         assertTrue(result.get(0).isOfType(Integer.class));
-        assertEquals(17, (int) result.get(0).value());
+        assertEquals(17, (int) result.get(0).get());
 
 
         // === Call with constraints ===
@@ -35,13 +35,13 @@ public class SimpleConstraintSolverTest extends TestCase {
         result = gcd.solve(new Constraint<>(200), new Constraint<>(1));
         assertEquals(1, result.size());
         assertTrue(result.get(0).isOfType(Integer.class));
-        assertEquals(1, (int) result.get(0).value());
+        assertEquals(1, (int) result.get(0).get());
 
         // GCD = 17
         result = gcd.solve(new Constraint<>(680), new Constraint<>(34), new Constraint<>(85));
         assertEquals(1, result.size());
         assertTrue(result.get(0).isOfType(Integer.class));
-        assertEquals(17, (int) result.get(0).value());
+        assertEquals(17, (int) result.get(0).get());
 
 
         // === Call with list of constraints ===
@@ -51,7 +51,7 @@ public class SimpleConstraintSolverTest extends TestCase {
         result = gcd.solve(list);
         assertEquals(1, result.size());
         assertTrue(result.get(0).isOfType(Integer.class));
-        assertEquals(1, (int) result.get(0).value());
+        assertEquals(1, (int) result.get(0).get());
 
         // GCD = 17
         list.clear();
@@ -59,15 +59,15 @@ public class SimpleConstraintSolverTest extends TestCase {
         result = gcd.solve(list);
         assertEquals(1, result.size());
         assertTrue(result.get(0).isOfType(Integer.class));
-        assertEquals(17, (int) result.get(0).value());
+        assertEquals(17, (int) result.get(0).get());
     }
 
     public void testFindMatch() {
         Rule r1 = new Propagation(2).guard(
-                head -> head[0].isOfType(Integer.class) && (int)head[0].value() == 42 && head[1].isOfType(String.class)
+                head -> head[0].isOfType(Integer.class) && (int)head[0].get() == 42 && head[1].isOfType(String.class)
         );
         Rule r2 = new Simplification(2).guard(  // Rule shouldn't be applicable!
-                head -> head[0].isOfType(Integer.class) && head[1].isOfType(Integer.class) && (int)head[0].value() > (int)head[1].value()
+                head -> head[0].isOfType(Integer.class) && head[1].isOfType(Integer.class) && (int)head[0].get() > (int)head[1].get()
         );
 
         SimpleConstraintSolver solver = new SimpleConstraintSolver(r2, r1);
@@ -78,11 +78,11 @@ public class SimpleConstraintSolverTest extends TestCase {
 
         assertEquals(r1.ID(), result.rule.ID());
 
-        assertTrue(result.match[0].value() instanceof Integer);
-        assertTrue(result.match[1].value() instanceof String);
+        assertTrue(result.match[0].get() instanceof Integer);
+        assertTrue(result.match[1].get() instanceof String);
 
-        assertEquals(42, (int) result.match[0].value());
-        assertEquals("Hello World", (String) result.match[1].value());
+        assertEquals(42, (int) result.match[0].get());
+        assertEquals("Hello World", (String) result.match[1].get());
     }
 
     public void testNoDuplicatesIn() {
@@ -100,11 +100,11 @@ public class SimpleConstraintSolverTest extends TestCase {
     private SimpleConstraintSolver getGCDSolver(){
         Rule r1 = new Simpagation(1, 1)
                 .guard(
-                        (h1, h2) -> (int) h1[0].value() > 0 && (int) h1[0].value() <= (int) h2[0].value()
+                        (h1, h2) -> (int) h1[0].get() > 0 && (int) h1[0].get() <= (int) h2[0].get()
                 ).body(
                         (x1, x2, newConstraints) -> {
-                            int n = (int) x1[0].value();
-                            int m = (int) x2[0].value();
+                            int n = (int) x1[0].get();
+                            int m = (int) x2[0].get();
                             newConstraints.add(new Constraint<>(m - n));
                         }
                 );
@@ -112,7 +112,7 @@ public class SimpleConstraintSolverTest extends TestCase {
         // X <=> X=0 | true.
         Rule r2 = new Simplification(1)
                 .guard(
-                        x -> (int) x[0].value() == 0
+                        x -> (int) x[0].get() == 0
                 ).body( (x, y) -> {} );
 
         return new SimpleConstraintSolver(r1, r2);

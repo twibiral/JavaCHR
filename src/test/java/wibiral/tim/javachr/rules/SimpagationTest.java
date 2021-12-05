@@ -16,19 +16,19 @@ public class SimpagationTest {
     public void setUp() {
         rule = new Simpagation(1, 1);
         rule.guard((head1, head2) -> {
-            int i = (int) head1[0].value();
-            int i2 = (int) head2[0].value();
+            int i = (int) head1[0].get();
+            int i2 = (int) head2[0].get();
             return i > 2 && i < 21 && i2 == 5;
         });
-        rule.body((head1, head2, newConstraints) -> newConstraints.add(new Constraint<>((int) head2[0].value() - 1)));
+        rule.body((head1, head2, newConstraints) -> newConstraints.add(new Constraint<>((int) head2[0].get() - 1)));
     }
 
     @Test
     public void apply() {
         List<Constraint<?>> result = rule.apply(createConstraintList(15, 5));
-        assertTrue(result.stream().anyMatch(c -> c.value().equals(15)));
-        assertTrue(result.stream().anyMatch(c -> c.value().equals(4)));
-        assertFalse(result.stream().anyMatch(c -> c.value().equals(14)));
+        assertTrue(result.stream().anyMatch(c -> c.get().equals(15)));
+        assertTrue(result.stream().anyMatch(c -> c.get().equals(4)));
+        assertFalse(result.stream().anyMatch(c -> c.get().equals(14)));
         assertEquals(2, result.size());
     }
 
@@ -46,7 +46,7 @@ public class SimpagationTest {
 
     @Test
     public void guard() {
-        Simpagation rule = new Simpagation(2, 2).guard((head1, head2) -> head1[1].value().equals(2));
+        Simpagation rule = new Simpagation(2, 2).guard((head1, head2) -> head1[1].get().equals(2));
         assertTrue(rule.accepts(createConstraintList(1, 2, 3, 4)));
     }
 
@@ -55,9 +55,9 @@ public class SimpagationTest {
         Simpagation rule = new Simpagation(2, 1)
                 .body((head1, head2, newConstraint) -> newConstraint.add(new Constraint<>(5)));
         List<Constraint<?>> result = rule.apply(createConstraintList(1, 2, 3));
-        assertTrue(result.stream().anyMatch(c -> c.value().equals(1)));
-        assertTrue(result.stream().anyMatch(c -> c.value().equals(2)));
-        assertTrue(result.stream().anyMatch(c -> c.value().equals(5)));
+        assertTrue(result.stream().anyMatch(c -> c.get().equals(1)));
+        assertTrue(result.stream().anyMatch(c -> c.get().equals(2)));
+        assertTrue(result.stream().anyMatch(c -> c.get().equals(5)));
         assertEquals(3, result.size());
     }
 

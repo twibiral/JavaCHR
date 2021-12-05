@@ -47,9 +47,9 @@ public class ConstraintStoreTest {
         ConstraintStore store = new ConstraintStore();
         addTestConstraints(store);
         List<Constraint<?>> list = store.toList();
-        assertTrue(list.removeIf(x -> x.value().equals(42)));
-        assertTrue(list.removeIf(x -> x.value().equals(3.14159)));
-        assertTrue(list.removeIf(x -> x.value().toString().equals("Hello World!")));
+        assertTrue(list.removeIf(x -> x.get().equals(42)));
+        assertTrue(list.removeIf(x -> x.get().equals(3.14159)));
+        assertTrue(list.removeIf(x -> x.get().toString().equals("Hello World!")));
 
     }
 
@@ -93,9 +93,9 @@ public class ConstraintStoreTest {
         store.createAndAdd(3.141);
 
         assertEquals(3, store.size());
-        assertEquals(1, store.toList().stream().filter(x -> x.value().equals("Hello World!")).count());
-        assertTrue(store.toList().stream().anyMatch(x -> x.value().equals(42)));
-        assertTrue(store.toList().stream().anyMatch(x -> x.value().equals(3.141)));
+        assertEquals(1, store.toList().stream().filter(x -> x.get().equals("Hello World!")).count());
+        assertTrue(store.toList().stream().anyMatch(x -> x.get().equals(42)));
+        assertTrue(store.toList().stream().anyMatch(x -> x.get().equals(3.141)));
     }
 
     @Test

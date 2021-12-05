@@ -16,21 +16,21 @@ public class SimplificationTest {
     public void setUp() {
         rule = new Simplification(1);
         rule.guard(x -> {
-            int i = (int) x[0].value();
+            int i = (int) x[0].get();
             return i > 2 && i < 21;
         });
-        rule.body((head, newConstraints) -> newConstraints.add(new Constraint<>((int) head[0].value() - 1)));
+        rule.body((head, newConstraints) -> newConstraints.add(new Constraint<>((int) head[0].get() - 1)));
     }
 
     @Test
     public void apply() {
         List<Constraint<?>> result = rule.apply(createConstraintList(3));
-        assertTrue(result.stream().anyMatch(c -> c.value().equals(2)));
+        assertTrue(result.stream().anyMatch(c -> c.get().equals(2)));
         assertEquals(1, result.size());
 
         result = rule.apply(createConstraintList(15));
-        assertTrue(result.stream().anyMatch(c -> c.value().equals(14)));
-        assertFalse(result.stream().anyMatch(c -> c.value().equals(15)));
+        assertTrue(result.stream().anyMatch(c -> c.get().equals(14)));
+        assertFalse(result.stream().anyMatch(c -> c.get().equals(15)));
         assertEquals(1, result.size());
     }
 
@@ -48,7 +48,7 @@ public class SimplificationTest {
 
     @Test
     public void guard() {
-        Simplification rule = new Simplification(1).guard(x -> x[0].value().equals(2));
+        Simplification rule = new Simplification(1).guard(x -> x[0].get().equals(2));
         assertTrue(rule.accepts(createConstraintList(2)));
     }
 
@@ -57,7 +57,7 @@ public class SimplificationTest {
         Simplification rule = new Simplification(1)
                 .body((oldC, newC) -> newC.add(new Constraint<>(5)));
         List<Constraint<?>> result = rule.apply(createConstraintList(3));
-        assertTrue(result.stream().anyMatch(c -> c.value().equals(5)));
+        assertTrue(result.stream().anyMatch(c -> c.get().equals(5)));
         assertEquals(1, result.size());
     }
 

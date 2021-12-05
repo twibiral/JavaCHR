@@ -24,7 +24,7 @@ public class FastFibonacci {
 
     static Rule[] getRules(){
         Rule r1 = new Propagation(1)  // MAX => Fib(0, 1), Fib(1, 1).
-                .guard(x -> x[0].value() instanceof Integer)
+                .guard(x -> x[0].get() instanceof Integer)
                 .body((head, newConstraints) -> {
                     newConstraints.add(new Constraint<>(new Fib(0, 0)));
                     newConstraints.add(new Constraint<>(new Fib(1, 1)));
@@ -34,20 +34,20 @@ public class FastFibonacci {
         // MAX, Fib(N+1, X) / Fib(N, Y) <=> Fib(N+2, X+Y).
         // MAX, Fib(N+1, X) Fib(N, Y) <=> MAX == N+1 | Fib(N+1, X).
         Rule r2 = new Simplification(3)
-                .guard(x -> x[0].value() instanceof Integer
-                            && !(x[1].value() instanceof Integer) //&& !(x[2].value() instanceof Integer)
-                            && ((Fib) x[1].value()).a + 1 == ((Fib) x[2].value()).a)
+                .guard(x -> x[0].get() instanceof Integer
+                            && !(x[1].get() instanceof Integer) //&& !(x[2].value() instanceof Integer)
+                            && ((Fib) x[1].get()).a + 1 == ((Fib) x[2].get()).a)
                 .body((head, newConstraints) -> {
                     // Fib n and Fib n+1:
-                    Fib n1 = (Fib) head[1].value();
-                    Fib n2 = (Fib) head[2].value();
+                    Fib n1 = (Fib) head[1].get();
+                    Fib n2 = (Fib) head[2].get();
                     // Calculate Fib n+2:
                     Constraint<Fib> newFib = new Constraint<>(new Fib(n2.a + 1, n1.b + n2.b));
 
                     // Add Fib n+1 and Fib n+2
                     newConstraints.add(newFib);
 
-                    if(n2.a + 1 < (int) head[0].value()) {
+                    if(n2.a + 1 < (int) head[0].get()) {
                         // Add max and Fib n+1 just when max not reached now
                         newConstraints.add(head[2]);
                         newConstraints.add(head[0]);

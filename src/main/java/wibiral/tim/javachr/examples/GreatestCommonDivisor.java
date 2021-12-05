@@ -61,11 +61,11 @@ public class GreatestCommonDivisor {
         // X1 / X2 <=> X1>0, X1=<X2 | int(X2-X1).
         Rule r1 = new Simpagation(1, Head.ofType(Integer.class), Head.ofType(Integer.class))
                 .guard(
-                        (h1, h2) -> (int) h1[0].value() > 0 && (int) h1[0].value() <= (int) h2[0].value()
+                        (h1, h2) -> (int) h1[0].get() > 0 && (int) h1[0].get() <= (int) h2[0].get()
                 ).body(
                         (h1, h2, newConstraints) -> {
-                            int n = (int) h1[0].value();
-                            int m = (int) h2[0].value();
+                            int n = (int) h1[0].get();
+                            int m = (int) h2[0].get();
                             newConstraints.add(new Constraint<>(m - n));
                         }
                 );
@@ -85,11 +85,11 @@ public class GreatestCommonDivisor {
         // X1 / X2 <=> X1>0, X1=<X2 | int(X2-X1).
         Rule r1 = new Simpagation(1, Integer.class, Integer.class)
                 .guard(
-                        (h1, h2) -> (int) h1[0].value() > 0 && (int) h1[0].value() <= (int) h2[0].value()
+                        (h1, h2) -> (int) h1[0].get() > 0 && (int) h1[0].get() <= (int) h2[0].get()
                 ).body(
                         (h1, h2, newConstraints) -> {
-                            int n = (int) h1[0].value();
-                            int m = (int) h2[0].value();
+                            int n = (int) h1[0].get();
+                            int m = (int) h2[0].get();
                             newConstraints.add(new Constraint<>(m - n));
                         }
                 );
@@ -98,7 +98,7 @@ public class GreatestCommonDivisor {
         Rule r2 = new Simplification("X <=> X=0 | true.", Integer.class)
                 .guard(head ->{
                             // The solver guarantees the type of the constraint to be integer
-                            return (int) head[0].value() == 0;
+                            return (int) head[0].get() == 0;
                         });
 //                  .body( (head, newConstraints) -> {} );    // not necessary
 
@@ -114,12 +114,12 @@ public class GreatestCommonDivisor {
                 .guard(
                         (h1, h2) ->
                                 // Type check necessary if you can be sure that all Constraints are Integers.
-                                h1[0].value() instanceof Integer && h2[0].value() instanceof Integer &&
-                                (int) h1[0].value() > 0 && (int) h1[0].value() <= (int) h2[0].value()
+                                h1[0].get() instanceof Integer && h2[0].get() instanceof Integer &&
+                                (int) h1[0].get() > 0 && (int) h1[0].get() <= (int) h2[0].get()
                 ).body(
                         (x1, x2, newConstraints) -> {
-                            int n = (int) x1[0].value();
-                            int m = (int) x2[0].value();
+                            int n = (int) x1[0].get();
+                            int m = (int) x2[0].get();
                             newConstraints.add(new Constraint<>(m - n));
                         }
                 );
@@ -127,7 +127,7 @@ public class GreatestCommonDivisor {
         // X <=> X=0 | true.
         Rule r2 = new Simplification(1)
                 .guard(
-                        head -> head[0].value() instanceof  Integer && (int) head[0].value() == 0
+                        head -> head[0].get() instanceof  Integer && (int) head[0].get() == 0
                 );
 //                  .body( (head, newConstraints) -> {} );    // not necessary
 

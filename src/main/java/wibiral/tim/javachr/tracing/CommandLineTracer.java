@@ -104,13 +104,13 @@ public class CommandLineTracer implements Tracer {
         for (int i = 0; i < constraints.length - 1; i++) {
             str.append(constraints[i].type().getSimpleName()).append("[").append(constraints[i].ID()).append("]")
                     .append(": ")
-                    .append(constraints[i].value()).append(", ");
+                    .append(constraints[i].get()).append(", ");
         }
 
         str.append(constraints[constraints.length-1].type().getSimpleName())
                 .append("[").append(constraints[constraints.length-1].ID()).append("]")
                 .append(": ")
-                .append(constraints[constraints.length-1].value());
+                .append(constraints[constraints.length-1].get());
 
         return str.toString();
     }

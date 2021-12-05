@@ -25,17 +25,17 @@ public class ColorMixing {
         ConstraintSolver colorHandler = new SimpleConstraintSolver(getRules2());
 //        colorHandler.setTracer(new CommandLineTracer()); // Use to see the process of the rule application
 
-        COLOR redAndBlue = (COLOR) colorHandler.solve(COLOR.RED, COLOR.BLUE).get(0).value();
+        COLOR redAndBlue = (COLOR) colorHandler.solve(COLOR.RED, COLOR.BLUE).get(0).get();
         System.out.println(colorHandler.solve(COLOR.RED, COLOR.BLUE).size());
         System.out.println("red and blue is " + redAndBlue.toString());
 
-        COLOR redAndYellow = (COLOR) colorHandler.solve(COLOR.RED, COLOR.YELLOW).get(0).value();
+        COLOR redAndYellow = (COLOR) colorHandler.solve(COLOR.RED, COLOR.YELLOW).get(0).get();
         System.out.println("red and yellow is " + redAndYellow.toString());
 
-        COLOR greenAndGreen = (COLOR) colorHandler.solve(COLOR.GREEN, COLOR.GREEN).get(0).value();
+        COLOR greenAndGreen = (COLOR) colorHandler.solve(COLOR.GREEN, COLOR.GREEN).get(0).get();
         System.out.println("green and green is " + greenAndGreen.toString());
 
-        COLOR orangeAndBrown = (COLOR) colorHandler.solve(COLOR.ORANGE, COLOR.BROWN).get(0).value();
+        COLOR orangeAndBrown = (COLOR) colorHandler.solve(COLOR.ORANGE, COLOR.BROWN).get(0).get();
         System.out.println("orange and brown is " + orangeAndBrown.toString());
     }
 
@@ -78,7 +78,7 @@ public class ColorMixing {
 
         // remove duplicates:
         rules.add(new Simpagation("Remove duplicate", 1, Head.ofType(COLOR.class), Head.ofType(COLOR.class))
-                .guard((head1, head2) -> head1[0].value().equals(head2[0])));
+                .guard((head1, head2) -> head1[0].get().equals(head2[0])));
 
         return rules.toArray(new Rule[0]);
     }
@@ -86,26 +86,26 @@ public class ColorMixing {
     public static Rule[] getRules2(){
         List<Rule> rules = new ArrayList<>();
         rules.add(new Simplification(COLOR.class, COLOR.class)
-                .guard(head -> head[0].value().equals(COLOR.RED) && head[1].value().equals(COLOR.BLUE))
+                .guard(head -> head[0].get().equals(COLOR.RED) && head[1].get().equals(COLOR.BLUE))
                 .body((head, newConstraints) -> newConstraints.add(new Constraint<>(COLOR.PURPLE))));
 
         rules.add(new Simplification(COLOR.class, COLOR.class)
-                .guard(head -> head[0].value().equals(COLOR.BLUE) && head[1].value().equals(COLOR.YELLOW))
+                .guard(head -> head[0].get().equals(COLOR.BLUE) && head[1].get().equals(COLOR.YELLOW))
                 .body((head, newConstraints) -> newConstraints.add(new Constraint<>(COLOR.GREEN))));
 
         rules.add(new Simplification(COLOR.class, COLOR.class)
-                .guard(head -> head[0].value().equals(COLOR.YELLOW) && head[1].value().equals(COLOR.RED))
+                .guard(head -> head[0].get().equals(COLOR.YELLOW) && head[1].get().equals(COLOR.RED))
                 .body((head, newConstraints) -> newConstraints.add(new Constraint<>(COLOR.ORANGE))));
 
         // Mixing with brown results in brown:
         rules.add(new Simpagation(1, COLOR.class, COLOR.class)
-                .guard((head1, head2) -> head1[0].value().equals(COLOR.BROWN))
+                .guard((head1, head2) -> head1[0].get().equals(COLOR.BROWN))
                 // .body((head1, head2, newConstraints) -> {  })   // Body is not necessary
         );
 
         // remove duplicates:
         rules.add(new Simpagation("Remove duplicate", 1, COLOR.class, COLOR.class)
-                .guard((head1, head2) -> head1[0].value().equals(head2[0])));
+                .guard((head1, head2) -> head1[0].get().equals(head2[0])));
 
         return rules.toArray(new Rule[0]);
     }
@@ -113,25 +113,25 @@ public class ColorMixing {
     public static Rule[] getRules3(){
         List<Rule> rules = new ArrayList<>();
         rules.add(new Simplification(2)
-                .guard(head -> head[0].value().equals(COLOR.RED) && head[1].value().equals(COLOR.BLUE))
+                .guard(head -> head[0].get().equals(COLOR.RED) && head[1].get().equals(COLOR.BLUE))
                 .body((head, newConstraints) -> newConstraints.add(new Constraint<>(COLOR.PURPLE))));
 
         rules.add(new Simplification(2)
-                .guard(head -> head[0].value().equals(COLOR.BLUE) && head[1].value().equals(COLOR.YELLOW))
+                .guard(head -> head[0].get().equals(COLOR.BLUE) && head[1].get().equals(COLOR.YELLOW))
                 .body((head, newConstraints) -> newConstraints.add(new Constraint<>(COLOR.GREEN))));
 
         rules.add(new Simplification(2)
-                .guard(head -> head[0].value().equals(COLOR.YELLOW) && head[1].value().equals(COLOR.RED))
+                .guard(head -> head[0].get().equals(COLOR.YELLOW) && head[1].get().equals(COLOR.RED))
                 .body((head, newConstraints) -> newConstraints.add(new Constraint<>(COLOR.ORANGE))));
 
         // Mixing with brown results in brown:
-        rules.add(new Simpagation(1, 1).guard((head1, head2) -> head1[0].value().equals(COLOR.BROWN))
+        rules.add(new Simpagation(1, 1).guard((head1, head2) -> head1[0].get().equals(COLOR.BROWN))
                 // .body((head1, head2, newConstraints) -> {  })   // Body is not necessary
         );
 
         // remove duplicates:
         rules.add(new Simpagation("Remove duplicate", 1, 1)
-                .guard((head1, head2) -> head1[0].value().equals(head2[0])));
+                .guard((head1, head2) -> head1[0].get().equals(head2[0])));
 
         return rules.toArray(new Rule[0]);
     }

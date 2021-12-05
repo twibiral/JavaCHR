@@ -389,7 +389,7 @@ public class SimpleConstraintSolver implements ConstraintSolver {
 
                 // Check if the two constraints are equal
 
-                if(! array[bound.get(i)].value().equals(array[bound.get(i+1)].value()))
+                if(! array[bound.get(i)].get().equals(array[bound.get(i+1)].get()))
                     return false;
             }
         }

@@ -5,7 +5,6 @@ import wibiral.tim.javachr.SimpleConstraintSolver;
 import wibiral.tim.javachr.constraints.Constraint;
 import wibiral.tim.javachr.rules.Rule;
 import wibiral.tim.javachr.rules.Simpagation;
-import wibiral.tim.javachr.tracing.CommandLineTracer;
 
 import java.util.List;
 import java.util.Random;
@@ -20,7 +19,7 @@ public class Maximum {
         array[0] = 0;
 
         Simpagation rule = new Simpagation(1, 1)
-                .guard((h1, h2) -> ((int) h1[0].value()) >= ((int) h2[0].value()));
+                .guard((h1, h2) -> ((int) h1[0].get()) >= ((int) h2[0].get()));
 
         List<Constraint<?>> result;
         long start;
@@ -48,7 +47,7 @@ public class Maximum {
     static Rule[] getRules(){
         return new Rule[]{
                 new Simpagation(1, 1)
-                .guard((h1, h2) -> (int) h1[0].value() >= (int) h2[0].value())
+                .guard((h1, h2) -> (int) h1[0].get() >= (int) h2[0].get())
         };
     }
 }
