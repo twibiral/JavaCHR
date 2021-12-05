@@ -20,7 +20,7 @@ public class Maximum {
         array[0] = 0;
 
         Simpagation rule = new Simpagation(1, 1)
-                .guard((h1, h2) -> ((Integer) h1[0].value()) >= ((Integer) h2[0].value()));
+                .guard((h1, h2) -> ((int) h1[0].value()) >= ((int) h2[0].value()));
 
         List<Constraint<?>> result;
         long start;
