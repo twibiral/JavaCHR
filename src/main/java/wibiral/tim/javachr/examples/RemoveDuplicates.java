@@ -1,8 +1,8 @@
 package wibiral.tim.javachr.examples;
 
 import wibiral.tim.javachr.constraints.Constraint;
-import wibiral.tim.javachr.ConstraintSolver;
-import wibiral.tim.javachr.SimpleConstraintSolver;
+import wibiral.tim.javachr.RuleApplicator;
+import wibiral.tim.javachr.SimpleRuleApplicator;
 import wibiral.tim.javachr.rules.Rule;
 import wibiral.tim.javachr.rules.Simpagation;
 import wibiral.tim.javachr.rules.head.Head;
@@ -12,7 +12,7 @@ import java.util.List;
 
 public class RemoveDuplicates {
     public static void main(String[] args) {
-        ConstraintSolver solver = new SimpleConstraintSolver(getRules());
+        RuleApplicator solver = new SimpleRuleApplicator(getRules());
 //        solver.setTracer(new CommandLineTracer());
 
         List<Constraint<?>> result = solver.solve(1, 2, 3, 4, 1, 2, 3, 1, 2);

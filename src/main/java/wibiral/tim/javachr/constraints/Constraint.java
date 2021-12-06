@@ -1,6 +1,6 @@
 package wibiral.tim.javachr.constraints;
 
-import wibiral.tim.javachr.ConstraintSolver;
+import wibiral.tim.javachr.RuleApplicator;
 
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
@@ -65,14 +65,14 @@ public class Constraint<T> {
     }
 
     /**
-     * @return true if the constraint is still alive. Dead constraints are unregarded by {@link ConstraintSolver}s.
+     * @return true if the constraint is still alive. Dead constraints are unregarded by {@link RuleApplicator}s.
      */
     public boolean isAlive(){
         return this.alive;
     }
 
     /**
-     * Switches this constraint to not alive. Dead constraints are unregarded by {@link ConstraintSolver}s.
+     * Switches this constraint to not alive. Dead constraints are unregarded by {@link RuleApplicator}s.
      * Use the method {@link #setAlive()} to revive the constraint.
      */
     public void setDead(){
@@ -80,7 +80,7 @@ public class Constraint<T> {
     }
 
     /**
-     * Switches this constraint to alive. Dead constraints are unregarded by {@link ConstraintSolver}s.
+     * Switches this constraint to alive. Dead constraints are unregarded by {@link RuleApplicator}s.
      * Use the method {@link #setDead()} to kill the constraint.
      */
     public void setAlive(){

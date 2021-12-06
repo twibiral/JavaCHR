@@ -2,8 +2,8 @@ package wibiral.tim.javachr.examples;
 
 import wibiral.tim.javachr.rules.head.Head;
 import wibiral.tim.javachr.rules.Simpagation;
-import wibiral.tim.javachr.ConstraintSolver;
-import wibiral.tim.javachr.SimpleConstraintSolver;
+import wibiral.tim.javachr.RuleApplicator;
+import wibiral.tim.javachr.SimpleRuleApplicator;
 import wibiral.tim.javachr.constraints.Constraint;
 import wibiral.tim.javachr.rules.Rule;
 import wibiral.tim.javachr.rules.Simplification;
@@ -12,7 +12,7 @@ import java.util.List;
 
 public class GreatestCommonDivisor {
     public static void main(String[] args) {
-        ConstraintSolver gcdHandler = new SimpleConstraintSolver(getRules());
+        RuleApplicator gcdHandler = new SimpleRuleApplicator(getRules());
 //        gcdHandler.setTracer(new CommandLineTracer(true));
 
         List<Constraint<?>> result;

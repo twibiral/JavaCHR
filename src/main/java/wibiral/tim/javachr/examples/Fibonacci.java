@@ -1,8 +1,8 @@
 package wibiral.tim.javachr.examples;
 
 import wibiral.tim.javachr.constraints.Constraint;
-import wibiral.tim.javachr.ConstraintSolver;
-import wibiral.tim.javachr.SimpleConstraintSolver;
+import wibiral.tim.javachr.RuleApplicator;
+import wibiral.tim.javachr.SimpleRuleApplicator;
 import wibiral.tim.javachr.rules.Propagation;
 import wibiral.tim.javachr.rules.Rule;
 import wibiral.tim.javachr.rules.Simpagation;
@@ -34,7 +34,7 @@ public class Fibonacci {
     }
 
     public static void main(String[] args) {
-        ConstraintSolver fibHandler = new SimpleConstraintSolver(getRules());
+        RuleApplicator fibHandler = new SimpleRuleApplicator(getRules());
         fibHandler.setTracer(new CommandLineTracer());
 
         System.out.println("Fibonacci 42:");

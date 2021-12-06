@@ -1,7 +1,7 @@
 package wibiral.tim.javachr.examples;
 
-import wibiral.tim.javachr.ConstraintSolver;
-import wibiral.tim.javachr.SimpleConstraintSolver;
+import wibiral.tim.javachr.RuleApplicator;
+import wibiral.tim.javachr.SimpleRuleApplicator;
 import wibiral.tim.javachr.constraints.Constraint;
 import wibiral.tim.javachr.rules.Rule;
 import wibiral.tim.javachr.rules.Simpagation;
@@ -16,7 +16,7 @@ import java.util.List;
 public class FastGCD {
     public static void main(String[] args) {
         // SimpleConstraintSolver is a naive implementation to apply some rules to some Constraints:
-        ConstraintSolver gcdSolver = new SimpleConstraintSolver(getRules());
+        RuleApplicator gcdSolver = new SimpleRuleApplicator(getRules());
 //        gcdSolver.trace();   // use to trace execution
 
         List<Constraint<?>> result;

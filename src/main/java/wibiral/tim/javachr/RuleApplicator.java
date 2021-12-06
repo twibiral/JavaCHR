@@ -7,9 +7,9 @@ import java.util.List;
 
 /**
  * Constraint solvers apply a set of rules to some given constraints.
- * Classes that implement this interface provide different "solve" methods which return a list with constraints after the rules were applied.
+ * Classes that implement this interface provides different "solve" methods which return a list with constraints after the rules were applied.
  */
-public interface ConstraintSolver {
+public interface RuleApplicator {
     /**
      * Applies the defined rules to the given constraints.
      * @param constraints the constraints you want the rules applied to.

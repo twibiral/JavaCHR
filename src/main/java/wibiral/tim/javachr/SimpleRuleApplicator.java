@@ -19,7 +19,7 @@ import java.util.*;
  * A matching as described in Thom Frühwirth, "Constraint Handling Rules" (2009) is not possible, because the constraints
  * can't be matched separately but must be matched together.
  */
-public class SimpleConstraintSolver implements ConstraintSolver {
+public class SimpleRuleApplicator implements RuleApplicator {
     protected final List<Rule> rules = new ArrayList<>();
 
     /**
@@ -32,7 +32,7 @@ public class SimpleConstraintSolver implements ConstraintSolver {
     private int biggestHeader = 0;
 
 
-    public SimpleConstraintSolver(Rule... rules) {
+    public SimpleRuleApplicator(Rule... rules) {
         this.rules.addAll(Arrays.asList(rules));
         if(rules.length > 2){
             // Find rule with the largest header and set the variable to it.
@@ -51,11 +51,6 @@ public class SimpleConstraintSolver implements ConstraintSolver {
     public void setTracer(Tracer tracer) {
         tracingOn = tracer != null;
         this.tracer = tracer;
-    }
-
-    @Override
-    public void addRule(Rule rule) {
-        rules.add(rule);
     }
 
     @Override

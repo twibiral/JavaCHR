@@ -1,7 +1,7 @@
 package wibiral.tim.javachr.examples.webserver;
 
-import wibiral.tim.javachr.ConstraintSolver;
-import wibiral.tim.javachr.SimpleConstraintSolver;
+import wibiral.tim.javachr.RuleApplicator;
+import wibiral.tim.javachr.SimpleRuleApplicator;
 import wibiral.tim.javachr.constraints.Constraint;
 import wibiral.tim.javachr.rules.Propagation;
 import wibiral.tim.javachr.rules.Rule;
@@ -98,7 +98,7 @@ public class Main {
         try (ServerSocket serverSocket = new ServerSocket(PORT)) {
             serverSocket.setSoTimeout(10);  // makes accept() block only 10ms
 
-            ConstraintSolver solver = new SimpleConstraintSolver(readFromConnection,
+            RuleApplicator solver = new SimpleRuleApplicator(readFromConnection,
                                                                  parseRequest,
                                                                  kickIncomplete,
                                                                  createResponse,

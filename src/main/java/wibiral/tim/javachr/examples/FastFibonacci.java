@@ -1,7 +1,7 @@
 package wibiral.tim.javachr.examples;
 
-import wibiral.tim.javachr.ConstraintSolver;
-import wibiral.tim.javachr.SimpleConstraintSolver;
+import wibiral.tim.javachr.RuleApplicator;
+import wibiral.tim.javachr.SimpleRuleApplicator;
 import wibiral.tim.javachr.constraints.Constraint;
 import wibiral.tim.javachr.examples.Fibonacci.Fib;
 import wibiral.tim.javachr.rules.Propagation;
@@ -12,7 +12,7 @@ import java.util.List;
 
 public class FastFibonacci {
     public static void main(String[] args) {
-        ConstraintSolver fastFibSolver = new SimpleConstraintSolver(getRules());
+        RuleApplicator fastFibSolver = new SimpleRuleApplicator(getRules());
 
         System.out.println("Fibonacci 42:");
         long start = System.currentTimeMillis();

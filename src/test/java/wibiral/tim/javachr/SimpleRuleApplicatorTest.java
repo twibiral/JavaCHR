@@ -11,10 +11,10 @@ import wibiral.tim.javachr.rules.Simplification;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SimpleConstraintSolverTest extends TestCase {
+public class SimpleRuleApplicatorTest extends TestCase {
 
     public void testSolve() {
-        SimpleConstraintSolver gcd = getGCDSolver();
+        SimpleRuleApplicator gcd = getGCDSolver();
 
         // === Call directly ===
         // GCD = 1
@@ -70,9 +70,9 @@ public class SimpleConstraintSolverTest extends TestCase {
                 head -> head[0].isOfType(Integer.class) && head[1].isOfType(Integer.class) && (int)head[0].get() > (int)head[1].get()
         );
 
-        SimpleConstraintSolver solver = new SimpleConstraintSolver(r2, r1);
+        SimpleRuleApplicator solver = new SimpleRuleApplicator(r2, r1);
 
-        SimpleConstraintSolver.RuleAndMatch result = solver.findMatch(
+        SimpleRuleApplicator.RuleAndMatch result = solver.findMatch(
                 new ConstraintStore(new Constraint<>("Hello World"), new Constraint<>(42), new Constraint<>(3.14))
         );
 
@@ -86,7 +86,7 @@ public class SimpleConstraintSolverTest extends TestCase {
     }
 
     public void testNoDuplicatesIn() {
-        SimpleConstraintSolver solver = new SimpleConstraintSolver();
+        SimpleRuleApplicator solver = new SimpleRuleApplicator();
 
         Constraint<?>[] array = new Constraint[]{
             new Constraint<>(1), new Constraint<>(2), new Constraint<>("42"), new Constraint<>(3.14)
@@ -97,7 +97,7 @@ public class SimpleConstraintSolverTest extends TestCase {
         assertFalse(solver.noDuplicatesIn(array));
     }
 
-    private SimpleConstraintSolver getGCDSolver(){
+    private SimpleRuleApplicator getGCDSolver(){
         Rule r1 = new Simpagation(1, 1)
                 .guard(
                         (h1, h2) -> (int) h1[0].get() > 0 && (int) h1[0].get() <= (int) h2[0].get()
@@ -115,7 +115,7 @@ public class SimpleConstraintSolverTest extends TestCase {
                         x -> (int) x[0].get() == 0
                 ).body( (x, y) -> {} );
 
-        return new SimpleConstraintSolver(r1, r2);
+        return new SimpleRuleApplicator(r1, r2);
     }
 
 }

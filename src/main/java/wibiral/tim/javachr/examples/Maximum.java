@@ -1,7 +1,7 @@
 package wibiral.tim.javachr.examples;
 
-import wibiral.tim.javachr.ConstraintSolver;
-import wibiral.tim.javachr.SimpleConstraintSolver;
+import wibiral.tim.javachr.RuleApplicator;
+import wibiral.tim.javachr.SimpleRuleApplicator;
 import wibiral.tim.javachr.constraints.Constraint;
 import wibiral.tim.javachr.rules.Rule;
 import wibiral.tim.javachr.rules.Simpagation;
@@ -26,7 +26,7 @@ public class Maximum {
         long end;
 
         // Sequential approach:
-        ConstraintSolver solver = new SimpleConstraintSolver(rule);
+        RuleApplicator solver = new SimpleRuleApplicator(rule);
 //        solver.setTracer(new CommandLineTracer(true));
 
         start = System.currentTimeMillis();
