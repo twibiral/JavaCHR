@@ -25,17 +25,17 @@ public class ColorMixing {
         RuleApplicator colorHandler = new SimpleRuleApplicator(getRules2());
 //        colorHandler.setTracer(new CommandLineTracer()); // Use to see the process of the rule application
 
-        COLOR redAndBlue = (COLOR) colorHandler.solve(COLOR.RED, COLOR.BLUE).get(0).get();
-        System.out.println(colorHandler.solve(COLOR.RED, COLOR.BLUE).size());
+        COLOR redAndBlue = (COLOR) colorHandler.execute(COLOR.RED, COLOR.BLUE).get(0).get();
+        System.out.println(colorHandler.execute(COLOR.RED, COLOR.BLUE).size());
         System.out.println("red and blue is " + redAndBlue.toString());
 
-        COLOR redAndYellow = (COLOR) colorHandler.solve(COLOR.RED, COLOR.YELLOW).get(0).get();
+        COLOR redAndYellow = (COLOR) colorHandler.execute(COLOR.RED, COLOR.YELLOW).get(0).get();
         System.out.println("red and yellow is " + redAndYellow.toString());
 
-        COLOR greenAndGreen = (COLOR) colorHandler.solve(COLOR.GREEN, COLOR.GREEN).get(0).get();
+        COLOR greenAndGreen = (COLOR) colorHandler.execute(COLOR.GREEN, COLOR.GREEN).get(0).get();
         System.out.println("green and green is " + greenAndGreen.toString());
 
-        COLOR orangeAndBrown = (COLOR) colorHandler.solve(COLOR.ORANGE, COLOR.BROWN).get(0).get();
+        COLOR orangeAndBrown = (COLOR) colorHandler.execute(COLOR.ORANGE, COLOR.BROWN).get(0).get();
         System.out.println("orange and brown is " + orangeAndBrown.toString());
     }
 

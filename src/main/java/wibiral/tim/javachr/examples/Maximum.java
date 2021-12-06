@@ -30,7 +30,7 @@ public class Maximum {
 //        solver.setTracer(new CommandLineTracer(true));
 
         start = System.currentTimeMillis();
-        result = solver.solve(array);
+        result = solver.execute(array);
         end = System.currentTimeMillis();
         System.out.println("Sequential computed: " + result.toString() + "\nTime: " + (end - start) + "ms\n");
 

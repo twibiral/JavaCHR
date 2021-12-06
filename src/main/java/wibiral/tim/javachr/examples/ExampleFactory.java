@@ -6,7 +6,7 @@ import wibiral.tim.javachr.SimpleRuleApplicator;
 
 /**
  * Use this class to get {@link SimpleRuleApplicator} instances. They were instantiated with some
- * example rules. Try passing some Constraints to the {@link SimpleRuleApplicator#solve(Object[])} method.
+ * example rules. Try passing some Constraints to the {@link SimpleRuleApplicator#execute(Object[])} method.
  */
 public class ExampleFactory {
     public enum EXAMPLE {

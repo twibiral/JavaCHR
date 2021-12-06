@@ -12,7 +12,7 @@ import java.util.*;
 
 /**
  * TODO: Complete refactoring!
- * This constraint solver implements constraint-first matching.
+ * This rule applicator implements constraint-first matching.
  * This means it takes a combination of constraints and tries to match it with the heads of the rules. The first
  * matching rule is executed. If the constraints fit no rule, the next combination is tried.
  *
@@ -23,7 +23,7 @@ public class SimpleRuleApplicator implements RuleApplicator {
     protected final List<Rule> rules = new ArrayList<>();
 
     /**
-     * Constains a history that stores which rules were applied to which constraints.
+     * Contains a history that stores which rules were applied to which constraints.
      */
     protected PropagationHistory history = new PropagationHistory();
     protected Tracer tracer;
@@ -54,23 +54,23 @@ public class SimpleRuleApplicator implements RuleApplicator {
     }
 
     @Override
-    public List<Constraint<?>> solve(List<Constraint<?>> constraints) {
-        return solve(new ConstraintStore(constraints));
+    public List<Constraint<?>> execute(List<Constraint<?>> constraints) {
+        return execute(new ConstraintStore(constraints));
     }
 
     @Override
-    public List<Constraint<?>> solve(Constraint<?>... constraints) {
-        return solve(new ConstraintStore(Arrays.asList(constraints)));
+    public List<Constraint<?>> execute(Constraint<?>... constraints) {
+        return execute(new ConstraintStore(Arrays.asList(constraints)));
     }
 
     @SafeVarargs
     @Override
-    public final <T> List<Constraint<?>> solve(T... values) {
-        return solve(new ConstraintStore(values));
+    public final <T> List<Constraint<?>> execute(T... values) {
+        return execute(new ConstraintStore(values));
     }
 
     // ===================== Experimental ================================
-    public List<Constraint<?>> solve(ConstraintStore store) {
+    public List<Constraint<?>> execute(ConstraintStore store) {
         // TODO: make store and history local variables for better concurrency safety
         history = new PropagationHistory();
 

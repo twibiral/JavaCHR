@@ -39,7 +39,7 @@ public class Fibonacci {
 
         System.out.println("Fibonacci 42:");
         long start = System.currentTimeMillis();
-        List<Constraint<?>> result = fibHandler.solve(42);
+        List<Constraint<?>> result = fibHandler.execute(42);
         long end = System.currentTimeMillis();
         System.out.println(result + "\nDuration: " + (end - start) + "ms");
     }

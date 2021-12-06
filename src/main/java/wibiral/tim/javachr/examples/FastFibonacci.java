@@ -16,7 +16,7 @@ public class FastFibonacci {
 
         System.out.println("Fibonacci 42:");
         long start = System.currentTimeMillis();
-        List<Constraint<?>> result = fastFibSolver.solve(42);   // max before overflow (negative number): 92
+        List<Constraint<?>> result = fastFibSolver.execute(42);   // max before overflow (negative number): 92
         long end = System.currentTimeMillis();
         System.out.println(result);
         System.out.println("Duration: " + (end - start) + "ms");

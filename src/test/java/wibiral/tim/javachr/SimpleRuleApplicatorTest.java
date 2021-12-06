@@ -18,13 +18,13 @@ public class SimpleRuleApplicatorTest extends TestCase {
 
         // === Call directly ===
         // GCD = 1
-        List<Constraint<?>> result = gcd.solve(200, 1);
+        List<Constraint<?>> result = gcd.execute(200, 1);
         assertEquals(1, result.size());
         assertTrue(result.get(0).isOfType(Integer.class));
         assertEquals(1, (int) result.get(0).get());
 
         // GCD = 17
-        result = gcd.solve(680, 34, 85);
+        result = gcd.execute(680, 34, 85);
         assertEquals(1, result.size());
         assertTrue(result.get(0).isOfType(Integer.class));
         assertEquals(17, (int) result.get(0).get());
@@ -32,13 +32,13 @@ public class SimpleRuleApplicatorTest extends TestCase {
 
         // === Call with constraints ===
         // GCD = 1
-        result = gcd.solve(new Constraint<>(200), new Constraint<>(1));
+        result = gcd.execute(new Constraint<>(200), new Constraint<>(1));
         assertEquals(1, result.size());
         assertTrue(result.get(0).isOfType(Integer.class));
         assertEquals(1, (int) result.get(0).get());
 
         // GCD = 17
-        result = gcd.solve(new Constraint<>(680), new Constraint<>(34), new Constraint<>(85));
+        result = gcd.execute(new Constraint<>(680), new Constraint<>(34), new Constraint<>(85));
         assertEquals(1, result.size());
         assertTrue(result.get(0).isOfType(Integer.class));
         assertEquals(17, (int) result.get(0).get());
@@ -48,7 +48,7 @@ public class SimpleRuleApplicatorTest extends TestCase {
         // GCD = 1
         ArrayList<Constraint<?>> list = new ArrayList<>();
         list.add(new Constraint<>(200)); list.add(new Constraint<>(1));
-        result = gcd.solve(list);
+        result = gcd.execute(list);
         assertEquals(1, result.size());
         assertTrue(result.get(0).isOfType(Integer.class));
         assertEquals(1, (int) result.get(0).get());
@@ -56,7 +56,7 @@ public class SimpleRuleApplicatorTest extends TestCase {
         // GCD = 17
         list.clear();
         list.add(new Constraint<>(680)); list.add( new Constraint<>(34)); list.add(new Constraint<>(85));
-        result = gcd.solve(list);
+        result = gcd.execute(list);
         assertEquals(1, result.size());
         assertTrue(result.get(0).isOfType(Integer.class));
         assertEquals(17, (int) result.get(0).get());

@@ -104,7 +104,7 @@ public class Main {
                                                                  createResponse,
                                                                  sendResponse,
                                                                  acceptConnection);
-            solver.solve(serverSocket);
+            solver.execute(serverSocket);
         }
     }
 }

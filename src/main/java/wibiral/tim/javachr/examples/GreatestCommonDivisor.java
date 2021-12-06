@@ -20,35 +20,35 @@ public class GreatestCommonDivisor {
 
         System.out.println("Greatest common divisor for 27 and 9:");
         start = System.nanoTime(); // Stop time and print it
-        result = gcdHandler.solve(27, 9);
+        result = gcdHandler.execute(27, 9);
         end = System.nanoTime();
         System.out.println("Duration: " + (end - start)/1000000.0 + "ms\n" + result + "\n");
 
 
         System.out.println("Greatest common divisor for 1337 and 42:");
         start = System.nanoTime();
-        result = gcdHandler.solve(1337, 42);
+        result = gcdHandler.execute(1337, 42);
         end = System.nanoTime();
         System.out.println("Duration: " + (end - start)/1000000.0 + "ms\n" + result + "\n");
 
 
         System.out.println("Greatest common divisor for 11, 253 and 25.751:");
         start = System.nanoTime();
-        result = gcdHandler.solve(11, 253, 25751);
+        result = gcdHandler.execute(11, 253, 25751);
         end = System.nanoTime();
         System.out.println("Duration: " + (end - start)/1000000.0 + "ms\n" + result + "\n");
 
 
         System.out.println("Greatest common divisor for 12.312, 12.132, 112, 4234 and 1211:");
         start = System.nanoTime();
-        result = gcdHandler.solve(12312, 12132, 112, 4234, 1211);
+        result = gcdHandler.execute(12312, 12132, 112, 4234, 1211);
         end = System.nanoTime();
         System.out.println("Duration: " + (end - start)/1000000.0 + "ms\n" + result + "\n");
 
 
         System.out.println("Greatest common divisor for 9897392, 2837812, 1211, 283749:");
         start = System.nanoTime();
-        result = gcdHandler.solve(9897392, 2837812, 1211, 283749);
+        result = gcdHandler.execute(9897392, 2837812, 1211, 283749);
         end = System.nanoTime();
         System.out.println("Duration: " + (end - start)/1000000.0 + "ms\n" + result + "\n");
 
