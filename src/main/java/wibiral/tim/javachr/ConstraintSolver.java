@@ -1,7 +1,6 @@
 package wibiral.tim.javachr;
 
 import wibiral.tim.javachr.constraints.Constraint;
-import wibiral.tim.javachr.rules.Rule;
 import wibiral.tim.javachr.tracing.Tracer;
 
 import java.util.List;
@@ -31,12 +30,6 @@ public interface ConstraintSolver {
      * @return The result after no more rules can be applied to the constraints.
      */
     <T> List<Constraint<?>> solve(T... values);
-
-    /**
-     * Adds a rule to the constraint handler.
-     * @param rule The rule to add.
-     */
-    void addRule(Rule rule);
 
     /**
      * Tracers show you step-by-step how the rules are executed. Tracing only takes place if a tracer is passed to the
