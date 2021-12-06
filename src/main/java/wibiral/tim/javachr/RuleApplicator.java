@@ -29,6 +29,7 @@ public interface RuleApplicator {
      * @param values Some objects you want the rules be applied to.
      * @return The result after no more rules can be applied to the constraints.
      */
+    @SuppressWarnings("unchecked")
     <T> List<Constraint<?>> execute(T... values);
 
     /**
