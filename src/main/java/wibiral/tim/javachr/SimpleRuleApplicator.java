@@ -13,10 +13,9 @@ import java.util.*;
 import java.util.logging.Logger;
 
 /**
- * TODO: Complete refactoring!
- * This rule applicator implements constraint-first matching.
- * This means it takes a combination of constraints and tries to match it with the heads of the rules. The first
- * matching rule is executed. If the constraints fit no rule, the next combination is tried.
+ * This rule applicator implements rule-first matching.
+ * This means it takes a rule and tries to match it with different combinations of constraints. If there are no matching
+ * constraints for a rule the next rule is tried. The first matching rule is executed.
  *
  * A matching as described in Thom Frühwirth, "Constraint Handling Rules" (2009) is not possible, because the constraints
  * can't be matched separately but must be matched together.
