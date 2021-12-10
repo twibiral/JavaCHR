@@ -10,16 +10,18 @@ import wibiral.tim.javachr.rules.Simplification;
 
 import java.util.List;
 
+import static wibiral.tim.javachr.examples.ExampleFactory.printDurationAndResult;
+
 public class FastFibonacci {
     public static void main(String[] args) {
         RuleApplicator fastFibSolver = new SimpleRuleApplicator(getRules());
 
         System.out.println("Fibonacci 42:");
-        long start = System.currentTimeMillis();
+        long start = System.nanoTime();
         List<Constraint<?>> result = fastFibSolver.execute(42);   // max before overflow (negative number): 92
-        long end = System.currentTimeMillis();
-        System.out.println(result);
-        System.out.println("Duration: " + (end - start) + "ms");
+        long end = System.nanoTime();
+        printDurationAndResult(start, end, result);
+
     }
 
     static Rule[] getRules(){

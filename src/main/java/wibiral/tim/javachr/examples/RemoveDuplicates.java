@@ -10,16 +10,24 @@ import wibiral.tim.javachr.rules.head.VAR;
 
 import java.util.List;
 
+import static wibiral.tim.javachr.examples.ExampleFactory.printDurationAndResult;
+
 public class RemoveDuplicates {
     public static void main(String[] args) {
         RuleApplicator solver = new SimpleRuleApplicator(getRules());
 //        solver.setTracer(new CommandLineTracer());
 
-        List<Constraint<?>> result = solver.execute(1, 2, 3, 4, 1, 2, 3, 1, 2);
-        System.out.println(result);
+        long start, end;
 
+        start = System.nanoTime();
+        List<Constraint<?>> result = solver.execute(1, 2, 3, 4, 1, 2, 3, 1, 2);
+        end = System.nanoTime();
+        printDurationAndResult(start, end, result);
+
+        start = System.nanoTime();
         result = solver.execute("Hallo", 42, "Welt", 1337, "Hallo");
-        System.out.println(result);
+        end = System.nanoTime();
+        printDurationAndResult(start, end, result);
     }
 
     public static Rule[] getRules(){

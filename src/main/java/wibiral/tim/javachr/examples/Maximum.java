@@ -9,6 +9,8 @@ import wibiral.tim.javachr.rules.Simpagation;
 import java.util.List;
 import java.util.Random;
 
+import static wibiral.tim.javachr.examples.ExampleFactory.printDurationAndResult;
+
 public class Maximum {
     public static void main(String[] args) {
         Random ran = new Random();
@@ -25,23 +27,13 @@ public class Maximum {
         long start;
         long end;
 
-        // Sequential approach:
         RuleApplicator solver = new SimpleRuleApplicator(rule);
 //        solver.setTracer(new CommandLineTracer(true));
 
         start = System.currentTimeMillis();
         result = solver.execute(array);
         end = System.currentTimeMillis();
-        System.out.println("Sequential computed: " + result.toString() + "\nTime: " + (end - start) + "ms\n");
-
-
-        // Semi-parallel approach:
-//        SemiParallelSolver parallelSolver = new SemiParallelHandler(2, rule);
-//        start = System.currentTimeMillis();
-//        result = parallelSolver.solve(array);
-//        end = System.currentTimeMillis();
-//        System.out.println("Parallel computed: " + result.toString() + "\nTime: " + (end - start) + "ms\n");
-//        parallelSolver.kill();
+        printDurationAndResult(start, end, result);
     }
 
     static Rule[] getRules(){

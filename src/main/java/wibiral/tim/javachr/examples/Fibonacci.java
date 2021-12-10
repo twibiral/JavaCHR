@@ -10,6 +10,7 @@ import wibiral.tim.javachr.tracing.CommandLineTracer;
 
 import java.util.List;
 
+import static wibiral.tim.javachr.examples.ExampleFactory.printDurationAndResult;
 import static wibiral.tim.javachr.rules.head.Head.ofType;
 
 public class Fibonacci {
@@ -38,10 +39,10 @@ public class Fibonacci {
         fibHandler.setTracer(new CommandLineTracer());
 
         System.out.println("Fibonacci 42:");
-        long start = System.currentTimeMillis();
+        long start = System.nanoTime();
         List<Constraint<?>> result = fibHandler.execute(42);
-        long end = System.currentTimeMillis();
-        System.out.println(result + "\nDuration: " + (end - start) + "ms");
+        long end = System.nanoTime();
+        printDurationAndResult(start, end, result);
     }
 
     static Rule[] getRules(){

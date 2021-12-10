@@ -26,7 +26,6 @@ public class ColorMixing {
 //        colorHandler.setTracer(new CommandLineTracer()); // Use to see the process of the rule application
 
         COLOR redAndBlue = (COLOR) colorHandler.execute(COLOR.RED, COLOR.BLUE).get(0).get();
-        System.out.println(colorHandler.execute(COLOR.RED, COLOR.BLUE).size());
         System.out.println("red and blue is " + redAndBlue.toString());
 
         COLOR redAndYellow = (COLOR) colorHandler.execute(COLOR.RED, COLOR.YELLOW).get(0).get();
