@@ -88,9 +88,9 @@ public class ConstraintStoreTest {
     @Test
     public void createAndAdd() {
         ConstraintStore store = new ConstraintStore();
-        store.createAndAdd("Hello World!");
-        store.createAndAdd(42);
-        store.createAndAdd(3.141);
+        store.add("Hello World!");
+        store.add(42);
+        store.add(3.141);
 
         assertEquals(3, store.size());
         assertEquals(1, store.toList().stream().filter(x -> x.get().equals("Hello World!")).count());
@@ -168,7 +168,7 @@ public class ConstraintStoreTest {
         addTestConstraints(store);
         assertEquals(3, store.size());
 
-        store.createAndAdd("42");
+        store.add("42");
         assertEquals(4, store.size());
     }
 

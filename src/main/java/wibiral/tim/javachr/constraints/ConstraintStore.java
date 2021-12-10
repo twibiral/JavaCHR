@@ -54,6 +54,15 @@ public class ConstraintStore {
     }
 
     /**
+     * Create a new constraint and add it to the store.
+     * @param object the new object to add.
+     * @param <T> Type of the given object and the created constraint.
+     */
+    public <T> void add(T object){
+        this.add(new Constraint<>(object));
+    }
+
+    /**
      * Adds all the constraints of the list to the constraint store.
      * @param collection Constraints that get added to the store.
      */
@@ -73,15 +82,6 @@ public class ConstraintStore {
         store.addAll(withoutDuplicates);
         // All rules in the store must be alive if they aren't in use:
         withoutDuplicates.forEach(Constraint::setAlive);
-    }
-
-    /**
-     * Create a new constraint and add it to the store.
-     * @param object the new object to add.
-     * @param <T> Type of the given object and the created constraint.
-     */
-    public <T> void createAndAdd(T object){
-        this.add(new Constraint<>(object));
     }
 
     /**
