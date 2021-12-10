@@ -35,7 +35,7 @@ public class Fibonacci {
     }
 
     public static void main(String[] args) {
-        RuleApplicator fibHandler = new SimpleRuleApplicator(getRules());
+        RuleApplicator fibHandler = new SimpleRuleApplicator(getRules2());
 //        fibHandler.setTracer(new CommandLineTracer());
 
         System.out.println("Fibonacci 42:");
@@ -59,7 +59,8 @@ public class Fibonacci {
                 .guard(head ->
                             ((Fib) head[1].get()).a == ((Fib) head[2].get()).a - 1
                             && ((Fib) head[2].get()).a < (int) head[0].get()
-                ).body((head, newConstraints) -> {
+                )
+                .body((head, newConstraints) -> {
                     int N2 = ((Fib) head[2].get()).a;
                     long M1 = ((Fib) head[1].get()).b;
                     long M2 = ((Fib) head[2].get()).b;
@@ -83,9 +84,9 @@ public class Fibonacci {
 
         // MAX, fib(N1, M1), fib(N2, M2) =>  N1 == N2 - 1 | fib(N2 + 1, M1 + M2).
         Rule r2 = new Propagation(Integer.class, Fib.class, Fib.class)
-                .guard(x ->
-                        ((Fib) x[1].get()).a == ((Fib) x[2].get()).a - 1
-                        && ((Fib) x[2].get()).a < (int) x[0].get()
+                .guard(head ->
+                        ((Fib) head[1].get()).a == ((Fib) head[2].get()).a - 1
+                        && ((Fib) head[2].get()).a < (int) head[0].get()
                 )
                 .body((head, newConstraints) -> {
                     int N2 = ((Fib) head[2].get()).a;

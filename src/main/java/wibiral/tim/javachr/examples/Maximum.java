@@ -24,15 +24,13 @@ public class Maximum {
                 .guard((h1, h2) -> ((int) h1[0].get()) >= ((int) h2[0].get()));
 
         List<Constraint<?>> result;
-        long start;
-        long end;
 
         RuleApplicator solver = new SimpleRuleApplicator(rule);
 //        solver.setTracer(new CommandLineTracer(true));
 
-        start = System.currentTimeMillis();
+        long start = System.currentTimeMillis();
         result = solver.execute(array);
-        end = System.currentTimeMillis();
+        long end = System.currentTimeMillis();
         printDurationAndResult(start, end, result);
     }
 
