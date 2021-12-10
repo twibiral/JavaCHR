@@ -214,4 +214,9 @@ public abstract class Rule {
 
         return true;
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }
