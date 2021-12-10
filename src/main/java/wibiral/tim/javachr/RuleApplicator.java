@@ -1,6 +1,7 @@
 package wibiral.tim.javachr;
 
 import wibiral.tim.javachr.constraints.Constraint;
+import wibiral.tim.javachr.constraints.ConstraintStore;
 import wibiral.tim.javachr.tracing.Tracer;
 
 import java.util.List;
@@ -31,6 +32,13 @@ public interface RuleApplicator {
      */
     @SuppressWarnings("unchecked")
     <T> List<Constraint<?>> execute(T... values);
+
+    /**
+     * Applies the defined rules to the given objects.
+     * @param store {@ConstraintStore} with objects you want the rules be applied to.
+     * @return The result after no more rules can be applied to the constraints.
+     */
+    List<Constraint<?>> execute(ConstraintStore store);
 
     /**
      * Tracers show you step-by-step how the rules are executed. Tracing only takes place if a tracer is passed to the
