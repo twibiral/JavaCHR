@@ -44,7 +44,7 @@ public class ExampleFactory {
         return null;
     }
 
-    public static void printDurationAndResult(long start, long end, List<Constraint> result){
+    public static void printDurationAndResult(long start, long end, List<Constraint<?>> result){
         System.out.println("Duration: " + (end-start) + "ms\n" + result + "\n");
     }
 }
