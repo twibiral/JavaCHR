@@ -19,6 +19,10 @@ import java.util.logging.Logger;
  *
  * A matching as described in Thom Frühwirth, "Constraint Handling Rules" (2009) is not possible, because the constraints
  * can't be matched separately but must be matched together.
+ *
+ * TODO: Potential improvements:
+ * - Start with the last constraint in the head instead of the first one.
+ * - Set constraints to dead when getting them from store and set them alive after use (to decrease the iterator size).
  */
 public class SimpleRuleApplicator implements RuleApplicator {
     protected final List<Rule> rules = new ArrayList<>();
@@ -119,7 +123,7 @@ public class SimpleRuleApplicator implements RuleApplicator {
     protected RuleAndMatch findMatch(ConstraintStore store,
                                      PropagationHistory history,
                                      ArrayDeque<Iterator<Constraint<?>>> iteratorStack){
-        Constraint<?>[] matchingConstraints = null;
+        Constraint<?>[] matchingConstraints;
 
         for(Rule rule: rules){
             // Handle every rule according to their header:
@@ -141,7 +145,7 @@ public class SimpleRuleApplicator implements RuleApplicator {
                                                     PropagationHistory history){
         int headSize = rule.headSize();
 
-        if (headSize > store.size()) {
+        if (store.size() < headSize) {
             // Not enough constraints in the store to apply the rule.
             return null;
         }
@@ -154,50 +158,50 @@ public class SimpleRuleApplicator implements RuleApplicator {
 
         currentIter = getConstraintIterator(rule, store, 0);
 
-
         boolean allCombinationsTested = false;
         while(!allCombinationsTested){
 
             if(pointer < headSize-1 && currentIter.hasNext()){
                 matchingConstraints[pointer] = currentIter.next();
                 iteratorStack.add(currentIter);
-                pointer++;
 
+                // Find constraint for next position of array
+                pointer++;
                 currentIter = getConstraintIterator(rule, store, pointer);
 
             } else if(currentIter.hasNext() && headDefinitionType == HEAD_DEFINITION_TYPE.COMPLEX_DEFINITION){
-            // Filling last element in array and try to match
-            matchingConstraints[pointer] = currentIter.next();
+                // Filling last element in array and try to match
+                matchingConstraints[pointer] = currentIter.next();
 
-            if(rule.saveHistory()){ // Rules that want to be saved in the propagation history -> Propagation
-                // if all constraints different AND rule+constraints not in history AND fits header+guard
-                if (noDuplicatesIn(matchingConstraints)
-                        && checkBindings(rule.getVariableBindings(), matchingConstraints)
-                        && !history.isInHistory(rule, matchingConstraints)
-                        && rule.accepts(Arrays.asList(matchingConstraints))) {
+                if(rule.saveHistory()){ // Rules that want to be saved in the propagation history -> Propagation
+                    // if all constraints different AND rule+constraints not in history AND fits header+guard
+                    if (noDuplicatesIn(matchingConstraints)
+                            && checkBindings(rule.getVariableBindings(), matchingConstraints)
+                            && !history.isInHistory(rule, matchingConstraints)
+                            && rule.accepts(Arrays.asList(matchingConstraints))) {
 
-                    for(Constraint<?> constraint : matchingConstraints){
-                        store.remove(constraint.ID());
+                        for(Constraint<?> constraint : matchingConstraints){
+                            store.remove(constraint.ID());
+                        }
+
+                        return matchingConstraints;
                     }
 
-                    return matchingConstraints;
-                }
+                } else { // Rules that allow to be executed on the same constraints multiple times
+                    // if all constraints different AND fits header+guard
+                    if (noDuplicatesIn(matchingConstraints)
+                            && checkBindings(rule.getVariableBindings(), matchingConstraints)
+                            && rule.accepts(Arrays.asList(matchingConstraints))) {
 
-            } else { // Rules that allow to be executed on the same constraints multiple times
-                // if all constraints different AND fits header+guard
-                if (noDuplicatesIn(matchingConstraints)
-                        && checkBindings(rule.getVariableBindings(), matchingConstraints)
-                        && rule.accepts(Arrays.asList(matchingConstraints))) {
+                        for(Constraint<?> constraint : matchingConstraints){
+                            store.remove(constraint.ID());
+                        }
 
-                    for(Constraint<?> constraint : matchingConstraints){
-                        store.remove(constraint.ID());
+                        return matchingConstraints;
                     }
-
-                    return matchingConstraints;
                 }
-            }
 
-            }else if(currentIter.hasNext()) {
+            } else if(currentIter.hasNext()) {
                 // Filling last element in array and try to match
                 matchingConstraints[pointer] = currentIter.next();
 
@@ -244,7 +248,7 @@ public class SimpleRuleApplicator implements RuleApplicator {
         Iterator<Constraint<?>> currentIter;
         switch (rule.getHeadDefinitionType()){
             case SIZE_SPECIFIED:
-                currentIter = getDefaultIterator(store, rule, pointer);
+                currentIter = getDefaultIterator(store);
                 break;
 
             case TYPES_SPECIFIED:
@@ -260,13 +264,13 @@ public class SimpleRuleApplicator implements RuleApplicator {
         return currentIter;
     }
 
-    private Iterator<Constraint<?>> getDefaultIterator(ConstraintStore store, Rule rule, int pos) {
+    private Iterator<Constraint<?>> getDefaultIterator(ConstraintStore store) {
         return store.lookup();
     }
 
     private Iterator<Constraint<?>> getTypeIterator(ConstraintStore store, Rule rule, int pos) {
         if (rule.getHeadDefinitionType() != HEAD_DEFINITION_TYPE.TYPES_SPECIFIED) {
-            return getDefaultIterator(store, rule, pos);
+            return getDefaultIterator(store);
         }
 
         return store.lookup(rule.getHeadTypes()[pos]);
@@ -274,14 +278,14 @@ public class SimpleRuleApplicator implements RuleApplicator {
 
     private Iterator<Constraint<?>> getComplexHeadIterator(ConstraintStore store, Rule rule, int pos) {
         if(rule.getHeadDefinitionType() != HEAD_DEFINITION_TYPE.COMPLEX_DEFINITION){
-            return getDefaultIterator(store, rule, pos);
+            throw new IllegalStateException("Unexpected value: " + rule.getHeadDefinitionType());
         }
 
         Head headDefinition = rule.getHeadDefinitions()[pos];
 
         switch (headDefinition.getHeadConstraintDefType()) {
             case ANY:
-                return getDefaultIterator(store, rule, pos);
+                return getDefaultIterator(store);
 
             case TYPE:
                 return store.lookup(headDefinition.getType());

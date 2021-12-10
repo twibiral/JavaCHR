@@ -82,7 +82,7 @@ public abstract class Rule {
         for (int i = 0; i < nrConstraintsInHead; i++) {
             Head headDef = headDefinitions[i];
 
-            if(headDef.isBoundTo() != null){
+            if(headDef.isBoundTo() != VAR.NONE){
                 if (!variableBindings.containsKey(headDef.isBoundTo())){
                     variableBindings.put(headDef.isBoundTo(), new ArrayList<>());
                 }
