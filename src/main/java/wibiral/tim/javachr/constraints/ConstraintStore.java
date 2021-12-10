@@ -16,6 +16,10 @@ import java.util.List;
 public class ConstraintStore {
     private final List<Constraint<?>> store = new ArrayList<>();
 
+    public ConstraintStore() {
+        // Empty constructor for empty constraint stores.
+    }
+
     public ConstraintStore(Collection<Constraint<?>> constraints) {
         if(constraints == null)
             return;
