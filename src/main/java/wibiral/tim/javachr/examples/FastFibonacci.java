@@ -38,10 +38,7 @@ public class FastFibonacci {
         // MAX, Fib(N+1, X) / Fib(N, Y) <=> Fib(N+2, X+Y).
         // MAX, Fib(N+1, X) Fib(N, Y) <=> MAX == N+1 | Fib(N+1, X).
         Rule r2 = new Simplification(Head.ofType(Integer.class), Head.ofType(Fib.class), Head.ofType(Fib.class))
-                .guard(head -> {
-                    System.out.println("Try to match: " + head[0].get() + " " + head[1].get() + " " + head[2].get());
-                    return ((Fib) head[1].get()).a + 1 == ((Fib) head[2].get()).a;
-                })
+                .guard(head -> ((Fib) head[1].get()).a + 1 == ((Fib) head[2].get()).a)
                 .body((head, newConstraints) -> {
                     // Fib n and Fib n+1:
                     Fib n1 = (Fib) head[1].get();
