@@ -3,12 +3,15 @@ package wibiral.tim.javachr;
 import junit.framework.TestCase;
 import wibiral.tim.javachr.constraints.Constraint;
 import wibiral.tim.javachr.constraints.ConstraintStore;
+import wibiral.tim.javachr.constraints.PropagationHistory;
 import wibiral.tim.javachr.rules.Propagation;
 import wibiral.tim.javachr.rules.Rule;
 import wibiral.tim.javachr.rules.Simpagation;
 import wibiral.tim.javachr.rules.Simplification;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class SimpleRuleApplicatorTest extends TestCase {
@@ -73,7 +76,9 @@ public class SimpleRuleApplicatorTest extends TestCase {
         SimpleRuleApplicator solver = new SimpleRuleApplicator(r2, r1);
 
         SimpleRuleApplicator.RuleAndMatch result = solver.findMatch(
-                new ConstraintStore(new Constraint<>("Hello World"), new Constraint<>(42), new Constraint<>(3.14))
+                new ConstraintStore(new Constraint<>("Hello World"), new Constraint<>(42), new Constraint<>(3.14)),
+                new PropagationHistory(),
+                new ArrayDeque<>(2)
         );
 
         assertEquals(r1.ID(), result.rule.ID());
