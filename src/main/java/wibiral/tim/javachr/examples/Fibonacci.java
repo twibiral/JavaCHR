@@ -36,7 +36,7 @@ public class Fibonacci {
 
     public static void main(String[] args) {
         RuleApplicator fibHandler = new SimpleRuleApplicator(getRules());
-        fibHandler.setTracer(new CommandLineTracer());
+//        fibHandler.setTracer(new CommandLineTracer());
 
         System.out.println("Fibonacci 42:");
         long start = System.nanoTime();
