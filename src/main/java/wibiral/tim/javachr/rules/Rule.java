@@ -26,54 +26,57 @@ public abstract class Rule {
 
 
     protected Rule(int nrConstraintsInHead){
-        this.headDefinitionType = HEAD_DEFINITION_TYPE.SIZE_SPECIFIED;
-        this.nrConstraintsInHead = nrConstraintsInHead;
-        this.name = null;
-        this.headTypes = null;
-        this.headDefinitions = null;
-
         // give this rule an ID
         ID = ID_COUNTER.getAndIncrement();
+
+        this.headDefinitionType = HEAD_DEFINITION_TYPE.SIZE_SPECIFIED;
+        this.nrConstraintsInHead = nrConstraintsInHead;
+        this.name = this.getClass().getSimpleName() + "[ID=" + ID + "]";
+        this.headTypes = null;
+        this.headDefinitions = null;
     }
 
     protected Rule(String name, int nrConstraintsInHead){
+        // give this rule an ID
+        ID = ID_COUNTER.getAndIncrement();
+
         this.headDefinitionType = HEAD_DEFINITION_TYPE.SIZE_SPECIFIED;
         this.nrConstraintsInHead = nrConstraintsInHead;
         this.name = name;
         this.headTypes = null;
         this.headDefinitions = null;
-
-        // give this rule an ID
-        ID = ID_COUNTER.getAndIncrement();
     }
 
     protected Rule(Class<?>... headTypes){
-        this.headDefinitionType = HEAD_DEFINITION_TYPE.TYPES_SPECIFIED;
-        this.nrConstraintsInHead = headTypes.length;
-        this.name = null;
-        this.headTypes = headTypes;
-        this.headDefinitions = null;
-
         // give this rule an ID
         ID = ID_COUNTER.getAndIncrement();
+
+        this.headDefinitionType = HEAD_DEFINITION_TYPE.TYPES_SPECIFIED;
+        this.nrConstraintsInHead = headTypes.length;
+        this.name = this.getClass().getSimpleName() + "[ID=" + ID + "]";
+        this.headTypes = headTypes;
+        this.headDefinitions = null;
     }
 
     protected Rule(String name, Class<?>... headTypes){
+        // give this rule an ID
+        ID = ID_COUNTER.getAndIncrement();
+
         this.headDefinitionType = HEAD_DEFINITION_TYPE.TYPES_SPECIFIED;
         this.nrConstraintsInHead = headTypes.length;
         this.name = name;
         this.headTypes = headTypes;
         this.headDefinitions = null;
-
-        // give this rule an ID
-        ID = ID_COUNTER.getAndIncrement();
     }
 
     protected Rule(Head... headDefinitions){
+        // give this rule an ID
+        ID = ID_COUNTER.getAndIncrement();
+
         this.headDefinitionType = HEAD_DEFINITION_TYPE.COMPLEX_DEFINITION;
         this.headDefinitions = headDefinitions;
         this.nrConstraintsInHead = headDefinitions.length;
-        this.name = null;
+        this.name = this.getClass().getSimpleName() + "[ID=" + ID + "]";
         this.headTypes = null;
 
         for (int i = 0; i < nrConstraintsInHead; i++) {
@@ -87,12 +90,12 @@ public abstract class Rule {
                 variableBindings.get(headDef.isBoundTo()).add(i);
             }
         }
-
-        // give this rule an ID
-        ID = ID_COUNTER.getAndIncrement();
     }
 
     protected Rule(String name, Head... headDefinitions){
+        // give this rule an ID
+        ID = ID_COUNTER.getAndIncrement();
+
         this.headDefinitionType = HEAD_DEFINITION_TYPE.COMPLEX_DEFINITION;
         this.headDefinitions = headDefinitions;
         this.nrConstraintsInHead = headDefinitions.length;
@@ -110,9 +113,6 @@ public abstract class Rule {
                 variableBindings.get(headDef.isBoundTo()).add(i);
             }
         }
-
-        // give this rule an ID
-        ID = ID_COUNTER.getAndIncrement();
     }
 
     /**
