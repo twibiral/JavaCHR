@@ -5,6 +5,12 @@ import wibiral.tim.javachr.RuleApplicator;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 
+/**
+ * Generic class that stores an object and an ID. Objects of this class represent CHR constraints and
+ * are used by the JavaCHR framework.
+ *
+ * CONSTRAINTS CAN'T BE INSTANTIATED WITH {@code null}!
+ */
 public class Constraint<T> {
     private static final AtomicLong ID_COUNTER = new AtomicLong(0);
 
@@ -14,6 +20,9 @@ public class Constraint<T> {
 
     private boolean alive;
 
+    /**
+     * @param value Can't be null! The object that is stored in this constraint.
+     */
     public Constraint(T value){
         this.value = value;
         this.type = value.getClass();
