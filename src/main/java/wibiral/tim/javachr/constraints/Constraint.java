@@ -16,7 +16,7 @@ public class Constraint<T> {
 
     public Constraint(T value){
         this.value = value;
-        this.type = value.getClass();
+        this.type = value == null ? null : value.getClass();
         this.alive = true;
 
         // gives this constraint a new id and increments the id counter for the next constraint.
