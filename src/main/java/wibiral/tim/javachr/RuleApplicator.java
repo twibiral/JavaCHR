@@ -35,7 +35,7 @@ public interface RuleApplicator {
 
     /**
      * Applies the defined rules to the given objects.
-     * @param store {@ConstraintStore} with objects you want the rules be applied to.
+     * @param store {@link ConstraintStore} with objects you want the rules be applied to.
      * @return The result after no more rules can be applied to the constraints.
      */
     List<Constraint<?>> execute(ConstraintStore store);
