@@ -2,7 +2,7 @@ plugins {
     id 'java-library'
 }
 
-group 'wibiral.tim.javachr'
+group 'javachr'
 version '1.5'
 sourceCompatibility = '8'
 

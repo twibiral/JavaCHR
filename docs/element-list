@@ -1,6 +1,6 @@
 wibiral.tim.javachr
-wibiral.tim.javachr.constraints
-wibiral.tim.javachr.examples
-wibiral.tim.javachr.exceptions
-wibiral.tim.javachr.rules
-wibiral.tim.javachr.tracing
+javachr.constraints
+javachr.examples
+javachr.exceptions
+javachr.rules
+javachr.tracing
