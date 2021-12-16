@@ -25,7 +25,7 @@ import java.util.logging.Logger;
  * - Set constraints to dead when getting them from store and set them alive after use (to decrease the iterator size).
  */
 public class SimpleRuleApplicator implements RuleApplicator {
-    protected final ArrayList<Rule> rules;
+    protected final List<Rule> rules;
 
     protected Tracer tracer;
     protected boolean tracingOn = false;
