@@ -25,7 +25,7 @@ import java.util.logging.Logger;
  * - Set constraints to dead when getting them from store and set them alive after use (to decrease the iterator size).
  */
 public class SimpleRuleApplicator implements RuleApplicator {
-    protected final List<Rule> rules = new ArrayList<>();
+    protected final ArrayList<Rule> rules;
 
     protected Tracer tracer;
     protected boolean tracingOn = false;
@@ -33,7 +33,7 @@ public class SimpleRuleApplicator implements RuleApplicator {
     private int biggestHeader = 0;
 
     public SimpleRuleApplicator(Rule... rules) {
-        this.rules.addAll(Arrays.asList(rules));
+        this.rules = Arrays.asList(rules);
         if(rules.length > 2){
             // Find rule with the largest header and set the variable to it.
             // Must be present because the array contains at least 2 rules.
