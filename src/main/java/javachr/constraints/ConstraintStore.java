@@ -125,6 +125,20 @@ public class ConstraintStore {
     }
 
     /**
+     * @return The first constraint in the store that is alive.
+     */
+    public Constraint<?> getFirst(){
+        return store.stream().filter(Constraint::isAlive).findFirst().orElse(null);
+    }
+
+    /**
+     * @return The last constraint in the store that is alive.
+     */
+    public Constraint<?> getLast(){
+        return store.stream().filter(Constraint::isAlive).reduce((x, y) -> y).orElse(null);
+    }
+
+    /**
      * Set all constraints to dead and remove them from the internal data structure.
      */
     public void clear(){
