@@ -1,15 +1,20 @@
 package javachr.extensions.higherorderrules;
 
+import javachr.RuleApplicator;
+import javachr.SimpleRuleApplicator;
 import javachr.constraints.Constraint;
+import javachr.rules.Propagation;
 import javachr.rules.Rule;
+import javachr.rules.head.Head;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Twice extends HigherOrderBase {
-    protected Twice(Rule rule, String prefix) {
-        super(rule, prefix);
+    protected Twice(Rule rule) {
+        super(rule, "Twice");
     }
 
     @Override
@@ -19,7 +24,7 @@ public class Twice extends HigherOrderBase {
 
     @Override
     public List<Constraint<?>> apply(List<Constraint<?>> constraints) {
-        List<Constraint<?>> result1 = this.rule.apply(constraints);
+        List<Constraint<?>> result1 = this.rule.apply(new ArrayList<>(constraints));// Works on copy
         List<Constraint<?>> result2 = this.rule.apply(constraints);
 
         return Stream.concat(result1.stream(), result2.stream())    // join lists

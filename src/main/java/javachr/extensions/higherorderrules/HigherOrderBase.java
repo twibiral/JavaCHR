@@ -43,4 +43,8 @@ public abstract class HigherOrderBase extends Rule {
         return rule.getVariableBindings();
     }
 
+    @Override
+    public boolean saveHistory() {
+        return this.rule.saveHistory();
+    }
 }
