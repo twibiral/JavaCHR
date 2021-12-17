@@ -60,7 +60,7 @@ public class Constraint<T> {
     /**
      * @return The ID of the Constraint
      */
-    public long ID(){
+    public long getID(){
         return ID;
     }
 
@@ -107,7 +107,7 @@ public class Constraint<T> {
             return false;
 
         else if(obj instanceof Constraint)
-            return ((Constraint<?>) obj).ID() == this.ID();
+            return ((Constraint<?>) obj).getID() == this.getID();
 
         else
             return false;

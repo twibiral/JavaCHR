@@ -89,11 +89,11 @@ public class ConstraintStore {
      */
     public void remove(long ID){
         store.forEach(x -> {
-            if(x.ID() == ID){
+            if(x.getID() == ID){
                 x.setDead();
             }
         });
-        store.removeIf(x -> x.ID() == ID);
+        store.removeIf(x -> x.getID() == ID);
     }
 
     /**

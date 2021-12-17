@@ -41,7 +41,7 @@ public class ConstraintTest {
 
     @Test
     public void testID() {
-        assertNotEquals(new Constraint<>(123).ID(), new Constraint<>(123).ID());
+        assertNotEquals(new Constraint<>(123).getID(), new Constraint<>(123).getID());
     }
 
     @Test

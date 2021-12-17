@@ -25,7 +25,7 @@ public class ConstraintStoreTest {
         store.add(a);
 
         assertEquals(1, store.size());
-        store.remove(a.ID());
+        store.remove(a.getID());
         assertEquals(0, store.size());
     }
 
@@ -184,6 +184,6 @@ public class ConstraintStoreTest {
         store.add(b);
         store.add(c);
 
-        return new long[]{a.ID(), b.ID(), c.ID()};
+        return new long[]{a.getID(), b.getID(), c.getID()};
     }
 }

@@ -33,7 +33,7 @@ public class PropagationHistory {
 
         long[] constraintIDs = new long[constraints.length];
         for (int i = 0; i < constraints.length; i++) {
-            constraintIDs[i] = constraints[i].ID();
+            constraintIDs[i] = constraints[i].getID();
         }
 
         ArrayList<HistoryEntry> ruleHistory = history.get(rule.ID());
@@ -60,7 +60,7 @@ public class PropagationHistory {
             constraintIDs = new long[nrConstraints];
 
             for (int i = 0; i < nrConstraints; i++) {
-                constraintIDs[i] = constraints[i].ID();
+                constraintIDs[i] = constraints[i].getID();
             }
         }
 

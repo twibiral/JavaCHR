@@ -181,7 +181,7 @@ public class SimpleRuleApplicator implements RuleApplicator {
                             && rule.accepts(Arrays.asList(matchingConstraints))) {
 
                         for(Constraint<?> constraint : matchingConstraints){
-                            store.remove(constraint.ID());
+                            store.remove(constraint.getID());
                         }
 
                         return matchingConstraints;
@@ -194,7 +194,7 @@ public class SimpleRuleApplicator implements RuleApplicator {
                             && rule.accepts(Arrays.asList(matchingConstraints))) {
 
                         for(Constraint<?> constraint : matchingConstraints){
-                            store.remove(constraint.ID());
+                            store.remove(constraint.getID());
                         }
 
                         return matchingConstraints;
@@ -212,7 +212,7 @@ public class SimpleRuleApplicator implements RuleApplicator {
                             && rule.accepts(Arrays.asList(matchingConstraints))) {
 
                         for(Constraint<?> constraint : matchingConstraints){
-                            store.remove(constraint.ID());
+                            store.remove(constraint.getID());
                         }
 
                         return matchingConstraints;
@@ -224,7 +224,7 @@ public class SimpleRuleApplicator implements RuleApplicator {
                             && rule.accepts(Arrays.asList(matchingConstraints))) {
 
                         for(Constraint<?> constraint : matchingConstraints){
-                            store.remove(constraint.ID());
+                            store.remove(constraint.getID());
                         }
 
                         return matchingConstraints;
@@ -306,7 +306,7 @@ public class SimpleRuleApplicator implements RuleApplicator {
         for(Constraint<?> i : array){
             int cnt = 0;
             for(Constraint<?> j : array){
-                cnt += j.ID() == i.ID() ? 1 : 0;
+                cnt += j.getID() == i.getID() ? 1 : 0;
             }
             if(cnt > 1)
                 return false;
