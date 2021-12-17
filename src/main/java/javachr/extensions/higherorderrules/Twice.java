@@ -1,11 +1,7 @@
 package javachr.extensions.higherorderrules;
 
-import javachr.RuleApplicator;
-import javachr.SimpleRuleApplicator;
 import javachr.constraints.Constraint;
-import javachr.rules.Propagation;
 import javachr.rules.Rule;
-import javachr.rules.head.Head;
 
 import java.util.ArrayList;
 import java.util.List;
