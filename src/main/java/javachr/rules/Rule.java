@@ -130,6 +130,13 @@ public abstract class Rule {
     }
 
     /**
+     * Takes the constraints of the list and tests if the guard of the rule accepts them. (By using the defined guard.)
+     * @param constraints List of constraints that are tested by the guard.
+     * @return True if the guard of the Rule accepts the given {@link Constraint}s.
+     */
+    public abstract boolean accepts(List<Constraint<?>> constraints);
+
+    /**
      * Applies the rule to the list of constraints. (By using the defined body)
      * The result of the rule application is saved in the list that was given as parameter! Maybe some constraints get
      * removed from the list and maybe some others are added.
@@ -140,13 +147,6 @@ public abstract class Rule {
      * @return true if the rule was successfully applied to the constraints of the list.
      */
     public abstract List<Constraint<?>> apply(List<Constraint<?>> constraints);
-
-    /**
-     * Takes the constraints of the list and tests if the guard of the rule accepts them. (By using the defined guard.)
-     * @param constraints List of constraints that are tested by the guard.
-     * @return True if the guard of the Rule accepts the given {@link Constraint}s.
-     */
-    public abstract boolean accepts(List<Constraint<?>> constraints);
 
     /**
      * Returns the distinct ID of this rule.
