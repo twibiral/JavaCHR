@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * CONSTRAINTS CAN'T BE INSTANTIATED WITH {@code null}!
  */
 public class Constraint<T> {
-    private static final AtomicLong ID_COUNTER = new AtomicLong(0);
+    private static final AtomicLong ID_COUNTER = new AtomicLong(1);
 
     private final long ID;
     private final T value;
