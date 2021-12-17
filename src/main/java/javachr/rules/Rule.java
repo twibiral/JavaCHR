@@ -156,8 +156,8 @@ public abstract class Rule {
     }
 
     /**
-     * The propagation history of a rule is saved if this this method returns true.
-     * (True for the {@link Propagation} rule.
+     * The propagation history of a rule is saved if this method returns true.
+     * (True for the {@link Propagation} rule.)
      */
     public boolean saveHistory(){
         return false;
