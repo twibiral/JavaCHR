@@ -53,7 +53,7 @@ public class Constraint<T> {
      * @param obj The object that is compared to the intern object of this Constraint.
      * @return True if the equals() method of the stored object returns true.
      */
-    public boolean isEqualTo(Object obj){
+    public boolean innerObjEquals(Object obj){
         return value.equals(obj);
     }
 
