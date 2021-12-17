@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 public abstract class Rule {
-    private static final AtomicLong ID_COUNTER = new AtomicLong(0);
+    private static final AtomicLong ID_COUNTER = new AtomicLong(1);
 
     /**
      * The rule uniquely identified by the id
