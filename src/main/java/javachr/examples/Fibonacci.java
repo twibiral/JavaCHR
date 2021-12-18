@@ -115,9 +115,9 @@ public class Fibonacci {
         // MAX, fib(N1, M1), fib(N2, M2) =>  N1 == N2 - 1 | fib(N2 + 1, M1 + M2).
         Rule r2 = new Propagation(3)
                 .guard(head ->
-                        head[0].ofType(Integer.class)
-                                && head[1].ofType(Fib.class)
-                                && head[2].ofType(Fib.class)
+                        head[0].isOfType(Integer.class)
+                                && head[1].isOfType(Fib.class)
+                                && head[2].isOfType(Fib.class)
                                 && ((Fib) head[1].get()).a == ((Fib) head[2].get()).a-1
                                 && ((Fib) head[2].get()).a < (int) head[0].get()
                 )
@@ -130,8 +130,8 @@ public class Fibonacci {
 
         Rule r3 = new Simpagation(1, 1)
                 .guard((h1, h2) ->
-                        h1[0].ofType(Fib.class)
-                                && h2[0].ofType(Integer.class)
+                        h1[0].isOfType(Fib.class)
+                                && h2[0].isOfType(Integer.class)
                                 && h2[0].get().equals(((Fib) h1[0].get()).a)
                 );
 

@@ -22,13 +22,13 @@ public class SimpleRuleApplicatorTest extends TestCase {
         // GCD = 1
         List<Constraint<?>> result = gcd.execute(200, 1);
         assertEquals(1, result.size());
-        assertTrue(result.get(0).ofType(Integer.class));
+        assertTrue(result.get(0).isOfType(Integer.class));
         assertEquals(1, (int) result.get(0).get());
 
         // GCD = 17
         result = gcd.execute(680, 34, 85);
         assertEquals(1, result.size());
-        assertTrue(result.get(0).ofType(Integer.class));
+        assertTrue(result.get(0).isOfType(Integer.class));
         assertEquals(17, (int) result.get(0).get());
 
 
@@ -36,13 +36,13 @@ public class SimpleRuleApplicatorTest extends TestCase {
         // GCD = 1
         result = gcd.execute(new Constraint<>(200), new Constraint<>(1));
         assertEquals(1, result.size());
-        assertTrue(result.get(0).ofType(Integer.class));
+        assertTrue(result.get(0).isOfType(Integer.class));
         assertEquals(1, (int) result.get(0).get());
 
         // GCD = 17
         result = gcd.execute(new Constraint<>(680), new Constraint<>(34), new Constraint<>(85));
         assertEquals(1, result.size());
-        assertTrue(result.get(0).ofType(Integer.class));
+        assertTrue(result.get(0).isOfType(Integer.class));
         assertEquals(17, (int) result.get(0).get());
 
 
@@ -52,7 +52,7 @@ public class SimpleRuleApplicatorTest extends TestCase {
         list.add(new Constraint<>(200)); list.add(new Constraint<>(1));
         result = gcd.execute(list);
         assertEquals(1, result.size());
-        assertTrue(result.get(0).ofType(Integer.class));
+        assertTrue(result.get(0).isOfType(Integer.class));
         assertEquals(1, (int) result.get(0).get());
 
         // GCD = 17
@@ -60,16 +60,16 @@ public class SimpleRuleApplicatorTest extends TestCase {
         list.add(new Constraint<>(680)); list.add( new Constraint<>(34)); list.add(new Constraint<>(85));
         result = gcd.execute(list);
         assertEquals(1, result.size());
-        assertTrue(result.get(0).ofType(Integer.class));
+        assertTrue(result.get(0).isOfType(Integer.class));
         assertEquals(17, (int) result.get(0).get());
     }
 
     public void testFindMatch() {
         Rule r1 = new Propagation(2).guard(
-                head -> head[0].ofType(Integer.class) && (int)head[0].get() == 42 && head[1].ofType(String.class)
+                head -> head[0].isOfType(Integer.class) && (int)head[0].get() == 42 && head[1].isOfType(String.class)
         );
         Rule r2 = new Simplification(2).guard(  // Rule shouldn't be applicable!
-                head -> head[0].ofType(Integer.class) && head[1].ofType(Integer.class) && (int)head[0].get() > (int)head[1].get()
+                head -> head[0].isOfType(Integer.class) && head[1].isOfType(Integer.class) && (int)head[0].get() > (int)head[1].get()
         );
 
         SimpleRuleApplicator solver = new SimpleRuleApplicator(r2, r1);
