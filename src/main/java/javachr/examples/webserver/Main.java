@@ -57,13 +57,6 @@ public class Main {
                     HTTP_Request request = connection.getRequest();
                     newConstraints.add(new Constraint<>(request));
                     LOG.info("Got request: \n" + connection.getRequest().toString());
-                    if (request.isValid()){
-                        newConstraints.add(new Constraint<>(request));
-
-                    } else {
-                        LOG.warning("Got invalid request!");
-                        connection.close();
-                    }
                 });
 
         // Remove invalid requests
