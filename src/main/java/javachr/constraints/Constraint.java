@@ -69,7 +69,7 @@ public class Constraint<T> {
      * @param type Some class type.
      * @return True if the value of this constraint is assignable to the given type.
      */
-    public boolean isOfType(Class<?> type){
+    public boolean ofType(Class<?> type){
         return type.isAssignableFrom(this.type);
     }
 

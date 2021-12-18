@@ -65,7 +65,8 @@ public class Fibonacci {
                     long M2 = ((Fib) head[2].get()).b;
                     newConstraints.add(new Constraint<>(new Fib(N2+1, M1 + M2)));
                 });
-//
+
+        // fib(N1, M1), MAX <=> N1 == MAX | fib(N1, M1).
         Rule r3 = new Simpagation(1, ofType(Fib.class), ofType(Integer.class))
                 .guard((h1, h2) -> h2[0].get().equals(((Fib) h1[0].get()).a));
 

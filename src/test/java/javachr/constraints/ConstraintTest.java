@@ -26,10 +26,10 @@ public class ConstraintTest {
     @Test
     public void testIsOfType() {
         Constraint<Integer> c = new Constraint<>(42);
-        assertTrue(c.isOfType(Integer.class));
+        assertTrue(c.ofType(Integer.class));
 
         Constraint<String> c2 = new Constraint<>("Hello World!");
-        assertTrue(c2.isOfType(String.class));
+        assertTrue(c2.ofType(String.class));
     }
 
     @Test
