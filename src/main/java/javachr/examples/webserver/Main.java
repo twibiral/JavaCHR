@@ -60,7 +60,7 @@ public class Main {
                 });
 
         // Remove invalid requests
-        Rule kickResponse = new Simplification("Kick response", Head.ofType(HTTP_Request.class))
+        Rule kickRequest = new Simplification("Kick request", Head.ofType(HTTP_Request.class))
                 .guard(head -> ! ((HTTP_Request) head[0].get()).isValid())
                 .body((head, newConstraints) -> {
                     LOG.warning("Got invalid request!");
@@ -108,7 +108,7 @@ public class Main {
                                                                  parseRequest,
                                                                  kickIncomplete,
                                                                  createResponse,
-                                                                 kickResponse,
+                                                                 kickRequest,
                                                                  sendResponse,
                                                                  acceptConnection);
             solver.execute(serverSocket);
