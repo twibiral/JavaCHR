@@ -107,9 +107,7 @@ public class Fibonacci {
     public static Rule[] getRules3(){
         // MAX => fib(0, 1), fib(1, 1).
         Rule r1 = new Propagation(1)
-                .guard(head ->
-                        head[0].get() instanceof Integer
-                )
+                .guard(head -> head[0].get() instanceof Integer)
                 .body((head, newConstraints) -> {
                     newConstraints.add(new Constraint<>(new Fib(0, 0)));
                     newConstraints.add(new Constraint<>(new Fib(1, 1)));
@@ -118,9 +116,11 @@ public class Fibonacci {
         // MAX, fib(N1, M1), fib(N2, M2) =>  N1 == N2 - 1 | fib(N2 + 1, M1 + M2).
         Rule r2 = new Propagation(3)
                 .guard(head ->
-                        head[0].get() instanceof Integer && head[1].get() instanceof Fib && head[2].get() instanceof Fib
-                        && ((Fib) head[1].get()).a == ((Fib) head[2].get()).a - 1
-                        && ((Fib) head[2].get()).a < (int) head[0].get()
+                        head[0].ofType(Integer.class)
+                                && head[1].ofType(Fib.class)
+                                && head[2].ofType(Fib.class)
+                                && ((Fib) head[1].get()).a == ((Fib) head[2].get()).a-1
+                                && ((Fib) head[2].get()).a < (int) head[0].get()
                 )
                 .body((head, newConstraints) -> {
                     int N2 = ((Fib) head[2].get()).a;
@@ -131,8 +131,9 @@ public class Fibonacci {
 
         Rule r3 = new Simpagation(1, 1)
                 .guard((h1, h2) ->
-                        h1[0].get() instanceof Fib && h2[0].get() instanceof Integer
-                        && h2[0].get().equals(((Fib) h1[0].get()).a)
+                        h1[0].ofType(Fib.class)
+                                && h2[0].ofType(Integer.class)
+                                && h2[0].get().equals(((Fib) h1[0].get()).a)
                 );
 
         return new Rule[]{r1, r2, r3};
