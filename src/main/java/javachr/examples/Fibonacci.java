@@ -34,7 +34,7 @@ public class Fibonacci {
     }
 
     public static void main(String[] args) {
-        RuleApplicator fibHandler = new SimpleRuleApplicator(getRules2());
+        RuleApplicator fibHandler = new SimpleRuleApplicator(getRules());
 //        fibHandler.setTracer(new CommandLineTracer());
 
         System.out.println("Fibonacci 42:");
@@ -95,10 +95,9 @@ public class Fibonacci {
                     newConstraints.add(new Constraint<>(new Fib(N2+1, M1 + M2)));
                 });
 
-        Rule r3 = new Simpagation(1, 1)
+        Rule r3 = new Simpagation(1, Fib.class, Integer.class)
                 .guard((h1, h2) ->
-                        h1[0].get() instanceof Fib && h2[0].get() instanceof Integer
-                                && h2[0].get().equals(((Fib) h1[0].get()).a)
+                        h2[0].get().equals(((Fib) h1[0].get()).a)
                 );
 
         return new Rule[]{r1, r2, r3};
