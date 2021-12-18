@@ -47,7 +47,8 @@ public class Main {
 
         // Kick incomplete corrupt messages
         Rule kickIncomplete = new Simplification("Kick incomplete", Head.ofType(Connection.class))
-                .guard(head -> !((Connection) head[0].get()).isMessageComplete());
+                .guard(head -> !((Connection) head[0].get()).isMessageComplete())
+                .body((head, newConstraints) -> ((Connection) head[0].get()).close());
 
         // Parse request, kick it if invalid, otherwise create HTTP Request object
         Rule parseRequest = new Simplification("Parse request", Head.ofType(Connection.class))
