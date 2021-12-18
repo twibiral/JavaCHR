@@ -55,16 +55,29 @@ public class Main {
                 .body((head, newConstraints) -> {
                     Connection connection = (Connection) head[0].get();
                     HTTP_Request request = connection.getRequest();
-
+                    newConstraints.add(new Constraint<>(request));
+                    LOG.info("Got request: \n" + connection.getRequest().toString());
                     if (request.isValid()){
                         newConstraints.add(new Constraint<>(request));
-                        LOG.info("Got request: \n" + connection.getRequest().toString());
 
                     } else {
                         LOG.warning("Got invalid request!");
                         connection.close();
                     }
                 });
+
+        // Remove invalid requests
+        Rule kickResponse = new Simplification("Kick response", Head.ofType(HTTP_Request.class))
+                .guard(head -> ! ((HTTP_Request) head[0].get()).isValid())
+                .body((head, newConstraints) -> {
+                    LOG.warning("Got invalid request!");
+                    try {
+                        ((HTTP_Request) head[0].get()).getSender().close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+
 
         // Create response object
         Rule createResponse = new Simplification("Create response", Head.ofType(HTTP_Request.class))
@@ -102,6 +115,7 @@ public class Main {
                                                                  parseRequest,
                                                                  kickIncomplete,
                                                                  createResponse,
+                                                                 kickResponse,
                                                                  sendResponse,
                                                                  acceptConnection);
             solver.execute(serverSocket);
