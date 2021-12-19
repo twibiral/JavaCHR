@@ -10,7 +10,7 @@ import java.util.List;
  * This simple class is used as body parameter to add new constraints to the constraint store.
  *
  */
-public class GuardStore {
+public class BodyStore {
     private final List<Constraint<?>> store = new ArrayList<>();
 
     /**

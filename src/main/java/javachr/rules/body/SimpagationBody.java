@@ -2,8 +2,6 @@ package javachr.rules.body;
 
 import javachr.constraints.Constraint;
 
-import java.util.List;
-
 /**
  * Represents the lambda expression of the body.
  */
@@ -14,5 +12,5 @@ public interface SimpagationBody {
      * @param head2 The constraints from the head2. Its guaranteed that they were accepted by the guard. These get removed.
      * @param newConstraints Add all constraints to this data structure, which should be added to the constraint store.
      */
-    void execute(Constraint<?>[] head1, Constraint<?>[] head2, GuardStore newConstraints);
+    void execute(Constraint<?>[] head1, Constraint<?>[] head2, BodyStore newConstraints);
 }
