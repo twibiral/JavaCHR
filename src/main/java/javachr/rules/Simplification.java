@@ -3,6 +3,7 @@ package javachr.rules;
 import javachr.constraints.Constraint;
 import javachr.exceptions.AlreadyDefinedException;
 import javachr.rules.body.Body;
+import javachr.rules.body.GuardStore;
 import javachr.rules.guard.Guard;
 import javachr.rules.head.Head;
 
@@ -47,12 +48,10 @@ public class Simplification extends Rule {
         if(constraints.size() != headSize())
             return null;
 
-        ArrayList<Constraint<?>> newConstraints = new ArrayList<>();
+        GuardStore newConstraints = new GuardStore();
         body.execute(constraints.toArray(new Constraint<?>[0]), newConstraints);
 
-        constraints.clear();                // Simplification removes all old constraints
-        constraints.addAll(newConstraints); // and just adds new ones
-        return constraints;                 // return the new constraints
+        return newConstraints.getAll();                 // return the new constraints
     }
 
     @Override

@@ -3,6 +3,7 @@ package javachr.rules.body;
 import javachr.constraints.Constraint;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -27,6 +28,10 @@ public class GuardStore {
      */
     public <T> void add(T value) {
         store.add(new Constraint<>(value));
+    }
+
+    public void addAll(Constraint<?>[] constraints) {
+        store.addAll(Arrays.asList(constraints));
     }
 
     /**

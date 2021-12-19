@@ -3,6 +3,7 @@ package javachr.rules;
 import javachr.constraints.Constraint;
 import javachr.exceptions.AlreadyDefinedException;
 import javachr.exceptions.RuleDefinitionFailed;
+import javachr.rules.body.GuardStore;
 import javachr.rules.body.SimpagationBody;
 import javachr.rules.guard.SimpagationGuard;
 import javachr.rules.head.Head;
@@ -99,12 +100,12 @@ public class Simpagation extends Rule {
             constraintsHead2[i] = constraints.get(i + nrConstraintsHead1);
         }
 
-        ArrayList<Constraint<?>> newConstraints = new ArrayList<>();
+        GuardStore newConstraints = new GuardStore();
         body.execute(constraintsHead1, constraintsHead2, newConstraints);
         // Combine the constraints of the first head and the newly generated constraints:
-        newConstraints.addAll(Arrays.asList(constraintsHead1));
+        newConstraints.addAll(constraintsHead1);
 
-        return newConstraints;
+        return newConstraints.getAll();
     }
 
     @Override
