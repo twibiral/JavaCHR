@@ -66,7 +66,7 @@ public class FastGCD {
                 (x1, x2, newConstraints) -> {
                     int n = (int) x1[0].get();
                     int m = (int) x2[0].get();
-                    newConstraints.add(new Constraint<>(m % n));
+                    newConstraints.add(m % n);
                 }
         );
         Rule r2  = new Simplification( "Delete zero", 1)

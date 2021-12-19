@@ -41,33 +41,33 @@ public class ColorMixing {
     public static Rule[] getRules(){
         List<Rule> rules = new ArrayList<>();
         rules.add(new Simplification(Head.ofValue(COLOR.RED), Head.ofValue(COLOR.BLUE))
-                .body((head, newConstraints) -> newConstraints.add(new Constraint<>(COLOR.PURPLE))));
+                .body((head, newConstraints) -> newConstraints.add(COLOR.PURPLE)));
 
         rules.add(new Simplification(Head.ofValue(COLOR.BLUE), Head.ofValue(COLOR.YELLOW))
-                .body((head, newConstraints) -> newConstraints.add(new Constraint<>(COLOR.GREEN))));
+                .body((head, newConstraints) -> newConstraints.add(COLOR.GREEN)));
 
         rules.add(new Simplification(Head.ofValue(COLOR.YELLOW), Head.ofValue(COLOR.RED))
-                .body((head, newConstraints) -> newConstraints.add(new Constraint<>(COLOR.ORANGE))));
+                .body((head, newConstraints) -> newConstraints.add(COLOR.ORANGE)));
 
         // Version 1: Simplification; every color defined
 //        rules.add(new Simplification(Head.OF_VALUE(COLOR.BROWN), Head.OF_VALUE(COLOR.BLUE))
-//                .body((head, newConstraints) -> newConstraints.add(new Constraint<>(COLOR.BROWN))));
+//                .body((head, newConstraints) -> newConstraints.add(COLOR.BROWN)));
 //        rules.add(new Simplification(Head.OF_VALUE(COLOR.BROWN), Head.OF_VALUE(COLOR.RED))
-//                .body((head, newConstraints) -> newConstraints.add(new Constraint<>(COLOR.BROWN))));
+//                .body((head, newConstraints) -> newConstraints.add(COLOR.BROWN)));
 //        rules.add(new Simplification(Head.OF_VALUE(COLOR.BROWN), Head.OF_VALUE(COLOR.YELLOW))
-//                .body((head, newConstraints) -> newConstraints.add(new Constraint<>(COLOR.BROWN))));
+//                .body((head, newConstraints) -> newConstraints.add(COLOR.BROWN)));
 //        rules.add(new Simplification(Head.OF_VALUE(COLOR.BROWN), Head.OF_VALUE(COLOR.PURPLE))
-//                .body((head, newConstraints) -> newConstraints.add(new Constraint<>(COLOR.BROWN))));
+//                .body((head, newConstraints) -> newConstraints.add(COLOR.BROWN)));
 //        rules.add(new Simplification(Head.OF_VALUE(COLOR.BROWN), Head.OF_VALUE(COLOR.GREEN))
-//                .body((head, newConstraints) -> newConstraints.add(new Constraint<>(COLOR.BROWN))));
+//                .body((head, newConstraints) -> newConstraints.add(COLOR.BROWN)));
 //        rules.add(new Simplification(Head.OF_VALUE(COLOR.BROWN), Head.OF_VALUE(COLOR.ORANGE))
-//                .body((head, newConstraints) -> newConstraints.add(new Constraint<>(COLOR.BROWN))));
+//                .body((head, newConstraints) -> newConstraints.add(COLOR.BROWN)));
 //        rules.add(new Simplification(Head.OF_VALUE(COLOR.BROWN), Head.OF_VALUE(COLOR.BROWN))
-//                .body((head, newConstraints) -> newConstraints.add(new Constraint<>(COLOR.BROWN))));
+//                .body((head, newConstraints) -> newConstraints.add(COLOR.BROWN)));
 
         // Version 2: Simplification; use of wildcard
 //        rules.add(new Simplification(Head.OF_VALUE(COLOR.BROWN), Head.ANY())
-//                .body((head, newConstraints) -> newConstraints.add(new Constraint<>(COLOR.BROWN))));
+//                .body((head, newConstraints) -> newConstraints.add(COLOR.BROWN)));
 
         // Version 3: Simpagation instead of Simplification:
         rules.add(new Simpagation(1, Head.ofValue(COLOR.BROWN), Head.any())
@@ -86,15 +86,15 @@ public class ColorMixing {
         List<Rule> rules = new ArrayList<>();
         rules.add(new Simplification(COLOR.class, COLOR.class)
                 .guard(head -> head[0].get().equals(COLOR.RED) && head[1].get().equals(COLOR.BLUE))
-                .body((head, newConstraints) -> newConstraints.add(new Constraint<>(COLOR.PURPLE))));
+                .body((head, newConstraints) -> newConstraints.add(COLOR.PURPLE)));
 
         rules.add(new Simplification(COLOR.class, COLOR.class)
                 .guard(head -> head[0].get().equals(COLOR.BLUE) && head[1].get().equals(COLOR.YELLOW))
-                .body((head, newConstraints) -> newConstraints.add(new Constraint<>(COLOR.GREEN))));
+                .body((head, newConstraints) -> newConstraints.add(COLOR.GREEN)));
 
         rules.add(new Simplification(COLOR.class, COLOR.class)
                 .guard(head -> head[0].get().equals(COLOR.YELLOW) && head[1].get().equals(COLOR.RED))
-                .body((head, newConstraints) -> newConstraints.add(new Constraint<>(COLOR.ORANGE))));
+                .body((head, newConstraints) -> newConstraints.add(COLOR.ORANGE)));
 
         // Mixing with brown results in brown:
         rules.add(new Simpagation(1, COLOR.class, COLOR.class)
@@ -113,15 +113,15 @@ public class ColorMixing {
         List<Rule> rules = new ArrayList<>();
         rules.add(new Simplification(2)
                 .guard(head -> head[0].get().equals(COLOR.RED) && head[1].get().equals(COLOR.BLUE))
-                .body((head, newConstraints) -> newConstraints.add(new Constraint<>(COLOR.PURPLE))));
+                .body((head, newConstraints) -> newConstraints.add(COLOR.PURPLE)));
 
         rules.add(new Simplification(2)
                 .guard(head -> head[0].get().equals(COLOR.BLUE) && head[1].get().equals(COLOR.YELLOW))
-                .body((head, newConstraints) -> newConstraints.add(new Constraint<>(COLOR.GREEN))));
+                .body((head, newConstraints) -> newConstraints.add(COLOR.GREEN)));
 
         rules.add(new Simplification(2)
                 .guard(head -> head[0].get().equals(COLOR.YELLOW) && head[1].get().equals(COLOR.RED))
-                .body((head, newConstraints) -> newConstraints.add(new Constraint<>(COLOR.ORANGE))));
+                .body((head, newConstraints) -> newConstraints.add(COLOR.ORANGE)));
 
         // Mixing with brown results in brown:
         rules.add(new Simpagation(1, 1).guard((head1, head2) -> head1[0].get().equals(COLOR.BROWN))

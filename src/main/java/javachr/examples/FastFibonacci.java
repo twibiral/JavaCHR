@@ -29,8 +29,8 @@ public class FastFibonacci {
     static Rule[] getRules(){
         Rule r1 = new Propagation(Head.ofType(Integer.class))  // MAX => Fib(0, 1), Fib(1, 1).
                 .body((head, newConstraints) -> {
-                    newConstraints.add(new Constraint<>(new Fib(0, 0)));
-                    newConstraints.add(new Constraint<>(new Fib(1, 1)));
+                    newConstraints.add(new Fib(0, 0));
+                    newConstraints.add(new Fib(1, 1));
                 });
 
         // Combines:
@@ -43,10 +43,7 @@ public class FastFibonacci {
                     Fib n1 = (Fib) head[1].get();
                     Fib n2 = (Fib) head[2].get();
                     // Calculate Fib n+2:
-                    Constraint<Fib> newFib = new Constraint<>(new Fib(n2.a + 1, n1.b + n2.b));
-
-                    // Add Fib n+1 and Fib n+2
-                    newConstraints.add(newFib);
+                    newConstraints.add(new Fib(n2.a + 1, n1.b + n2.b));
 
                     if(n2.a + 1 < (int) head[0].get()) {
                         // Add max and Fib n+1 just when max not reached now
@@ -62,8 +59,8 @@ public class FastFibonacci {
         Rule r1 = new Propagation(1)  // MAX => Fib(0, 1), Fib(1, 1).
                 .guard(head -> head[0].get() instanceof Integer)
                 .body((head, newConstraints) -> {
-                    newConstraints.add(new Constraint<>(new Fib(0, 0)));
-                    newConstraints.add(new Constraint<>(new Fib(1, 1)));
+                    newConstraints.add(new Fib(0, 0));
+                    newConstraints.add(new Fib(1, 1));
                 });
 
         // Combines:
@@ -78,10 +75,7 @@ public class FastFibonacci {
                     Fib n1 = (Fib) head[1].get();
                     Fib n2 = (Fib) head[2].get();
                     // Calculate Fib n+2:
-                    Constraint<Fib> newFib = new Constraint<>(new Fib(n2.a + 1, n1.b + n2.b));
-
-                    // Add Fib n+1 and Fib n+2
-                    newConstraints.add(newFib);
+                    newConstraints.add(new Fib(n2.a + 1, n1.b + n2.b));
 
                     if(n2.a + 1 < (int) head[0].get()) {
                         // Add max and Fib n+1 just when max not reached now

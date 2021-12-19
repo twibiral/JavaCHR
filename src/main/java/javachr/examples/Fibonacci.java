@@ -49,8 +49,8 @@ public class Fibonacci {
         Rule r1 = new Propagation(ofType(Integer.class))
 //                .guard(x -> {})   // Not necessary
                 .body((head, newConstraints) -> {
-                    newConstraints.add(new Constraint<>(new Fib(0, 0)));
-                    newConstraints.add(new Constraint<>(new Fib(1, 1)));
+                    newConstraints.add(new Fib(0, 0));
+                    newConstraints.add(new Fib(1, 1));
                 });
 
         // MAX, fib(N1, M1), fib(N2, M2) =>  N1 == N2 - 1 | fib(N2 + 1, M1 + M2).
@@ -63,7 +63,7 @@ public class Fibonacci {
                     int N2 = ((Fib) head[2].get()).a;
                     long M1 = ((Fib) head[1].get()).b;
                     long M2 = ((Fib) head[2].get()).b;
-                    newConstraints.add(new Constraint<>(new Fib(N2+1, M1 + M2)));
+                    newConstraints.add(new Fib(N2+1, M1 + M2));
                 });
 
         // fib(N1, M1), MAX <=> N1 == MAX | fib(N1, M1).
@@ -78,8 +78,8 @@ public class Fibonacci {
         Rule r1 = new Propagation(Integer.class)
 //                .guard(head -> {})    // Not necessary
                 .body((head, newConstraints) -> {
-                    newConstraints.add(new Constraint<>(new Fib(0, 0)));
-                    newConstraints.add(new Constraint<>(new Fib(1, 1)));
+                    newConstraints.add(new Fib(0, 0));
+                    newConstraints.add(new Fib(1, 1));
                 });
 
         // MAX, fib(N1, M1), fib(N2, M2) =>  N1 == N2 - 1 | fib(N2 + 1, M1 + M2).
@@ -92,7 +92,7 @@ public class Fibonacci {
                     int N2 = ((Fib) head[2].get()).a;
                     long M1 = ((Fib) head[1].get()).b;
                     long M2 = ((Fib) head[2].get()).b;
-                    newConstraints.add(new Constraint<>(new Fib(N2+1, M1 + M2)));
+                    newConstraints.add(new Fib(N2+1, M1 + M2));
                 });
 
         Rule r3 = new Simpagation(1, Fib.class, Integer.class)
@@ -108,8 +108,8 @@ public class Fibonacci {
         Rule r1 = new Propagation(1)
                 .guard(head -> head[0].get() instanceof Integer)
                 .body((head, newConstraints) -> {
-                    newConstraints.add(new Constraint<>(new Fib(0, 0)));
-                    newConstraints.add(new Constraint<>(new Fib(1, 1)));
+                    newConstraints.add(new Fib(0, 0));
+                    newConstraints.add(new Fib(1, 1));
                 });
 
         // MAX, fib(N1, M1), fib(N2, M2) =>  N1 == N2 - 1 | fib(N2 + 1, M1 + M2).
@@ -125,7 +125,7 @@ public class Fibonacci {
                     int N2 = ((Fib) head[2].get()).a;
                     long M1 = ((Fib) head[1].get()).b;
                     long M2 = ((Fib) head[2].get()).b;
-                    newConstraints.add(new Constraint<>(new Fib(N2+1, M1 + M2)));
+                    newConstraints.add(new Fib(N2+1, M1 + M2));
                 });
 
         Rule r3 = new Simpagation(1, 1)

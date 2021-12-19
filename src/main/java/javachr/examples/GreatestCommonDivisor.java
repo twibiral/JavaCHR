@@ -67,7 +67,7 @@ public class GreatestCommonDivisor {
                         (h1, h2, newConstraints) -> {
                             int n = (int) h1[0].get();
                             int m = (int) h2[0].get();
-                            newConstraints.add(new Constraint<>(m - n));
+                            newConstraints.add(m - n);
                         }
                 );
 
@@ -91,7 +91,7 @@ public class GreatestCommonDivisor {
                         (h1, h2, newConstraints) -> {
                             int n = (int) h1[0].get();
                             int m = (int) h2[0].get();
-                            newConstraints.add(new Constraint<>(m - n));
+                            newConstraints.add(m - n);
                         }
                 );
 
@@ -121,7 +121,7 @@ public class GreatestCommonDivisor {
                         (x1, x2, newConstraints) -> {
                             int n = (int) x1[0].get();
                             int m = (int) x2[0].get();
-                            newConstraints.add(new Constraint<>(m - n));
+                            newConstraints.add(m - n);
                         }
                 );
 
@@ -130,8 +130,6 @@ public class GreatestCommonDivisor {
                 .guard(
                         head -> head[0].get() instanceof  Integer && (int) head[0].get() == 0
                 );
-//                  .body( (head, newConstraints) -> {} );    // not necessary
-
 
         return new Rule[]{r1, r2};
     }
