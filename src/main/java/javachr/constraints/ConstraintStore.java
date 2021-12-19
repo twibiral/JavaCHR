@@ -67,7 +67,7 @@ public class ConstraintStore {
      * @param collection Constraints that get added to the store.
      */
     public void addAll(Collection<Constraint<?>> collection){
-        List<Constraint<?>> withoutDuplicates = new ArrayList<>(new HashSet<>(collection));
+        HashSet<Constraint<?>> withoutDuplicates = new HashSet<>(collection);
         store.addAll(withoutDuplicates);
         // All rules in the store must be alive if they aren't in use:
         withoutDuplicates.forEach(Constraint::setAlive);
@@ -78,7 +78,7 @@ public class ConstraintStore {
      * @param constraints Constraints that get added to the store.
      */
     public void addAll(Constraint<?>... constraints){
-        List<Constraint<?>> withoutDuplicates = new ArrayList<>(new HashSet<>(Arrays.asList(constraints)));
+        HashSet<Constraint<?>> withoutDuplicates = new HashSet<>(Arrays.asList(constraints));
         store.addAll(withoutDuplicates);
         // All rules in the store must be alive if they aren't in use:
         withoutDuplicates.forEach(Constraint::setAlive);
