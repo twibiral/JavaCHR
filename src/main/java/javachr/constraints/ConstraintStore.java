@@ -16,8 +16,8 @@ import java.util.List;
  * Stores {@link Constraint}-objects and a rule application history (which rules where applied to which constraints)
  */
 public class ConstraintStore {
-    private final List<Constraint<?>> store = new ArrayList<>();
-    private final HashSet<Long> deadConstraints = new HashSet<>();
+    protected final List<Constraint<?>> store = new ArrayList<>();
+    protected final HashSet<Long> deadConstraints = new HashSet<>();
 
 
     public ConstraintStore() {
@@ -188,7 +188,7 @@ public class ConstraintStore {
      * Removes all stored IDs that refer to constraints that are no longer in the internal data structure.
      */
     public void cleanup() {
-        deadConstraints.removeIf(x -> !store.stream().anyMatch(y -> y.getID() == x));
+        deadConstraints.removeIf(x -> store.stream().noneMatch(y -> y.getID() == x));
     }
 
 

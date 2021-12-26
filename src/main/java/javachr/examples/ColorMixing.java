@@ -2,7 +2,6 @@ package javachr.examples;
 
 import javachr.RuleApplicator;
 import javachr.SimpleRuleApplicator;
-import javachr.constraints.Constraint;
 import javachr.rules.Rule;
 import javachr.rules.Simpagation;
 import javachr.rules.Simplification;

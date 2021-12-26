@@ -1,7 +1,5 @@
 package javachr.constraints;
 
-import javachr.RuleApplicator;
-
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -18,7 +16,6 @@ public class Constraint<T> {
     private final T value;
     private final Class<?> type;
 
-    private boolean alive;
 
     /**
      * @param value Can't be null! The object that is stored in this constraint.
@@ -26,7 +23,6 @@ public class Constraint<T> {
     public Constraint(T value){
         this.value = value;
         this.type = value.getClass();
-        this.alive = true;
 
         // gives this constraint a new id and increments the id counter for the next constraint.
         ID = ID_COUNTER.getAndIncrement();

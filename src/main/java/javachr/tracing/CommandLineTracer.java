@@ -7,16 +7,18 @@ import javachr.rules.Rule;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.logging.Logger;
 
 /**
  * A tracer that prints simple statements to the command line. Helpful for debugging.
- * TODO: Replace System.out by logger.
  */
 public class CommandLineTracer implements Tracer {
-    private final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+    private static final Logger logger = Logger.getLogger(CommandLineTracer.class.getName());
+
     public static final String ANSI_BLUE = "\u001B[34m";
     public static final String ANSI_RESET = "\u001B[0m";
 
+    private final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
     private final boolean stopAfterEveryStep;
 
     public CommandLineTracer(){
