@@ -32,6 +32,7 @@ public class SimpleRuleApplicator implements RuleApplicator {
 
     private int biggestHeader = 0;
 
+
     public SimpleRuleApplicator(Rule... rules) {
         this.rules = Arrays.asList(rules);
         if(rules.length > 2){
@@ -48,27 +49,32 @@ public class SimpleRuleApplicator implements RuleApplicator {
         }
     }
 
+
     @Override
     public void setTracer(Tracer tracer) {
         tracingOn = tracer != null;
         this.tracer = tracer;
     }
 
+
     @Override
     public List<Constraint<?>> execute(List<Constraint<?>> constraints) {
         return execute(new ConstraintStore(constraints));
     }
+
 
     @Override
     public List<Constraint<?>> execute(Constraint<?>... constraints) {
         return execute(new ConstraintStore(Arrays.asList(constraints)));
     }
 
+
     @SafeVarargs
     @Override
     public final <T> List<Constraint<?>> execute(T... values) {
         return execute(new ConstraintStore(values));
     }
+
 
     public List<Constraint<?>> execute(ConstraintStore store) {
         // Stores which rules were already applied to which constraints.
@@ -113,8 +119,11 @@ public class SimpleRuleApplicator implements RuleApplicator {
         return store.toList();
     }
 
+
     /**
      * Goes through the rules and tries to find matching constraints for one of the rules.
+     * Returns null if no match was found.
+     *
      * @param store The constraint store that stores the current constraints.
      * @param history The current propagation history.
      * @param iteratorStack The stack of iterators that are used to build the constraint arrays.
@@ -125,19 +134,51 @@ public class SimpleRuleApplicator implements RuleApplicator {
                                      ArrayDeque<Iterator<Constraint<?>>> iteratorStack){
         Constraint<?>[] matchingConstraints;
 
-        for(Rule rule: rules){
-            // Handle every rule according to their header:
+        for(Rule rule : rules){
+            // Check if there are negated constraints in the store.
+            boolean negatedConstraintsInStore = rule.hasNegatedHeadConstraints() && checkNegations(rule, store);
 
-            matchingConstraints = findMatchingConstraints(rule, store, iteratorStack, history);
+            if (! negatedConstraintsInStore){
+                // Try to find some constraints that match the head of the rule.
+                matchingConstraints = findMatchingConstraints(rule, store, iteratorStack, history);
 
-            if(matchingConstraints != null) // match found
-                return new RuleAndMatch(rule, matchingConstraints);
-
+                if(matchingConstraints != null) // match found
+                    return new RuleAndMatch(rule, matchingConstraints);
+            }
         }
 
         // No match found:
         return null;
     }
+
+
+    /**
+     * Returns true if the constraint store contains a negated constraint.
+     */
+    private boolean checkNegations(Rule rule, ConstraintStore store) {
+        for (Head negatedConstraint : rule.getNegatedHeadConstraints()) {
+            switch (negatedConstraint.getHeadConstraintDefType()) {
+                case ANY:
+                    // Ignore Constraints like this
+                    break;
+
+                case TYPE:
+                    // Only has next, if the store contains a negated one.
+                    if (store.lookup(negatedConstraint.getType()).hasNext())
+                        return true;
+                    break;
+
+                case VALUE:
+                    // Only has next, if the store contains a negated one.
+                    if (store.lookup(negatedConstraint.getValue()).hasNext())
+                        return true;
+                    break;
+            }
+        }
+
+        return false;
+    }
+
 
     private Constraint<?>[] findMatchingConstraints(Rule rule,
                                                     ConstraintStore store,
@@ -244,6 +285,7 @@ public class SimpleRuleApplicator implements RuleApplicator {
         return null;
     }
 
+
     private Iterator<Constraint<?>> getConstraintIterator(Rule rule, ConstraintStore store, int pointer) {
         Iterator<Constraint<?>> currentIter;
         switch (rule.getHeadDefinitionType()){
@@ -264,9 +306,11 @@ public class SimpleRuleApplicator implements RuleApplicator {
         return currentIter;
     }
 
+
     private Iterator<Constraint<?>> getDefaultIterator(ConstraintStore store) {
         return store.lookup();
     }
+
 
     private Iterator<Constraint<?>> getTypeIterator(ConstraintStore store, Rule rule, int pos) {
         if (rule.getHeadDefinitionType() != HEAD_DEFINITION_TYPE.TYPES_SPECIFIED) {
@@ -275,6 +319,7 @@ public class SimpleRuleApplicator implements RuleApplicator {
 
         return store.lookup(rule.getHeadTypes()[pos]);
     }
+
 
     private Iterator<Constraint<?>> getComplexHeadIterator(ConstraintStore store, Rule rule, int pos) {
         if(rule.getHeadDefinitionType() != HEAD_DEFINITION_TYPE.COMPLEX_DEFINITION){
@@ -298,6 +343,7 @@ public class SimpleRuleApplicator implements RuleApplicator {
         }
     }
 
+
     /**
      * @param array The array to check.
      * @return Return true if there are duplicates in the entry.
@@ -313,6 +359,7 @@ public class SimpleRuleApplicator implements RuleApplicator {
         }
         return true;
     }
+
 
     /**
      * @param bindings Contains which head constrains must be equal.
@@ -330,6 +377,7 @@ public class SimpleRuleApplicator implements RuleApplicator {
 
         return true;
     }
+
 
     /**
      * Stores a rule and a fitting match.

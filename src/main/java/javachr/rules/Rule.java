@@ -1,10 +1,12 @@
 package javachr.rules;
 
 import javachr.constraints.Constraint;
+import javachr.exceptions.AlreadyDefinedException;
 import javachr.rules.head.HEAD_DEFINITION_TYPE;
 import javachr.rules.head.Head;
 import javachr.rules.head.VAR;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
@@ -23,6 +25,16 @@ public abstract class Rule {
     protected final Head[] headDefinitions;
     protected final HEAD_DEFINITION_TYPE headDefinitionType;
     protected final EnumMap<VAR, ArrayList<Integer>> variableBindings = new EnumMap<>(VAR.class);
+
+    /**
+     * Used for negation-as-absence like in production rules.
+     * Constraints that fit the heads in this array are not allowed to be in the constraint store.
+     *
+     * Rules with negation-as-absence have to implement a method that sets this fields. The fields are defined here for
+     * easier access in the rule applicator.
+     */
+    protected Head[] negated;
+    protected boolean negatedHeadsDefined = false;
 
 
     protected Rule(int nrConstraintsInHead){
@@ -213,6 +225,14 @@ public abstract class Rule {
         }
 
         return true;
+    }
+
+    public boolean hasNegatedHeadConstraints() {
+        return this.negatedHeadsDefined;
+    }
+
+    public Head[] getNegatedHeadConstraints() {
+        return this.negated;
     }
 
     @Override

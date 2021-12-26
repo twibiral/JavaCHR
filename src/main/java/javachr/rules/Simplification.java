@@ -91,4 +91,28 @@ public class Simplification extends Rule {
 
         return this;
     }
+
+
+    /**
+     * Used for negation-as-absence like in production rules.
+     *
+     * All the given constraint definitions are negated. That means the rule applicator makes sure that there are no
+     * constraints like the defines ones in the constraint store.
+     *
+     * Attention: Negations ignore all variable bindings! Head of type ANY are ignored!
+     *
+     * @param negatedHead Negated constraints (Constraints that are not allowed to be in the constraint store)
+     * @return This rule. Use this to chain method calls.
+     */
+    public Simplification not(Head... negatedHead){
+        if (this.negatedHeadsDefined)
+            throw new AlreadyDefinedException("Negated head constraints already defined!");
+
+        if (negatedHead.length > 0) {
+            this.negatedHeadsDefined = true;
+            this.negated = negatedHead;
+        }
+
+        return this;
+    }
 }

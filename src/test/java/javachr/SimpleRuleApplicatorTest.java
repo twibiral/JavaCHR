@@ -1,5 +1,6 @@
 package javachr;
 
+import javachr.rules.head.Head;
 import junit.framework.TestCase;
 import javachr.constraints.Constraint;
 import javachr.constraints.ConstraintStore;
@@ -99,6 +100,26 @@ public class SimpleRuleApplicatorTest extends TestCase {
 
         array[0] = array[2];
         assertFalse(solver.noDuplicatesIn(array));
+    }
+
+    public void testNegationAsAbsence() {
+        Rule r1 = new Propagation(Integer.class).not(Head.ofType(String.class))
+                .body((head, newConstraints) -> newConstraints.add("Wrong rule!"));
+
+        Rule r2 = new Propagation(Integer.class)
+                .body((head, newConstraints) -> newConstraints.add("Correct rule!"));
+
+        SimpleRuleApplicator solver = new SimpleRuleApplicator(r1, r2);
+
+        List<Constraint<?>> result = solver.execute(42, "This string prevents rule r1 from being applied!");
+        assertEquals(3, result.size());
+        assertTrue(result.stream().anyMatch(x -> x.innerObjEquals("Correct rule!")));
+        assertFalse(result.stream().anyMatch(x -> x.innerObjEquals("Wrong rule!")));
+
+        result = solver.execute(42);    // Now rule r2 should be applied
+        assertEquals(3, result.size());
+        assertTrue(result.stream().anyMatch(x -> x.innerObjEquals("Correct rule!")));
+        assertTrue(result.stream().anyMatch(x -> x.innerObjEquals("Wrong rule!")));
     }
 
     private SimpleRuleApplicator getGCDSolver(){
