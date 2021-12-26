@@ -94,21 +94,18 @@ public class SimpleRuleApplicator implements RuleApplicator {
                 ruleApplied = false;
 
             } else {    // Apply rule.
-                List<Constraint<?>> constraintList = new ArrayList<>(Arrays.asList(ruleAndMatch.match));
-
-                if(tracingOn){
-                    List<Constraint<?>> temp = new ArrayList<>(constraintList);
-                    temp.removeAll(new ArrayList<>(Arrays.asList(ruleAndMatch.match)));
-                    tracer.step(ruleAndMatch.rule, ruleAndMatch.match, temp.toArray(new Constraint<?>[0]));
-                }
-
                 if(ruleAndMatch.rule.saveHistory()){
                     history.addEntry(ruleAndMatch.rule, ruleAndMatch.match);
                 }
 
                 // Store directly in the old variable to save memory and time.
-                constraintList = ruleAndMatch.rule.apply(constraintList);
-                store.addAll(constraintList);
+                List<Constraint<?>> newConstraints = ruleAndMatch.rule.apply(ruleAndMatch.match);
+                store.addAll(newConstraints);
+
+                if(tracingOn){
+                    newConstraints.removeAll(Arrays.asList(ruleAndMatch.match));
+                    tracer.step(ruleAndMatch.rule, ruleAndMatch.match, newConstraints.toArray(new Constraint<?>[0]));
+                }
             }
 
         }
@@ -219,7 +216,7 @@ public class SimpleRuleApplicator implements RuleApplicator {
                     if (noDuplicatesIn(matchingConstraints)
                             && checkBindings(rule.getVariableBindings(), matchingConstraints)
                             && !history.isInHistory(rule, matchingConstraints)
-                            && rule.accepts(Arrays.asList(matchingConstraints))) {
+                            && rule.accepts(matchingConstraints)) {
 
                         for(Constraint<?> constraint : matchingConstraints){
                             store.remove(constraint.getID());
@@ -232,7 +229,7 @@ public class SimpleRuleApplicator implements RuleApplicator {
                     // if all constraints different AND fits header+guard
                     if (noDuplicatesIn(matchingConstraints)
                             && checkBindings(rule.getVariableBindings(), matchingConstraints)
-                            && rule.accepts(Arrays.asList(matchingConstraints))) {
+                            && rule.accepts(matchingConstraints)) {
 
                         for(Constraint<?> constraint : matchingConstraints){
                             store.remove(constraint.getID());
@@ -250,7 +247,7 @@ public class SimpleRuleApplicator implements RuleApplicator {
                     // if all constraints different AND rule+constraints not in history AND fits header+guard
                     if (noDuplicatesIn(matchingConstraints)
                             && !history.isInHistory(rule, matchingConstraints)
-                            && rule.accepts(Arrays.asList(matchingConstraints))) {
+                            && rule.accepts(matchingConstraints)) {
 
                         for(Constraint<?> constraint : matchingConstraints){
                             store.remove(constraint.getID());
@@ -262,7 +259,7 @@ public class SimpleRuleApplicator implements RuleApplicator {
                 } else { // Rules that allow to be executed on the same constraints multiple times
                     // if all constraints different AND fits header+guard
                     if (noDuplicatesIn(matchingConstraints)
-                            && rule.accepts(Arrays.asList(matchingConstraints))) {
+                            && rule.accepts(matchingConstraints)) {
 
                         for(Constraint<?> constraint : matchingConstraints){
                             store.remove(constraint.getID());
@@ -366,7 +363,7 @@ public class SimpleRuleApplicator implements RuleApplicator {
      * @param array Array with potential head constraints.
      * @return True, if all constraints that must be equal are equal. Otherwise, false.
      */
-    private boolean checkBindings(EnumMap<VAR, ArrayList<Integer>> bindings, Constraint<?>[] array){
+    private boolean checkBindings(Map<VAR, ArrayList<Integer>> bindings, Constraint<?>[] array){
         for (ArrayList<Integer> bound : bindings.values()){
             for (int i = 0; i < bound.size()-1; i++) {
                 // Check if the two constraints are equal

@@ -7,8 +7,8 @@ import javachr.rules.head.Head;
 import javachr.rules.head.VAR;
 
 import java.util.ArrayList;
-import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -21,13 +21,13 @@ public class Twice extends Rule {
     }
 
     @Override
-    public boolean accepts(List<Constraint<?>> constraints) {
+    public boolean accepts(Constraint<?>[] constraints) {
         return rule.accepts(constraints);
     }
 
     @Override
-    public List<Constraint<?>> apply(List<Constraint<?>> constraints) {
-        List<Constraint<?>> result1 = rule.apply(new ArrayList<>(constraints));// Works on copy
+    public List<Constraint<?>> apply(Constraint<?>[] constraints) {
+        List<Constraint<?>> result1 = rule.apply(constraints);// Works on copy
         List<Constraint<?>> result2 = rule.apply(constraints);
 
         return Stream.concat(result1.stream(), result2.stream())    // join lists
@@ -36,7 +36,7 @@ public class Twice extends Rule {
     }
 
     @Override
-    public HEAD_DEFINITION_TYPE getHeadDefinitionType(){
+    public HEAD_DEFINITION_TYPE getHeadDefinitionType() {
         return rule.getHeadDefinitionType();
     }
 
@@ -51,7 +51,7 @@ public class Twice extends Rule {
     }
 
     @Override
-    public EnumMap<VAR, ArrayList<Integer>> getVariableBindings(){
+    public Map<VAR, ArrayList<Integer>> getVariableBindings() {
         return rule.getVariableBindings();
     }
 

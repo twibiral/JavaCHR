@@ -78,7 +78,7 @@ public class CommandLineTracer implements Tracer {
 
     @Override
     public void terminatedMessage(ConstraintStore store) {
-        print("Constraints after execution: " + constraintsToString(store.toList().toArray(new Constraint<?>[0])));
+        print("\nConstraints after execution: " + constraintsToString(store.toList().toArray(new Constraint<?>[0])));
         print("=== Terminating handler ===\n");
     }
 

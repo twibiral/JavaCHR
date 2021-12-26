@@ -1,15 +1,14 @@
 package javachr.rules;
 
 import javachr.constraints.Constraint;
-import javachr.exceptions.AlreadyDefinedException;
 import javachr.rules.head.HEAD_DEFINITION_TYPE;
 import javachr.rules.head.Head;
 import javachr.rules.head.VAR;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
 public abstract class Rule {
@@ -146,7 +145,7 @@ public abstract class Rule {
      * @param constraints List of constraints that are tested by the guard.
      * @return True if the guard of the Rule accepts the given {@link Constraint}s.
      */
-    public abstract boolean accepts(List<Constraint<?>> constraints);
+    public abstract boolean accepts(Constraint<?>[] constraints);
 
     /**
      * Applies the rule to the list of constraints. (By using the defined body)
@@ -158,7 +157,7 @@ public abstract class Rule {
      * @param constraints A list of constraint on which the rule is applied or {@code null} if goes wrong.
      * @return true if the rule was successfully applied to the constraints of the list.
      */
-    public abstract List<Constraint<?>> apply(List<Constraint<?>> constraints);
+    public abstract List<Constraint<?>> apply(Constraint<?>[] constraints);
 
     /**
      * Returns the distinct ID of this rule.
@@ -202,29 +201,8 @@ public abstract class Rule {
      * @return An enum map that contains lists of integers, which are indices. The indices of a list tell the position
      * of constraints in the header that must be equal.
      */
-    public EnumMap<VAR, ArrayList<Integer>> getVariableBindings(){
+    public Map<VAR, ArrayList<Integer>> getVariableBindings(){
         return variableBindings;
-    }
-
-    /**
-     * Tests if the types of the constraints fit the types defined in the rule heads.
-     * This method isn't very efficient and uses the isAssignableFrom method instead of instanceof.
-     * @param constraints List of constraints to match with head types.
-     * @return True if the constraints in the list match the head type, otherwise false.
-     */
-    public boolean fitsHeadTypes(List<Constraint<?>> constraints) {
-        try{
-            for (int i = 0; i < this.headSize(); i++) {
-                if(!( headTypes[i].isAssignableFrom(constraints.get(i).getClass()) ))
-                    return false;
-            }
-
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            return false;
-        }
-
-        return true;
     }
 
     public boolean hasNegatedHeadConstraints() {

@@ -6,6 +6,7 @@ import javachr.rules.Rule;
 import javachr.rules.Simpagation;
 import javachr.rules.Simplification;
 import javachr.rules.head.Head;
+import javachr.tracing.CommandLineTracer;
 
 import java.util.ArrayList;
 import java.util.List;

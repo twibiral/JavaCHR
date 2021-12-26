@@ -43,19 +43,19 @@ public class Simplification extends Rule {
     }
 
     @Override
-    public List<Constraint<?>> apply(List<Constraint<?>> constraints) {
-        if(constraints.size() != headSize())
+    public List<Constraint<?>> apply(Constraint<?>[] constraints) {
+        if(constraints.length != headSize())
             return null;
 
         BodyStore newConstraints = new BodyStore();
-        body.execute(constraints.toArray(new Constraint<?>[0]), newConstraints);
+        body.execute(constraints, newConstraints);
 
         return newConstraints.getAll();                 // return the new constraints
     }
 
     @Override
-    public boolean accepts(List<Constraint<?>> constraints) {
-        return constraints.size() == headSize() && guard.check(constraints.toArray(new Constraint[0]));
+    public boolean accepts(Constraint<?>[] constraints) {
+        return constraints.length == headSize() && guard.check(constraints);
     }
 
     /**

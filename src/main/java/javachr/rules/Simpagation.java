@@ -83,20 +83,15 @@ public class Simpagation extends Rule {
     }
 
     @Override
-    public List<Constraint<?>> apply(List<Constraint<?>> constraints) {
-        if(constraints.size() != headSize())
+    public List<Constraint<?>> apply(Constraint<?>[] constraints) {
+        if(constraints.length != headSize())
             return null;
 
         Constraint<?>[] constraintsHead1 = new Constraint<?>[nrConstraintsHead1];
         Constraint<?>[] constraintsHead2 = new Constraint<?>[nrConstraintsHead2];
 
-        for (int i = 0; i < nrConstraintsHead1; i++) {
-            constraintsHead1[i] = constraints.get(i);
-        }
-
-        for (int i = 0; i <  nrConstraintsHead2; i++) {
-            constraintsHead2[i] = constraints.get(i + nrConstraintsHead1);
-        }
+        System.arraycopy(constraints, 0, constraintsHead1, 0, nrConstraintsHead1);
+        System.arraycopy(constraints, nrConstraintsHead1, constraintsHead2, 0, nrConstraintsHead2);
 
         BodyStore newConstraints = new BodyStore();
         body.execute(constraintsHead1, constraintsHead2, newConstraints);
@@ -107,19 +102,15 @@ public class Simpagation extends Rule {
     }
 
     @Override
-    public boolean accepts(List<Constraint<?>> constraints) {
-        if(constraints.size() != headSize())
+    public boolean accepts(Constraint<?>[] constraints) {
+        if(constraints.length != headSize())
             return false;
 
         Constraint<?>[] constraintsHead1 = new Constraint<?>[nrConstraintsHead1];
         Constraint<?>[] constraintsHead2 = new Constraint<?>[nrConstraintsHead2];
 
-        for (int i = 0; i < nrConstraintsHead1; i++) {
-            constraintsHead1[i] = constraints.get(i);
-        }
-        for (int i = 0; i < nrConstraintsHead2; i++) {
-            constraintsHead2[i] = constraints.get(i + nrConstraintsHead1);
-        }
+        System.arraycopy(constraints, 0, constraintsHead1, 0, nrConstraintsHead1);
+        System.arraycopy(constraints, nrConstraintsHead1, constraintsHead2, 0, nrConstraintsHead2);
 
         return guard.check(constraintsHead1, constraintsHead2);
     }
@@ -157,7 +148,6 @@ public class Simpagation extends Rule {
 
         return this;
     }
-
 
     /**
      * Used for negation-as-absence like in production rules.

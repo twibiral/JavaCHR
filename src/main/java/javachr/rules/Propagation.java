@@ -43,29 +43,26 @@ public class Propagation extends Rule {
     }
 
     @Override
-    public List<Constraint<?>> apply(List<Constraint<?>> constraints) {
-        if(constraints.size() != headSize())
+    public List<Constraint<?>> apply(Constraint<?>[] constraints) {
+        if(constraints.length != headSize())
             return null;
 
         BodyStore newConstraints = new BodyStore(); // All new constraints get added to this list by the body
-        body.execute(constraints.toArray(new Constraint<?>[0]), newConstraints);
+        body.execute(constraints, newConstraints);
 
-        // new constraints are added to the constraints list to add them to the constraint store after rule execution.
-        constraints.addAll(newConstraints.getAll());
-
-        return constraints;
+        // The old constraints are also added to the body store and the internal store of the body store is returned.
+        newConstraints.addAll(constraints);
+        return newConstraints.getAll();
     }
 
     @Override
-    public boolean accepts(List<Constraint<?>> constraints) {
-        if(constraints.size() != headSize())
+    public boolean accepts(Constraint<?>[] constraints) {
+        if(constraints.length != headSize())
             return false;
 
-        // Assume that the solver checks this:
-//        if(head_definition_type == HEAD_DEFINITION_TYPE.TYPES_SPECIFIED && !fitsHeadTypes(constraints))
-//            return false;
+        // Assumes that the rule applicator checks if the constraints are valid.
 
-        return guard.check(constraints.toArray(new Constraint<?>[0]));
+        return guard.check(constraints);
     }
 
     /**

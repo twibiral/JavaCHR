@@ -4,7 +4,6 @@ import org.junit.Before;
 import org.junit.Test;
 import javachr.constraints.Constraint;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -24,12 +23,12 @@ public class PropagationTest {
 
     @Test
     public void apply() {
-        List<Constraint<?>> result = rule.apply(createConstraintList(3));
+        List<Constraint<?>> result = rule.apply(createConstraintArray(3));
         assertTrue(result.stream().anyMatch(c -> c.get().equals(3)));
         assertTrue(result.stream().anyMatch(c -> c.get().equals(2)));
         assertEquals(2, result.size());
 
-        result = rule.apply(createConstraintList(15));
+        result = rule.apply(createConstraintArray(15));
         assertTrue(result.stream().anyMatch(c -> c.get().equals(14)));
         assertTrue(result.stream().anyMatch(c -> c.get().equals(15)));
         assertEquals(2, result.size());
@@ -37,37 +36,39 @@ public class PropagationTest {
 
     @Test
     public void accepts() {
-        assertTrue(rule.accepts(createConstraintList(3)));
-        assertTrue(rule.accepts(createConstraintList(15)));
+        assertTrue(rule.accepts(createConstraintArray(3)));
+        assertTrue(rule.accepts(createConstraintArray(15)));
 
-        assertFalse("Too many constraints, must be false!", rule.accepts(createConstraintList(12, 7)));
-        assertFalse("Too few constraints, must be false!", rule.accepts(createConstraintList()));
+        assertFalse("Too many constraints, must be false!", rule.accepts(createConstraintArray(12, 7)));
+        assertFalse("Too few constraints, must be false!", rule.accepts(createConstraintArray()));
 
-        assertFalse("Constraints don't fulfill the conditions, must be false!", rule.accepts(createConstraintList(42)));
-        assertFalse("Constraints don't fulfill the conditions, must be false!", rule.accepts(createConstraintList(-12)));
+        assertFalse("Constraints don't fulfill the conditions, must be false!", rule.accepts(createConstraintArray(42)));
+        assertFalse("Constraints don't fulfill the conditions, must be false!", rule.accepts(createConstraintArray(-12)));
     }
 
     @Test
     public void guard() {
         Propagation rule = new Propagation(1).guard(x -> x[0].get().equals(2));
-        assertTrue(rule.accepts(createConstraintList(2)));
-        assertFalse(rule.accepts(createConstraintList(3)));
+        assertTrue(rule.accepts(createConstraintArray(2)));
+        assertFalse(rule.accepts(createConstraintArray(3)));
     }
 
     @Test
     public void body() {
         Propagation rule = new Propagation(1)
                 .body((head, newConstraint) -> newConstraint.add(new Constraint<>((int) head[0].get() + 2)));
-        List<Constraint<?>> result = rule.apply(createConstraintList(2));
+
+        List<Constraint<?>> result = rule.apply(createConstraintArray(2));
         assertTrue(result.stream().anyMatch(c -> c.get().equals(4)));
         assertEquals(2, result.size());
     }
 
-    private List<Constraint<?>> createConstraintList(int... values) {
-        List<Constraint<?>> constraints = new ArrayList<>();
-        for (int i : values) {
-            constraints.add(new Constraint<>(i));
+    private Constraint<?>[] createConstraintArray(int... values) {
+        Constraint<?>[] constraints = new Constraint<?>[values.length];
+        for (int i = 0; i < constraints.length; i++) {
+            constraints[i] = new Constraint<>(values[i]);
         }
+
         return constraints;
     }
 }
