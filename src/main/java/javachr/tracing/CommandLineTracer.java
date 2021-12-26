@@ -13,8 +13,6 @@ import java.util.logging.Logger;
  * A tracer that prints simple statements to the command line. Helpful for debugging.
  */
 public class CommandLineTracer implements Tracer {
-    private static final Logger logger = Logger.getLogger(CommandLineTracer.class.getName());
-
     public static final String ANSI_BLUE = "\u001B[34m";
     public static final String ANSI_RESET = "\u001B[0m";
 
