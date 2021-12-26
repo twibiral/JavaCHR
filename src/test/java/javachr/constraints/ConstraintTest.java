@@ -43,17 +43,4 @@ public class ConstraintTest {
     public void testID() {
         assertNotEquals(new Constraint<>(123).getID(), new Constraint<>(123).getID());
     }
-
-    @Test
-    public void testIsAlive(){
-        Constraint<Integer> c = new Constraint<>(42);
-        assertTrue(c.isAlive());
-
-        c.setAlive();
-        assertTrue(c.isAlive());
-
-        c.setDead();
-        assertFalse(c.isAlive());
-    }
-
 }

@@ -17,12 +17,7 @@ public class ConcurrentStore extends ConstraintStore {
      */
     @Override
     public synchronized void remove(long ID){
-        store.forEach(x -> {
-            if(x.getID() == ID){
-                x.setDead();
-            }
-        });
-        store.removeIf(x -> x.getID() == ID);
+        super.remove(ID);
     }
 
     /**
@@ -30,7 +25,6 @@ public class ConcurrentStore extends ConstraintStore {
      */
     @Override
     public synchronized void clear(){
-        store.forEach(Constraint::setDead);
-        store.clear();
+        super.clear();
     }
 }

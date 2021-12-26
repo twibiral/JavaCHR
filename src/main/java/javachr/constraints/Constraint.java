@@ -73,28 +73,6 @@ public class Constraint<T> {
         return type.isAssignableFrom(this.type);
     }
 
-    /**
-     * @return true if the constraint is still alive. Dead constraints are unregarded by {@link RuleApplicator}s.
-     */
-    public boolean isAlive(){
-        return this.alive;
-    }
-
-    /**
-     * Switches this constraint to not alive. Dead constraints are unregarded by {@link RuleApplicator}s.
-     * Use the method {@link #setAlive()} to revive the constraint.
-     */
-    public void setDead(){
-        this.alive = false;
-    }
-
-    /**
-     * Switches this constraint to alive. Dead constraints are unregarded by {@link RuleApplicator}s.
-     * Use the method {@link #setDead()} to kill the constraint.
-     */
-    public void setAlive(){
-        this.alive = true;
-    }
 
     /**
      * Compares the IDs of two constraints. Returns false if obj is not of type {@link Constraint}.

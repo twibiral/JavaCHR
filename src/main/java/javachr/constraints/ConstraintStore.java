@@ -1,5 +1,7 @@
 package javachr.constraints;
 
+import javachr.RuleApplicator;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -15,10 +17,13 @@ import java.util.List;
  */
 public class ConstraintStore {
     private final List<Constraint<?>> store = new ArrayList<>();
+    private final HashSet<Long> deadConstraints = new HashSet<>();
+
 
     public ConstraintStore() {
         // Empty constructor for empty constraint stores.
     }
+
 
     public ConstraintStore(Collection<Constraint<?>> constraints) {
         if(constraints == null)
@@ -26,8 +31,8 @@ public class ConstraintStore {
 
         List<Constraint<?>> withoutDuplicates = new ArrayList<>(new HashSet<>(constraints));
         store.addAll(withoutDuplicates);
-        store.forEach(Constraint::setAlive);
     }
+
 
     public ConstraintStore(Constraint<?>... constraints) {
         if (constraints.length <= 0)
@@ -35,8 +40,8 @@ public class ConstraintStore {
 
         List<Constraint<?>> withoutDuplicates = new ArrayList<>(new HashSet<>(Arrays.asList(constraints)));
         store.addAll(withoutDuplicates);
-        store.forEach(Constraint::setAlive);
     }
+
 
     @SafeVarargs
     public <T> ConstraintStore(T... values) {
@@ -44,14 +49,15 @@ public class ConstraintStore {
             this.add(new Constraint<>(value));
     }
 
+
     /**
      * Add the given constraint to the store.
      */
     public void add(Constraint<?> constraint){
         store.add(constraint);
-        // All rules in the store must be alive if they aren't in use:
-        constraint.setAlive();
+        setAlive(constraint.getID());
     }
+
 
     /**
      * Create a new constraint and add it to the store.
@@ -62,6 +68,7 @@ public class ConstraintStore {
         this.add(new Constraint<>(object));
     }
 
+
     /**
      * Adds all the constraints of the list to the constraint store.
      * @param collection Constraints that get added to the store.
@@ -69,9 +76,9 @@ public class ConstraintStore {
     public void addAll(Collection<Constraint<?>> collection){
         HashSet<Constraint<?>> withoutDuplicates = new HashSet<>(collection);
         store.addAll(withoutDuplicates);
-        // All rules in the store must be alive if they aren't in use:
-        withoutDuplicates.forEach(Constraint::setAlive);
+        withoutDuplicates.forEach(x -> setAlive(x.getID()));
     }
+
 
     /**
      * Adds all the constraints of the list to the constraint store.
@@ -80,21 +87,18 @@ public class ConstraintStore {
     public void addAll(Constraint<?>... constraints){
         HashSet<Constraint<?>> withoutDuplicates = new HashSet<>(Arrays.asList(constraints));
         store.addAll(withoutDuplicates);
-        // All rules in the store must be alive if they aren't in use:
-        withoutDuplicates.forEach(Constraint::setAlive);
+        withoutDuplicates.forEach(x -> setAlive(x.getID()));
     }
+
 
     /**
      * Remove the constraint with the given ID.
      */
     public void remove(long ID){
-        store.forEach(x -> {
-            if(x.getID() == ID){
-                x.setDead();
-            }
-        });
+        deadConstraints.add(ID);
         store.removeIf(x -> x.getID() == ID);
     }
+
 
     /**
      * Returns a complete Iterator for the ConstraintStore.
@@ -104,14 +108,16 @@ public class ConstraintStore {
         return store.iterator();
     }
 
+
     /**
      * Returns an Iterator which contains only the constraints with type constraintType.
      * @param constraintType The type you want the constraints to be.
      * @return An iterator with all elements of type {@param constraintType}.
      */
     public Iterator<Constraint<?>> lookup(Class<?> constraintType){
-        return store.stream().filter(x -> x.isAlive() && x.isOfType(constraintType)).iterator();
+        return store.stream().filter(x -> isAlive(x.getID()) && x.isOfType(constraintType)).iterator();
     }
+
 
     /**
      * Returns an iterator which contains only the constraints that contain an object that is equal to {@param value}
@@ -121,38 +127,89 @@ public class ConstraintStore {
      * @return An iterator with constraints that contain objects equal to {@param value}.
      */
     public Iterator<Constraint<?>> lookup(Object value){
-        return store.stream().filter(x -> x.isAlive() && x.get().equals(value)).iterator();
+        return store.stream()
+                .filter(x -> isAlive(x.getID()) && x.innerObjEquals(value))
+                .iterator();
     }
+
 
     /**
      * @return The first constraint in the store that is alive.
      */
     public Constraint<?> getFirst(){
-        return store.stream().filter(Constraint::isAlive).findFirst().orElse(null);
+        return store.stream()
+                .filter(x -> isAlive(x.getID()))
+                .findFirst()
+                .orElse(null);
     }
+
 
     /**
      * @return The last constraint in the store that is alive.
      */
     public Constraint<?> getLast(){
-        return store.stream().filter(Constraint::isAlive).reduce((x, y) -> y).orElse(null);
+        return store.stream()
+                .filter(x -> isAlive(x.getID()))
+                .reduce((x, y) -> y)
+                .orElse(null);
     }
+
+
+    /**
+     * Sets the constraint with the given ID to dead if the constraint exists in the internal store.
+     * Dead constraints are unregarded by {@link RuleApplicator}s.
+     *
+     * @param ID the ID of the constraint that should be set to dead.
+     */
+    public void setDead(long ID){
+        deadConstraints.add(ID);
+    }
+
+
+    /**
+     * Sets the constraint with the given ID to alive.
+     * Removes the ID from the list of dead constraints if it is in there.
+     * Dead constraints are unregarded by {@link RuleApplicator}s.
+     *
+     * @param ID The ID of the constraint that should be set to alive.
+     */
+    public void setAlive(long ID){
+        deadConstraints.remove(ID);
+    }
+
+
+    public boolean isAlive(long ID){
+        return !deadConstraints.contains(ID);
+    }
+
+
+    /**
+     * Cleans the internal store of dead constraints.
+     * Removes all stored IDs that refer to constraints that are no longer in the internal data structure.
+     */
+    public void cleanup() {
+        deadConstraints.removeIf(x -> !store.stream().anyMatch(y -> y.getID() == x));
+    }
+
 
     /**
      * Set all constraints to dead and remove them from the internal data structure.
      */
     public void clear(){
-        store.forEach(Constraint::setDead);
+        store.forEach(x -> setDead(x.getID()));
         store.clear();
     }
+
 
     public int size(){
         return store.size();
     }
 
+
     public List<Constraint<?>> toList(){
         return new ArrayList<>(store);
     }
+
 
     @Override
     public String toString() {
