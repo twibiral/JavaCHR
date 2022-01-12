@@ -1,6 +1,7 @@
 package javachr.rules;
 
 import javachr.constraints.Constraint;
+import javachr.exceptions.RuleDefinitionFailed;
 import javachr.rules.head.HEAD_DEFINITION_TYPE;
 import javachr.rules.head.Head;
 import javachr.rules.head.VAR;
@@ -37,6 +38,10 @@ public abstract class Rule {
 
 
     protected Rule(int nrConstraintsInHead){
+        if(nrConstraintsInHead < 1){
+            throw new RuleDefinitionFailed("A rule must have at least one constraint in the head.");
+        }
+
         // give this rule an ID
         ID = ID_COUNTER.getAndIncrement();
 
@@ -48,6 +53,10 @@ public abstract class Rule {
     }
 
     protected Rule(String name, int nrConstraintsInHead){
+        if(nrConstraintsInHead < 1){
+            throw new RuleDefinitionFailed("A rule must have at least one constraint in the head.");
+        }
+
         // give this rule an ID
         ID = ID_COUNTER.getAndIncrement();
 
@@ -59,6 +68,10 @@ public abstract class Rule {
     }
 
     protected Rule(Class<?>... headTypes){
+        if(headTypes.length < 1){
+            throw new RuleDefinitionFailed("A rule must have at least one constraint in the head.");
+        }
+
         // give this rule an ID
         ID = ID_COUNTER.getAndIncrement();
 
@@ -70,6 +83,10 @@ public abstract class Rule {
     }
 
     protected Rule(String name, Class<?>... headTypes){
+        if(headTypes.length < 1){
+            throw new RuleDefinitionFailed("A rule must have at least one constraint in the head.");
+        }
+
         // give this rule an ID
         ID = ID_COUNTER.getAndIncrement();
 
@@ -81,6 +98,10 @@ public abstract class Rule {
     }
 
     protected Rule(Head... headDefinitions){
+        if(headDefinitions.length < 1){
+            throw new RuleDefinitionFailed("A rule must have at least one constraint in the head.");
+        }
+
         // give this rule an ID
         ID = ID_COUNTER.getAndIncrement();
 
@@ -104,6 +125,10 @@ public abstract class Rule {
     }
 
     protected Rule(String name, Head... headDefinitions){
+        if(headDefinitions.length < 1){
+            throw new RuleDefinitionFailed("A rule must have at least one constraint in the head.");
+        }
+
         // give this rule an ID
         ID = ID_COUNTER.getAndIncrement();
 
