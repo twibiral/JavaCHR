@@ -77,11 +77,11 @@ Apply the rule to constraints. Calculating the greatest common divisor of some n
 ````java
 
 
-RuleApplicator result = applicator.solve(42, 1337, 8080);
+RuleApplicator result = applicator.execute(42, 1337, 8080);
 System.out.println(result);
 ````
 
-``applicator.solve()`` returns a List of constraints.
+``applicator.execute(...)`` returns a List of constraints.
 
 More examples can be found in the [examples package](/src/main/java/javachr/examples) and in the [tests](/src/test/javachr/). The package [webserver](/src/main/java/javachr/examples/webserver) contains a https webserver implemented with CHR rules.
 
@@ -91,5 +91,11 @@ To use the library you can download the JavaCHR-<version>.jar file and use it as
 Here is how to use it for [gradle](https://appmediation.com/how-to-add-local-libraries-to-gradle/) and for 
 [IntelliJ](https://stackoverflow.com/questions/1051640/correct-way-to-add-external-jars-lib-jar-to-an-intellij-idea-project).
 
+
+## Future Work
+- [ ] Union Types for the Head objects
+- [ ] Hashing in Constraint Store
+- [ ] RuleApplicator with Refined Operational Semantics
+        
 
 #### Contact: tim.wibiral@uni-ulm.de
